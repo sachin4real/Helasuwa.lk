@@ -9,17 +9,20 @@ export default function DoctorHeader() {
   }
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 bg-[#111053] shadow-lg text-white">
+    <div className="flex items-center justify-between px-8 py-4 bg-gradient-to-r from-blue-900 to-indigo-900 shadow-md text-white">
+      {/* Logo and Site Title */}
       <div className="flex items-center space-x-4">
-        <img className="w-10 h-10" src="/images/Hospital logo B.png" alt="Hospital Logo" />
-        <h1 className="text-xl font-semibold">Helasuwa.lk</h1>
+        <img className="w-12 h-12 rounded-full shadow-md" src="/images/Hospital logo B.png" alt="Hospital Logo" />
+        <h1 className="text-2xl font-bold tracking-wide">Helasuwa.lk</h1>
       </div>
-      <button
+
+      {/* Logout Button */}
+      {/* <button
         onClick={logout}
-        className="px-4 py-2 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-semibold rounded-lg shadow-md transition duration-200"
+        className="px-5 py-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-105"
       >
         Logout
-      </button>
+      </button> */}
     </div>
   );
 }

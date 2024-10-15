@@ -21,15 +21,15 @@ const SingleAppointment = ({ apt }) => {
 
   const [text, setText] = useState("");
   const [drug, setDrug] = useState("");
-  const [price, setPrice] = useState(0); // New state for price
-  const [inventory, setInventory] = useState([]); // New state for inventory
+  const [price, setPrice] = useState(0);
+  const [inventory, setInventory] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
 
   useEffect(() => {
     axios
       .get("http://localhost:8070/inventory")
       .then((response) => {
-        setInventory(response.data); // Assuming response.data contains the inventory items
+        setInventory(response.data);
       })
       .catch((error) => {
         console.error("Error fetching inventory:", error);
@@ -145,39 +145,41 @@ const SingleAppointment = ({ apt }) => {
     doc.save(`${patient._id}.pdf`);
   }
 
-  // Handle selecting a drug and setting its price
   const handleDrugChange = (e) => {
     const selectedDrug = e.target.value;
     setDrug(selectedDrug);
 
-    // Find the selected item in the inventory and update price
     const selectedItem = inventory.find((item) => item.item_name === selectedDrug);
-    setPrice(selectedItem ? selectedItem.price : 0); // Set price or 0 if not found
+    setPrice(selectedItem ? selectedItem.price : 0);
   };
 
   return (
-    <div className="apt-container">
-      <div>
-        <h3>Appointment ID: {apt._id}</h3>
-        <h3>Patient Name : {patient.firstName} {patient.lastName}</h3>
-        <h4>Notes : {apt.notes}</h4>
-        <button className="view-patient-btn" onClick={downloadProfile}>View Patient Details</button>
-        <h3>Appointment No : {apt.appointmentNo}</h3>
+    <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto my-6 space-y-6">
+      <div className="border-b pb-4">
+        <h3 className="text-lg font-semibold">Appointment ID: {apt._id}</h3>
+        <p className="text-gray-700">Patient Name: {patient.firstName} {patient.lastName}</p>
+        <p className="text-gray-700">Appointment No: {apt.appointmentNo}</p>
+        <button
+          onClick={downloadProfile}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+        >
+          View Patient Details
+        </button>
       </div>
 
       <div>
         <textarea
-          className="pres-text"
-          cols="30"
-          rows="10"
+          className="w-full p-3 border rounded-md text-gray-800"
+          rows="6"
+          placeholder="Prescription text"
           value={text}
           onChange={(e) => setText(e.target.value)}
         ></textarea>
       </div>
 
-      <div>
+      <div className="space-y-4">
         <select
-          className="pres-inputs"
+          className="w-full p-3 border rounded-md text-gray-800"
           placeholder="Medicine Name"
           value={drug}
           onChange={handleDrugChange}
@@ -188,91 +190,107 @@ const SingleAppointment = ({ apt }) => {
           ))}
         </select>
 
-        {/* New input field for displaying the price */}
         <input
           type="text"
-          className="pres-inputs"
+          className="w-full p-3 border rounded-md text-gray-800"
           placeholder="Price"
           value={price > 0 ? `$${price}` : ""}
           readOnly
         />
 
-        <input
-          className="before-after-radio"
-          type="radio"
-          name="befoAfter"
-          value="Before"
-          checked={beforAfter === "Before"}
-          onChange={handleBeforeAndAfter}
-        />
-        <label>Before Meal</label>
-        <input
-          className="before-after-radio"
-          type="radio"
-          name="befoAfter"
-          value="After"
-          checked={beforAfter === "After"}
-          onChange={handleBeforeAndAfter}
-        />
-        <label>After Meal</label> <br />
-
-        <div className="pres-form">
+        <div className="flex items-center space-x-4">
           <input
-            type="checkbox"
-            checked={morning}
-            onChange={() => setMorning(!morning)}
+            type="radio"
+            name="befoAfter"
+            value="Before"
+            checked={beforAfter === "Before"}
+            onChange={handleBeforeAndAfter}
+            className="mr-1"
           />
-          <label>Morning</label>
+          <label>Before Meal</label>
           <input
-            className="pres-inputs"
-            type="number"
-            placeholder="Quantity..."
-            value={morning ? morningQ : 0}
-            disabled={!morning}
-            onChange={(e) => setMorningQ(e.target.value)}
+            type="radio"
+            name="befoAfter"
+            value="After"
+            checked={beforAfter === "After"}
+            onChange={handleBeforeAndAfter}
+            className="mr-1"
           />
+          <label>After Meal</label>
         </div>
 
-        <div className="pres-form">
-          <input
-            type="checkbox"
-            checked={evening}
-            onChange={() => setEvening(!evening)}
-          />
-          <label>Evening</label>
-          <input
-            className="pres-inputs"
-            type="number"
-            placeholder="Quantity..."
-            value={evening ? eveningQ : 0}
-            disabled={!evening}
-            onChange={(e) => setEveningQ(e.target.value)}
-          />
+        {/* Medication schedule with checkboxes */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={morning}
+              onChange={() => setMorning(!morning)}
+            />
+            <label>Morning</label>
+            <input
+              type="number"
+              placeholder="Qty"
+              value={morning ? morningQ : 0}
+              disabled={!morning}
+              onChange={(e) => setMorningQ(e.target.value)}
+              className="w-16 p-2 border rounded-md text-gray-800"
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={evening}
+              onChange={() => setEvening(!evening)}
+            />
+            <label>Evening</label>
+            <input
+              type="number"
+              placeholder="Qty"
+              value={evening ? eveningQ : 0}
+              disabled={!evening}
+              onChange={(e) => setEveningQ(e.target.value)}
+              className="w-16 p-2 border rounded-md text-gray-800"
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={night}
+              onChange={() => setNight(!night)}
+            />
+            <label>Night</label>
+            <input
+              type="number"
+              placeholder="Qty"
+              value={night ? nightQ : 0}
+              disabled={!night}
+              onChange={(e) => setNightQ(e.target.value)}
+              className="w-16 p-2 border rounded-md text-gray-800"
+            />
+          </div>
         </div>
 
-        <div className="pres-form">
-          <input
-            type="checkbox"
-            checked={night}
-            onChange={() => setNight(!night)}
-          />
-          <label>Night</label>
-          <input
-            className="pres-inputs"
-            type="number"
-            placeholder="Quantity..."
-            value={night ? nightQ : 0}
-            disabled={!night}
-            onChange={(e) => setNightQ(e.target.value)}
-          />
+        <div className="flex space-x-4">
+          <button
+            onClick={generatePres}
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200"
+          >
+            Generate Prescription
+          </button>
+          <button
+            onClick={addToPres}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+          >
+            Add To Prescription
+          </button>
         </div>
-
-        <button id="btn-generate-pres" onClick={generatePres}>Generate Prescription</button>
-        <button id="btn-add-pres" onClick={addToPres}>Add To prescription</button>
       </div>
 
       <div>
-        <h2>Prescriptions</h2>
+        <h2 className="text-lg font-semibold">Prescriptions</h2>
         {prescriptions.map((item) => (
           <SinglePrescription key={item._id} prescription={item} />
         ))}
@@ -280,9 +298,14 @@ const SingleAppointment = ({ apt }) => {
 
       <div>
         {apt.consulted ? (
-          <button className="btn-mark-consulted">Consulted</button>
+          <button className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-not-allowed">Consulted</button>
         ) : (
-          <button className="btn-mark-consulted" onClick={markConsulted}>Mark as Consulted</button>
+          <button
+            onClick={markConsulted}
+            className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition duration-200"
+          >
+            Mark as Consulted
+          </button>
         )}
       </div>
     </div>

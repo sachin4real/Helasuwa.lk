@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
-import SingleAppointment from '../SingleAppointment';
+import SingleAppointment from './SingleAppointment';
 import DoctorSidePanel from "./DoctorSidePanel";
 import DoctorHeader from './DoctorHeader';
 
