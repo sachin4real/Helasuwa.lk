@@ -1,92 +1,84 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 
 const PatientLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [email , setEmail] = useState("");
-    const [password , setPassword] = useState("") ;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const type = localStorage.getItem("type");
 
-    useEffect(()=>{
-        const token = localStorage.getItem("token") ;
-        const type = localStorage.getItem("type") ;
-
-        if(token !=  null & type == "patient") {
-            window.location.href = "/patientHome"
-        }
-    },[])
-
-    function login(e){
-        e.preventDefault() ;
-
-        const patient = {
-            email,
-            password
-          }
-      
-          axios.post("http://localhost:8070/patient/login" , patient).then((res)=>{
-      
-            if ( res.data.rst === "success" ) {
-              //Session.set("name" , "thanish") ;
-              //Session.set("user" , res.data.data._id) ;
-              console.log(res.data.data._id)
-              console.log(res.data.tok)
-              localStorage.setItem("type", "patient") ;
-              localStorage.setItem("token" , res.data.tok) ;
-              alert("login successfull") ;
-              //console.log("successfull") ;
-              
-              window.location = '/patientHome'
-            }
-            else if ( res.data.rst === "incorrect password" ) {
-              alert("incorrect password") ;
-              console.log("unsuccessfull") ;
-      
-            }else if ( res.data.rst === "invalid user" ) {
-              alert("invalid user") ;
-              console.log("unsuccessfull") ;
-            }
-            //console.log(res)
-            //alert("heyyy")
-            //window.location.reload();
-          }).catch( (err)=> {
-            alert(err) ;
-          }) 
+    if (token != null && type === "patient") {
+      window.location.href = "/patientHome";
     }
-   
+  }, []);
+
+  function login(e) {
+    e.preventDefault();
+
+    const patient = { email, password };
+
+    axios.post("http://localhost:8070/patient/login", patient)
+      .then((res) => {
+        if (res.data.rst === "success") {
+          localStorage.setItem("type", "patient");
+          localStorage.setItem("token", res.data.tok);
+          alert("Login successful");
+          window.location = '/patientHome';
+        } else if (res.data.rst === "incorrect password") {
+          alert("Incorrect password");
+        } else if (res.data.rst === "invalid user") {
+          alert("Invalid user");
+        }
+      })
+      .catch((err) => {
+        alert("An error occurred during login");
+      });
+  }
+
   return (
-    <div id='login-whole'>
-        <center>
-        <div id='login-container'  >
-            <div id='login-form-container' >
-                
-                <form action="" id='login-form' onSubmit={login}>
-                    <h1>Patient Login</h1> <br /> <br />
-
-                    <input className='input-fields' type="text" name="" id="" placeholder='Email' onChange={(e)=> {setEmail(e.target.value)}} required /> <br /> <br />
-
-                    <input className='input-fields' type="password" name="" id="" placeholder='Password' onChange={(e)=>{setPassword(e.target.value)}} required/> <br /> <br />
-
-                    <button id='login-button'>Login</button> <br /> <br />
-
-                    <p>Don't have an account? <a href="/signup">signup</a></p> 
-
-                </form>
-
-                
-            </div>
-            <div id='login-message'>
-                {/* <div>
-                <h2>Welcome !!</h2> <br />
-                <p className='welcome-text' >Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem voluptate ipsa modi! Provident ratione explicabo aliquam quo quisquam ipsa quod odit laudantium itaque! Quidem mollitia animi perferendis ex dolor commodi!</p>
-                </div> */}
-                <img  className='login-image' src="/images/Hospital logo B.png" alt="" />
-
-            </div>
-        </div>
-
-        </center>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-200 to-blue-300 p-4">
+      <div className="bg-white shadow-lg rounded-2xl p-10 max-w-sm w-full flex flex-col items-center">
+        <img className="w-24 mb-6" src="/images/Hospital-logo-W.png" alt="Hospital Logo" />
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Patient Login</h1>
+        <form className="w-full" onSubmit={login}>
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 border border-gray-300 rounded-full text-gray-700 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-8">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-3 border border-gray-300 rounded-full text-gray-700 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-3 rounded-full font-semibold hover:bg-blue-600 transition-all duration-200 shadow-md transform hover:scale-105"
+          >
+            Login
+          </button>
+          <p className="mt-6 text-gray-600 text-sm">
+            Don’t have an account?{" "}
+            <a href="/signup" className="text-blue-500 hover:underline">
+              Sign up
+            </a>
+          </p>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
 
-export default PatientLogin
+export default PatientLogin;
