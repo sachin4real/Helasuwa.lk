@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DoctorSidePanel from "./DoctorSidePanel";
-import DashboardHeader from "../DashboardHeader";
+import DoctorHeader from './DoctorHeader';
 
 export default function AllPatients() {
   const [patients, setPatients] = useState([]);
@@ -33,7 +33,7 @@ export default function AllPatients() {
 
   return (
     <div>
-      <DashboardHeader />
+     <DoctorHeader/>
       <div style={styles.mainContainer}>
         <DoctorSidePanel />
         <div style={styles.contentContainer}>

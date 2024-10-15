@@ -1,11 +1,11 @@
 import React from 'react';
 import DoctorSidePanel from "./DoctorSidePanel";
-import DashboardHeader from "../DashboardHeader";
+import DoctorHeader from './DoctorHeader';
 
 export default function AddmitPatient() {
   return (
     <div>
-      <DashboardHeader />
+      <DoctorHeader />
       <div style={styles.mainContainer}>
         <DoctorSidePanel />
         <div style={styles.formContainer}>

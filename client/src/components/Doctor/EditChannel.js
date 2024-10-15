@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import DashboardHeader from "../DashboardHeader";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import DoctorSidePanel from "./DoctorSidePanel";
+import DoctorHeader from './DoctorHeader';
 
 const EditChannel = (props) => {
   let { cid } = useParams();
@@ -52,7 +52,7 @@ const EditChannel = (props) => {
   }, []);
   return (
     <div>
-      <DashboardHeader />
+      <DoctorHeader />
       <div className="main-container">
       <DoctorSidePanel />
         <div className="content-container">

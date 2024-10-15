@@ -1,5 +1,4 @@
-
-import DashboardHeader from '../DashboardHeader'
+import DoctorHeader from './DoctorHeader';
 import React, { useEffect, useState } from "react";
 import DoctorSidePanel from "./DoctorSidePanel";
 
@@ -69,7 +68,7 @@ const AddChannel = () => {
   return (
 
     <div>
-        <DashboardHeader />
+        <DoctorHeader />
         <div className='main-container'>
 
         <DoctorSidePanel/>

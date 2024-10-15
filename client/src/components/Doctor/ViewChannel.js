@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import SingleAppointment from '../SingleAppointment';
-import DashboardHeader from '../DashboardHeader';
 import DoctorSidePanel from "./DoctorSidePanel";
+import DoctorHeader from './DoctorHeader';
 
 const ViewChannel = (props) => {
 
@@ -48,7 +48,7 @@ const ViewChannel = (props) => {
     },[])
   return (
     <div>
-      <DashboardHeader />
+      <DoctorHeader />
 
       <div className='main-container'> 
       <DoctorSidePanel/>

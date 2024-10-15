@@ -35,8 +35,8 @@ const DoctorLogin = () => {
           localStorage.setItem("doctor", res.data.data._id);
 
           console.log(res.data.data._id);
-          alert("login successfull");
-          //console.log("successfull") ;
+          // alert("login successfull");
+          console.log("successfull") ;
 
           window.location = "/doctorDashboard";
         } else if (res.data.rst === "incorrect password") {
