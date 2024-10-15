@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardHeader from "./DashboardHeader";
-import DoctorSidePanel from "./DoctorSidePanel";
+import DoctorSidePanel from "./Doctor/DoctorSidePanel";
 
 const DoctorProfile = () => {
   const [email, setEmail] = useState("");

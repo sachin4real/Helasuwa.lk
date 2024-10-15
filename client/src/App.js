@@ -11,16 +11,16 @@ import DoctorLogin from "./pages/Logins/DoctorLogin";
 import AdminLogin from "./pages/Logins/AdminLogin";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import MakeAppointment from "./components/MakeAppointment";
-import ViewChannel from "./components/ViewChannel";
+import ViewChannel from "./components/Doctor/ViewChannel";
 
-import AddChannel from "./components/AddChannel";
+import AddChannel from "./components/Doctor/AddChannel";
 import SearchChannels from "./components/SearchChannels";
 import PatientAppointments from "./components/PatientAppointments";
 import LaboratoryDashboard from "./components/Admin/LaboratoryDashboard";
 import AddPatientReport from "./components/AddPatientReport";
 import EditPatientProfile from "./components/EditPatientProfile";
 import PatientProfile from "./components/PatientProfile";
-import EditChannel from "./components/EditChannel";
+import EditChannel from "./components/Doctor/EditChannel";
 import StaffDashboard from "./components/Admin/StaffDashboard";
 import AddDoctor from "./components/Admin/AddDoctor";
 import EditAppointment from "./components/EditAppointment";
@@ -31,6 +31,9 @@ import EditReport from "./components/EditReport";
 import MyRecords from "./components/MyRecords";
 import EditRecord from "./components/EditRecord";
 import AddInventory from "./components/Admin/AddInventory";
+import AllPatients from "./components/Doctor/AllPatients";
+import Viewpatient from "./components/Doctor/Viewpatient";
+import AddmitPatient from "./components/Doctor/AddmitPatient";
 
 
 function App() {
@@ -57,15 +60,19 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<ChooseLogin />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
-          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
-          <Route path="/doctorProfile" element={<DoctorProfile />} />
           <Route path="/inventory" element={<AddInventory />} />
           
-
+          {/* doctor */}
+          <Route path="/allpatients" element={<AllPatients />} />
           <Route path="/viewChannel/:cid" element={<ViewChannel />} />
           <Route path="/addChannel" element={<AddChannel />} />
           <Route path="/editChannel/:cid" element={<EditChannel />} />
           <Route path="/searchChannels/:date?/:doctor?" element={<SearchChannels />} />
+          <Route path="/doctorProfile" element={<DoctorProfile />} />
+          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
+          <Route path="/viewpatient/:id" element={<Viewpatient />} />
+          <Route path="/addmit" element={<AddmitPatient />} />
+        
 
           <Route path="/laboratory" element={<LaboratoryDashboard />} />
           <Route path="/addReport/:tid/:pid" element={<AddPatientReport />} />
