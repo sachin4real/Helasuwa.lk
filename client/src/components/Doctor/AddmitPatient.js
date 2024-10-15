@@ -2,52 +2,54 @@ import React from 'react';
 import DoctorSidePanel from "./DoctorSidePanel";
 import DoctorHeader from './DoctorHeader';
 
-export default function AddmitPatient() {
+export default function AdmitPatient() {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100">
       <DoctorHeader />
-      <div style={styles.mainContainer}>
+      <div className="flex">
         <DoctorSidePanel />
-        <div style={styles.formContainer}>
-          <h2 style={styles.title}>Admit a Patient</h2>
-          <form style={styles.admitForm}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Patient ID</label>
-              <input type="text" placeholder="Enter Patient ID" style={styles.input} />
+        <div className="flex-1 p-8 bg-gray-100">
+          <h2 className="text-3xl font-semibold text-blue-600 mb-6">Admit a Patient</h2>
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-lg shadow-lg max-w-3xl">
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Patient ID</label>
+              <input type="text" placeholder="Enter Patient ID" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Patient Name</label>
-              <input type="text" placeholder="Enter Patient Name" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Patient Name</label>
+              <input type="text" placeholder="Enter Patient Name" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Patient Blood Pressure</label>
-              <input type="text" placeholder="Enter Blood Pressure" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Patient Blood Pressure</label>
+              <input type="text" placeholder="Enter Blood Pressure" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Next of Kin</label>
-              <input type="text" placeholder="Enter Next of Kin" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Next of Kin</label>
+              <input type="text" placeholder="Enter Next of Kin" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Patient Age</label>
-              <input type="number" placeholder="Enter Age" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Patient Age</label>
+              <input type="number" placeholder="Enter Age" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Gender</label>
-              <input type="text" placeholder="Enter Gender" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Gender</label>
+              <input type="text" placeholder="Enter Gender" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Occupation</label>
-              <input type="text" placeholder="Enter Occupation" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Occupation</label>
+              <input type="text" placeholder="Enter Occupation" className="input-field" />
             </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Doctor Name</label>
-              <input type="text" placeholder="Enter Doctor Name" style={styles.input} />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-1">Doctor Name</label>
+              <input type="text" placeholder="Enter Doctor Name" className="input-field" />
             </div>
-            <div style={{ ...styles.formGroup, ...styles.description }}>
-              <label style={styles.label}>Description</label>
-              <textarea placeholder="Enter Description" style={styles.textarea}></textarea>
+            <div className="flex flex-col md:col-span-2">
+              <label className="text-gray-700 mb-1">Description</label>
+              <textarea placeholder="Enter Description" className="input-field h-28 resize-none"></textarea>
             </div>
-            <button type="submit" style={styles.submitButton}>Submit</button>
+            <button type="submit" className="md:col-span-2 bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
+              Submit
+            </button>
           </form>
         </div>
       </div>
@@ -55,65 +57,12 @@ export default function AddmitPatient() {
   );
 }
 
-const styles = {
-  mainContainer: {
-    display: 'flex',
-  },
-  formContainer: {
-    flex: 1,
-    padding: '20px',
-    backgroundColor: '#f9f9f9',
-  },
-  title: {
-    fontSize: '1.5rem',
-    color: '#333',
-    marginBottom: '20px',
-  },
-  admitForm: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '20px',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  label: {
-    marginBottom: '5px',
-    fontWeight: '500',
-  },
-  input: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
-    backgroundColor: '#f0f0f0',
-    fontSize: '1rem',
-  },
-  textarea: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
-    backgroundColor: '#f0f0f0',
-    fontSize: '1rem',
-    resize: 'none',
-    height: '100px',
-  },
-  description: {
-    gridColumn: 'span 2',
-  },
-  submitButton: {
-    gridColumn: 'span 2',
-    padding: '10px',
-    backgroundColor: '#4a69bd',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    textAlign: 'center',
-    width: '100%',
-  },
-  submitButtonHover: {
-    backgroundColor: '#3b4a8b',
-  },
-};
+// Additional Tailwind classes
+const inputStyles = `
+  w-full px-4 py-2 border border-gray-300 rounded-lg 
+  focus:outline-none focus:border-blue-500 bg-gray-100
+`;
+
+// Apply the inputStyles to all input fields
+const styleSheet = document.styleSheets[0];
+styleSheet.insertRule(`.input-field { ${inputStyles} }`, styleSheet.cssRules.length);
