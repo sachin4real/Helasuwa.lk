@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import SingleAppointment from './SingleAppointment';
 import DashboardHeader from './DashboardHeader';
-import DoctorSideBar from './DoctorSideBar';
+import DoctorSidePanel from "./DoctorSidePanel";
 
 const ViewChannel = (props) => {
 
@@ -51,7 +51,7 @@ const ViewChannel = (props) => {
       <DashboardHeader />
 
       <div className='main-container'> 
-        <DoctorSideBar />
+      <DoctorSidePanel/>
 
         <div className='content-container'>
 

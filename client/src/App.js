@@ -9,7 +9,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import PatientLogin from "./pages/Logins/PatientLogin";
 import DoctorLogin from "./pages/Logins/DoctorLogin";
 import AdminLogin from "./pages/Logins/AdminLogin";
-import DoctorDashboard from "./components/DoctorDashboard";
+import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import MakeAppointment from "./components/MakeAppointment";
 import ViewChannel from "./components/ViewChannel";
 
