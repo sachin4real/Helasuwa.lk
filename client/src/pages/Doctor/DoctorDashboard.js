@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/dashboard.css";
 import axios from "axios";
-import SideBar from "../../components/SideBar";
 import DashboardHeader from "../../components/DashboardHeader";
 import DoctorChannels from "../../components/DoctorChannels";
 import DoctorSidePanel from "../../components/DoctorSidePanel";
@@ -61,20 +60,7 @@ const DoctorDashboard = () => {
     window.location.href = "/";
   }
   return (
-    <div>
-      {/* <div className="header-dashboard">
-        <div>
-          <h1>Dashbaord</h1>
-        </div>
-        <div></div>
-        <div className="header-icons">
-          <div className="profile-container">
-            <button className="btn-logout" onClick={logout}>
-              Logout
-            </button>
-          </div>
-        </div>
-      </div> */}
+    <div> 
       <DashboardHeader />
 
       <div className="main-container">

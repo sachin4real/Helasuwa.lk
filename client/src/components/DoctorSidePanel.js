@@ -5,7 +5,7 @@ export default function DoctorSidePanel() {
     <div className="nav-bar">
     <ul className="nav-list">
       <a href="/doctorDashboard">
-        <li className="nav-element active-element">Channeling Times</li>
+        <li className="nav-element ">Channeling Times</li>
       </a>
       <a href="/addChannel">
         <li className="nav-element">Create Channel</li>
@@ -13,8 +13,11 @@ export default function DoctorSidePanel() {
       <a href="/doctorProfile">
         <li className="nav-element">Profile</li>
       </a>
-      <a href="/viewpatiets">
+      <a href="/allpatients">
         <li className="nav-element">Patients</li>
+      </a>
+      <a href="/addmit">
+        <li className="nav-element">Addmit Patient</li>
       </a>
     </ul>
   </div>
