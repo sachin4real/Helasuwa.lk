@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DoctorSidePanel from "./DoctorSidePanel";
-import DashboardHeader from "../DashboardHeader";
+import DoctorHeader from './DoctorHeader';
 
 export default function AllPatients() {
   const [patients, setPatients] = useState([]);
@@ -32,99 +32,48 @@ export default function AllPatients() {
   };
 
   return (
-    <div>
-      <DashboardHeader />
-      <div style={styles.mainContainer}>
+    <div className="min-h-screen bg-gray-100">
+      <DoctorHeader />
+      <div className="flex">
         <DoctorSidePanel />
-        <div style={styles.contentContainer}>
-          <h1 style={styles.title}>All Patients</h1>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.tableHeader}>Name</th>
-                <th style={styles.tableHeader}>Gender</th>
-                <th style={styles.tableHeader}>Medical Status</th>
-                <th style={styles.tableHeader}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((patient, index) => (
-                <tr key={index} style={styles.tableRow}>
-                  <td style={styles.tableCell}>{patient.firstName} {patient.lastName}</td>
-                  <td style={styles.tableCell}>{patient.gender}</td>
-                  <td style={styles.tableCell}>{patient.medicalStatus}</td>
-                  <td style={styles.tableCell}>
-                    <button
-                      style={styles.button}
-                      onClick={() => handleViewDetails(patient._id)}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex-1 p-8 overflow-y-auto">
+          <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">All Patients</h1>
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          {loading ? (
+            <p className="text-center text-gray-600">Loading...</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+                <thead>
+                  <tr className="bg-gradient-to-r from-blue-300 to-blue-500 text-white">
+                    <th className="px-6 py-4 text-left font-semibold">Name</th>
+                    <th className="px-6 py-4 text-left font-semibold">Gender</th>
+                    <th className="px-6 py-4 text-left font-semibold">Medical Status</th>
+                    <th className="px-6 py-4 text-left font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {patients.map((patient, index) => (
+                    <tr key={index} className="border-b last:border-none hover:bg-gray-100">
+                      <td className="px-6 py-4 text-gray-700">{patient.firstName} {patient.lastName}</td>
+                      <td className="px-6 py-4 text-gray-700">{patient.gender}</td>
+                      <td className="px-6 py-4 text-gray-700">{patient.medicalStatus}</td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handleViewDetails(patient._id)}
+                          className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow-md transition duration-200 transform hover:scale-105 hover:from-green-500 hover:to-blue-600"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  mainContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    height: '100vh',
-    backgroundColor: '#f5f6fa',
-  },
-  contentContainer: {
-    flex: 1,
-    padding: '20px',
-    overflowY: 'auto',
-  },
-  title: {
-    fontSize: '2rem',
-    color: '#2f3640',
-    marginBottom: '20px',
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    margin: '0 auto',
-    maxWidth: '800px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  },
-  tableHeader: {
-    backgroundColor: '#4a148c',
-    color: '#ffffff',
-    padding: '10px',
-    fontWeight: '600',
-    textAlign: 'left',
-  },
-  tableRow: {
-    backgroundColor: '#ffffff',
-    borderBottom: '1px solid #dcdde1',
-  },
-  tableCell: {
-    padding: '10px',
-    color: '#2f3640',
-  },
-  button: {
-    background: 'linear-gradient(45deg, #00b09b, #96c93d)', // Green gradient
-    color: '#ffffff',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    fontWeight: '600',
-    width: '100px',
-    textAlign: 'center',
-  },
-  buttonHover: {
-    backgroundColor: '#1e3799',
-  },
-};

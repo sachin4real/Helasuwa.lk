@@ -1,112 +1,73 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 
-const DoctorChannels = (params) => {
+const DoctorChannels = () => {
+  const [channels, setChannels] = useState([]);
+  const id = localStorage.getItem("doctor");
 
-    const [channels, setChannels] = useState([]) ;
-    const id = localStorage.getItem("doctor") ;
+  useEffect(() => {
+    getChannels();
+  }, []);
 
+  const getChannels = async () => {
+    axios
+      .get(`http://localhost:8070/channel/doctorchannels/${id}`)
+      .then((res) => {
+        setChannels(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [doctor, setDoctor] = useState([]);
-    const [name, setName] = useState("");
-    // const [id, setId] = useState("");
+  const deleteChannel = (channelId) => {
+    axios
+      .delete(`http://localhost:8070/channel/delete/${channelId}`)
+      .then(() => {
+        alert("Channel Deleted");
+        setChannels(channels.filter((channel) => channel._id !== channelId));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    useEffect(()=>{
-        // getUser() ;
-        getChannels() ;
-    },[]) ;
-
-    // const getUser = async () => {
-    //   await axios
-    //     .get("http://localhost:8070/doctor/check/", {
-    //       headers: {
-    //         Authorization: `${localStorage.getItem("token")}`,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       setEmail(res.data.doctor.email);
-    //       setPassword(res.data.doctor.password);
-    //       setName(res.data.doctor.name);
-    //       setDoctor(res.data.doctor);
-    //       setId(res.data.doctor._id);
-    //       console.log(res.data.doctor._id);
-    //     })
-    //     .catch((err) => {
-    //       localStorage.removeItem("token");
-    //       window.location.href = "/";
-    //     });
-    // };
-
-    const getChannels = async () => {
-        
-        axios
-          .get(`http://localhost:8070/channel/doctorchannels/${id}`)
-          .then((res) => {
-            console.log(res.data);
-            setChannels(res.data);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
-
-      function deleteChannel(id)  {
-        console.log(id) ;
-        // axios
-        //   .delete(`http://localhost:8070/channel/delete/${id}`)
-        //   .then((res) => {
-        //     alert("Channel Deleted") ;
-        //   })
-        //   .catch(function (error) {
-        //     console.log(error);
-        //   });
-      };
   return (
-    <div>
-        
-        <h1 className='heading-channels'>Channeling Times</h1>
-        {channels.map((item,index)=>(
-            <div className='channel-container-doctor'>
+    <div className="p-8 bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen">
+      <h1 className="text-3xl font-semibold  mb-8 text-center">Channeling Times</h1>
+      {channels.map((item, index) => (
+        <div key={index} className="bg-white shadow-lg rounded-2xl p-6 mb-8 flex justify-between items-center hover:shadow-2xl transition-shadow duration-200">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800">{item.drName}</h2>
+            <h3 className="text-gray-600 mt-2">Specialized In: {item.specialization}</h3>
+            <h3 className="text-gray-600 mt-2">Date and Time: {new Date(item.startDateTime).toLocaleString()}</h3>
+            <h4 className="text-gray-600 mt-2">Maximum Patients: {item.maxPatients}</h4>
+          </div>
 
-              <div>
-                <h2>{item.drName}  </h2>
-                <h3>Specialized In : {item.specialization}</h3>
-                <h3>Date and Time :{new Date(item.startDateTime).toString()}</h3>
-                <h4>Maximum Patients : {item.maxPatients} </h4>
-                {/* <h4>Total Patients : {item.patients}</h4> */}
+          <div className="flex flex-col space-y-2">
+            <button
+              onClick={() => deleteChannel(item._id)}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200 shadow-md"
+            >
+              Delete
+            </button>
 
-              </div>
+            <a href={`/editChannel/${item._id}`} className="w-full">
+              <button className="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200 shadow-md">
+                Edit
+              </button>
+            </a>
 
-              <div>
-                <button id='btn-delete-channel' className='channel-buttons' onClick={()=>{
-                    axios
-          .delete(`http://localhost:8070/channel/delete/${item._id}`)
-          .then((res) => {
-            alert("Channel Deleted") ;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-                }}>Delete</button>  <br /> <br />
-                <a href={"editChannel/"+ item._id}>
-                <button id='btn-edit-channel' className='channel-buttons'>Edit</button>    <br /> <br />
-
-                </a>
-
-                <a href={"viewChannel/"+item._id}>
-                  <button id='btn-view-channel' className='channel-buttons'>View</button>   <br /><br />
-
-                </a>
-              </div>
-
-                
-            </div>
-        ))}
+            <a href={`/viewChannel/${item._id}`} className="w-full">
+              <button className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 shadow-md">
+                View
+              </button>
+            </a>
+          </div>
+        </div>
+      ))}
     </div>
-    
-  )
-}
+  );
+};
 
-export default DoctorChannels
+export default DoctorChannels;

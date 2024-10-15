@@ -25,7 +25,7 @@ import StaffDashboard from "./components/Admin/StaffDashboard";
 import AddDoctor from "./components/Admin/AddDoctor";
 import EditAppointment from "./components/EditAppointment";
 import EditStaff from "./components/EditStaff";
-import DoctorProfile from "./components/DoctorProfile";
+import DoctorProfile from "./components/Doctor/DoctorProfile";
 import StaffProfile from "./components/Admin/StaffProfile";
 import EditReport from "./components/EditReport";
 import MyRecords from "./components/MyRecords";

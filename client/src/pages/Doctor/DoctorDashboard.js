@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/dashboard.css";
 import axios from "axios";
-import DashboardHeader from "../../components/DashboardHeader";
 import DoctorChannels from "../../components/Doctor/DoctorChannels";
 import DoctorSidePanel from "../../components/Doctor/DoctorSidePanel";
+import DoctorHeader from '../../components/Doctor/DoctorHeader';
 
 const DoctorDashboard = () => {
   const [email, setEmail] = useState("");
@@ -61,7 +61,7 @@ const DoctorDashboard = () => {
   }
   return (
     <div> 
-      <DashboardHeader />
+      <DoctorHeader/>
 
       <div className="main-container">
         <DoctorSidePanel/>
