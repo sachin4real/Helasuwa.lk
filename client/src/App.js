@@ -11,16 +11,16 @@ import DoctorLogin from "./pages/Logins/DoctorLogin";
 import AdminLogin from "./pages/Logins/AdminLogin";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import MakeAppointment from "./components/MakeAppointment";
-import ViewChannel from "./components/ViewChannel";
+import ViewChannel from "./components/Doctor/ViewChannel";
 
-import AddChannel from "./components/AddChannel";
+import AddChannel from "./components/Doctor/AddChannel";
 import SearchChannels from "./components/SearchChannels";
 import PatientAppointments from "./components/PatientAppointments";
 import LaboratoryDashboard from "./components/Admin/LaboratoryDashboard";
 import AddPatientReport from "./components/AddPatientReport";
 import EditPatientProfile from "./components/EditPatientProfile";
 import PatientProfile from "./components/PatientProfile";
-import EditChannel from "./components/EditChannel";
+import EditChannel from "./components/Doctor/EditChannel";
 import StaffDashboard from "./components/Admin/StaffDashboard";
 import AddDoctor from "./components/Admin/AddDoctor";
 import EditAppointment from "./components/EditAppointment";
@@ -31,9 +31,9 @@ import EditReport from "./components/EditReport";
 import MyRecords from "./components/MyRecords";
 import EditRecord from "./components/EditRecord";
 import AddInventory from "./components/Admin/AddInventory";
-import AllPatients from "./components/AllPatients";
-import Viewpatient from "./components/Viewpatient";
-import AddmitPatient from "./components/AddmitPatient";
+import AllPatients from "./components/Doctor/AllPatients";
+import Viewpatient from "./components/Doctor/Viewpatient";
+import AddmitPatient from "./components/Doctor/AddmitPatient";
 
 
 function App() {

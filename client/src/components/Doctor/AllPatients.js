@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DoctorSidePanel from "./DoctorSidePanel";
-import DashboardHeader from "./DashboardHeader";
+import DashboardHeader from "../DashboardHeader";
 
 export default function AllPatients() {
   const [patients, setPatients] = useState([]);

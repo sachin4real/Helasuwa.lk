@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useParams } from 'react-router-dom';
-import SingleAppointment from './SingleAppointment';
-import DashboardHeader from './DashboardHeader';
+import SingleAppointment from '../SingleAppointment';
+import DashboardHeader from '../DashboardHeader';
 import DoctorSidePanel from "./DoctorSidePanel";
 
 const ViewChannel = (props) => {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../../styles/dashboard.css";
 import axios from "axios";
 import DashboardHeader from "../../components/DashboardHeader";
-import DoctorChannels from "../../components/DoctorChannels";
-import DoctorSidePanel from "../../components/DoctorSidePanel";
+import DoctorChannels from "../../components/Doctor/DoctorChannels";
+import DoctorSidePanel from "../../components/Doctor/DoctorSidePanel";
 
 const DoctorDashboard = () => {
   const [email, setEmail] = useState("");

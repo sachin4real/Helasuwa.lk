@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import DoctorSidePanel from "./DoctorSidePanel";
-import DashboardHeader from "./DashboardHeader";
+import DashboardHeader from "../DashboardHeader";
 
 export default function ViewPatient() {
   const { id } = useParams();

@@ -1,5 +1,5 @@
 
-import DashboardHeader from './DashboardHeader'
+import DashboardHeader from '../DashboardHeader'
 import React, { useEffect, useState } from "react";
 import DoctorSidePanel from "./DoctorSidePanel";
 
