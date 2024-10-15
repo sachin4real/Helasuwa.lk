@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../styles/dashboard.css";
+import "../../styles/dashboard.css";
 import axios from "axios";
-import SideBar from "./SideBar";
-import DashboardHeader from "./DashboardHeader";
-import DoctorChannels from "./DoctorChannels";
-import DoctorSidePanel from "./DoctorSidePanel";
+import SideBar from "../../components/SideBar";
+import DashboardHeader from "../../components/DashboardHeader";
+import DoctorChannels from "../../components/DoctorChannels";
+import DoctorSidePanel from "../../components/DoctorSidePanel";
 
 const DoctorDashboard = () => {
   const [email, setEmail] = useState("");
