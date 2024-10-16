@@ -1,8 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
 import Signup from "./components/Signup";
-import Dashboard from "./components/AdminDashboard";
 import ChooseLogin from "./pages/Logins/ChooseLogin";
 import PatientHome from "./components/PatientHome";
 import AdminDashboard from "./components/AdminDashboard";
@@ -12,8 +10,6 @@ import AdminLogin from "./pages/Logins/AdminLogin";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import MakeAppointment from "./components/MakeAppointment";
 import ViewChannel from "./components/Doctor/ViewChannel";
-
-import AddChannel from "./components/Doctor/AddChannel";
 import SearchChannels from "./components/SearchChannels";
 import PatientAppointments from "./components/PatientAppointments";
 import LaboratoryDashboard from "./components/Admin/LaboratoryDashboard";
@@ -25,12 +21,16 @@ import StaffDashboard from "./components/Admin/StaffDashboard";
 import AddDoctor from "./components/Admin/AddDoctor";
 import EditAppointment from "./components/EditAppointment";
 import EditStaff from "./components/EditStaff";
-import DoctorProfile from "./components/Doctor/DoctorProfile";
 import StaffProfile from "./components/Admin/StaffProfile";
 import EditReport from "./components/EditReport";
 import MyRecords from "./components/MyRecords";
 import EditRecord from "./components/EditRecord";
 import AddInventory from "./components/Admin/AddInventory";
+// import AllPatients from "./components/Doctor/AllPatients";
+// import Viewpatient from "./components/Doctor/Viewpatient";
+// import AddmitPatient from "./components/Doctor/AdmitPatient";
+// import DoctorProfile from "./components/Doctor/DoctorProfile";
+// import AddChannel from "./components/Doctor/AddChannel";
 import AllPatients from "./components/Doctor/AllPatients";
 import Viewpatient from "./components/Doctor/Viewpatient";
 import AddmitPatient from "./components/Doctor/AddmitPatient";
@@ -72,15 +72,15 @@ function App() {
           <Route path="/inventory" element={<AddInventory />} />
           
           {/* doctor */}
-          <Route path="/allpatients" element={<AllPatients />} />
+          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
           <Route path="/viewChannel/:cid" element={<ViewChannel />} />
-          <Route path="/addChannel" element={<AddChannel />} />
           <Route path="/editChannel/:cid" element={<EditChannel />} />
           <Route path="/searchChannels/:date?/:doctor?" element={<SearchChannels />} />
-          <Route path="/doctorProfile" element={<DoctorProfile />} />
-          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
-          <Route path="/viewpatient/:id" element={<Viewpatient />} />
-          <Route path="/addmit" element={<AddmitPatient />} />
+          {/* <Route path="/addChannel" element={<AddChannel />} /> */}
+          {/* <Route path="/doctorProfile" element={<DoctorProfile />} /> */}
+          {/* <Route path="/viewpatient/:id" element={<Viewpatient />} /> */}
+          {/* <Route path="/addmit" element={<AddmitPatient />} /> */}
+          {/* <Route path="/allpatients" element={<AllPatients />} /> */}
         
 
           <Route path="/laboratory" element={<LaboratoryDashboard />} />

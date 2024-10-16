@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import SinglePrescription from "./SinglePrescription";
 import jsPDF from "jspdf";
+import SinglePrescription from "./SinglePrescription";
 
 const SingleAppointment = ({ apt }) => {
   const logo = new Image();
@@ -219,7 +220,6 @@ const SingleAppointment = ({ apt }) => {
           <label>After Meal</label>
         </div>
 
-        {/* Medication schedule with checkboxes */}
         <div className="grid grid-cols-3 gap-4">
           <div className="flex items-center space-x-2">
             <input
