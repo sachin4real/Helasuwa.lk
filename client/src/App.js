@@ -31,6 +31,12 @@ import AddInventory from "./components/Admin/AddInventory";
 // import AddmitPatient from "./components/Doctor/AdmitPatient";
 // import DoctorProfile from "./components/Doctor/DoctorProfile";
 // import AddChannel from "./components/Doctor/AddChannel";
+import AllPatients from "./components/Doctor/AllPatients";
+import Viewpatient from "./components/Doctor/Viewpatient";
+import AddmitPatient from "./components/Doctor/AddmitPatient";
+import InsuranceClaim from "./components/Payment/InsuranceClaim";
+
+import MyPrescriptions from "./pages/Payment/Myprescriptions";
 
 
 function App() {
@@ -51,6 +57,12 @@ function App() {
           <Route path="/myAppointments" element={<PatientAppointments />} />
           <Route path="/editApt/:aid/:cid" element={<EditAppointment />} />
           <Route path="/makeApt/:cid" element={<MakeAppointment />} />
+
+          <Route path="/myPrescriptions" element={<MyPrescriptions />} />
+          <Route path="/insurance-claim" element={<InsuranceClaim />} />
+
+
+          
        
 
 

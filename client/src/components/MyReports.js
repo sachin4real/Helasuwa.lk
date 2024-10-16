@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import RowPrescription from "./RowPrescription";
+import RowPrescriptionView from "./Payment/RowPrescriptionView";
 import RowReports from "./RowReports";
 
 const MyReports = () => {
