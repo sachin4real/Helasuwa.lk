@@ -31,6 +31,13 @@ import AddInventory from "./components/Admin/AddInventory";
 // import AddmitPatient from "./components/Doctor/AdmitPatient";
 // import DoctorProfile from "./components/Doctor/DoctorProfile";
 // import AddChannel from "./components/Doctor/AddChannel";
+<<<<<<< HEAD
+=======
+
+import InsuranceClaim from "./components/Payment/InsuranceClaim";
+
+import MyPrescriptions from "./pages/Payment/Myprescriptions";
+>>>>>>> parent of dc471a2 (Revert "Merge pull request #9 from sachin4real/Dulan")
 
 
 function App() {

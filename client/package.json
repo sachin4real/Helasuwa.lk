@@ -6,7 +6,11 @@
     "@testing-library/jest-dom": "github:testing-library/jest-dom",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+<<<<<<< HEAD
     "axios": "^1.5.1",
+=======
+    "axios": "^1.7.7",
+>>>>>>> parent of dc471a2 (Revert "Merge pull request #9 from sachin4real/Dulan")
     "jspdf": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
