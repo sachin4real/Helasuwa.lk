@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function InsuranceClaim() {
   const [claimDetails, setClaimDetails] = useState({
@@ -50,38 +49,38 @@ function InsuranceClaim() {
   };
 
   return (
-    <div className="container mt-4">
-      <h3>Insurance Claim Form</h3>
-      <form onSubmit={handleSubmit} className="p-4 rounded shadow-sm bg-light">
+    <div className="container mx-auto mt-8 p-4 bg-gray-50 rounded-lg shadow-md max-w-lg">
+      <h3 className="text-xl font-semibold text-gray-700 mb-4">Insurance Claim Form</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Basic Information */}
-        <div className="form-group mb-3">
-          <label>First Name</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">First Name</label>
           <input
             type="text"
             name="firstName"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.firstName}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group mb-3">
-          <label>Last Name</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Last Name</label>
           <input
             type="text"
             name="lastName"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.lastName}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group mb-3">
-          <label>Birth Date</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Birth Date</label>
           <input
             type="date"
             name="birthDate"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.birthDate}
             onChange={handleChange}
             required
@@ -89,34 +88,42 @@ function InsuranceClaim() {
         </div>
 
         {/* Sex Selection */}
-        <div className="form-group mb-3">
-          <label>Sex</label>
-          <div>
-            <input
-              type="radio"
-              name="sex"
-              value="Male"
-              checked={claimDetails.sex === "Male"}
-              onChange={handleChange}
-              required
-            /> Male
-            <input
-              type="radio"
-              name="sex"
-              value="Female"
-              checked={claimDetails.sex === "Female"}
-              onChange={handleChange}
-              required
-            /> Female
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Sex</label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="sex"
+                value="Male"
+                className="mr-2"
+                checked={claimDetails.sex === "Male"}
+                onChange={handleChange}
+                required
+              />
+              Male
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="sex"
+                value="Female"
+                className="mr-2"
+                checked={claimDetails.sex === "Female"}
+                onChange={handleChange}
+                required
+              />
+              Female
+            </label>
           </div>
         </div>
 
         {/* Relationship to Insured */}
-        <div className="form-group mb-3">
-          <label>Relationship to Insured</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Relationship to Insured</label>
           <select
             name="relationshipToInsured"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.relationshipToInsured}
             onChange={handleChange}
             required
@@ -129,11 +136,11 @@ function InsuranceClaim() {
         </div>
 
         {/* Status */}
-        <div className="form-group mb-3">
-          <label>Status</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Status</label>
           <select
             name="status"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.status}
             onChange={handleChange}
             required
@@ -147,66 +154,66 @@ function InsuranceClaim() {
         </div>
 
         {/* Address Fields */}
-        <div className="form-group mb-3">
-          <label>Address Line 1</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Address Line 1</label>
           <input
             type="text"
             name="addressLine1"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.addressLine1}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group mb-3">
-          <label>Address Line 2</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Address Line 2</label>
           <input
             type="text"
             name="addressLine2"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.addressLine2}
             onChange={handleChange}
           />
         </div>
-        <div className="form-group mb-3">
-          <label>City</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">City</label>
           <input
             type="text"
             name="city"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.city}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group mb-3">
-          <label>State/Province</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">State/Province</label>
           <input
             type="text"
             name="state"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.state}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group mb-3">
-          <label>Postal Code</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Postal Code</label>
           <input
             type="text"
             name="postalCode"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.postalCode}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group mb-3">
-          <label>Mobile Number</label>
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Mobile Number</label>
           <input
             type="text"
             name="mobileNumber"
-            className="form-control"
+            className="w-full p-2 border border-gray-300 rounded"
             value={claimDetails.mobileNumber}
             onChange={handleChange}
             required
@@ -214,12 +221,14 @@ function InsuranceClaim() {
         </div>
 
         {/* File Upload */}
-        <div className="form-group mb-3">
-          <label>Upload Prescription</label>
-          <input type="file" className="form-control" onChange={handleFileChange} required />
+        <div>
+          <label className="block text-gray-600 font-medium mb-1">Upload Prescription</label>
+          <input type="file" className="w-full p-2 border border-gray-300 rounded" onChange={handleFileChange} required />
         </div>
 
-        <button type="submit" className="btn btn-primary w-100">Claim</button>
+        <button type="submit" className="w-full mt-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">
+          Claim
+        </button>
       </form>
     </div>
   );
