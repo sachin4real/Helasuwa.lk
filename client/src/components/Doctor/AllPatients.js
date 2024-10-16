@@ -45,7 +45,7 @@ export default function AllPatients() {
             <div className="overflow-x-auto">
               <table className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
                 <thead>
-                  <tr className="bg-gradient-to-r from-blue-300 to-blue-500 text-white">
+                  <tr className="bg-blue-500 text-white">
                     <th className="px-6 py-4 text-left font-semibold">Name</th>
                     <th className="px-6 py-4 text-left font-semibold">Gender</th>
                     <th className="px-6 py-4 text-left font-semibold">Medical Status</th>

@@ -68,7 +68,7 @@ const AddChannel = () => {
       <div className="flex">
         <DoctorSidePanel />
 
-        <div className="flex-1 flex items-center justify-center p-8">
+        <div className="flex-1 flex  justify-center p-8">
           <div className="w-full max-w-md">
             <h1 className="text-3xl font-bold mb-6 text-center">Create Channeling Time</h1>
 
