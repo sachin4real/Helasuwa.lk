@@ -19,21 +19,13 @@ export default function RowPrescriptionView({ item, onClick }) {
                 <button 
                     className="download-btn-pres" 
                     onClick={(e) => {
-                        e.stopPropagation(); // Prevent row click from triggering
-                        onClick(); // Trigger the view action
+                        e.stopPropagation(); 
+                        onClick(); 
                     }}
                 >
                     View
                 </button>
-                {/* <button 
-                    className="download-btn-pres" 
-                    onClick={(e) => {
-                        e.stopPropagation(); // Prevent row click from triggering
-                        downloadPrescription(); // Trigger the download action
-                    }}
-                >
-                    Download
-                </button> */}
+               
             </td>
         </tr>
     );
