@@ -26,34 +26,13 @@ import EditReport from "./components/EditReport";
 import MyRecords from "./components/MyRecords";
 import EditRecord from "./components/EditRecord";
 import AddInventory from "./components/Admin/AddInventory";
+import InsuranceClaim from "./components/Payment/InsuranceClaim";
+import MyPrescriptions from "./pages/Payment/Myprescriptions";
 // import AllPatients from "./components/Doctor/AllPatients";
 // import Viewpatient from "./components/Doctor/Viewpatient";
 // import AddmitPatient from "./components/Doctor/AdmitPatient";
 // import DoctorProfile from "./components/Doctor/DoctorProfile";
 // import AddChannel from "./components/Doctor/AddChannel";
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-=======
-import AllPatients from "./components/Doctor/AllPatients";
-import Viewpatient from "./components/Doctor/Viewpatient";
-import AddmitPatient from "./components/Doctor/AddmitPatient";
->>>>>>> parent of 168a6fe (bootstrap removed)
-import InsuranceClaim from "./components/Payment/InsuranceClaim";
-
-import MyPrescriptions from "./pages/Payment/Myprescriptions";
->>>>>>> parent of dc471a2 (Revert "Merge pull request #9 from sachin4real/Dulan")
-=======
-import AllPatients from "./components/Doctor/AllPatients";
-import Viewpatient from "./components/Doctor/Viewpatient";
-import AddmitPatient from "./components/Doctor/AddmitPatient";
-import InsuranceClaim from "./components/Payment/InsuranceClaim";
-
-import MyPrescriptions from "./pages/Payment/Myprescriptions";
->>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
-
 
 function App() {
   return (
@@ -73,21 +52,15 @@ function App() {
           <Route path="/myAppointments" element={<PatientAppointments />} />
           <Route path="/editApt/:aid/:cid" element={<EditAppointment />} />
           <Route path="/makeApt/:cid" element={<MakeAppointment />} />
-
           <Route path="/myPrescriptions" element={<MyPrescriptions />} />
           <Route path="/insurance-claim" element={<InsuranceClaim />} />
-
-
-          
-       
-
 
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<ChooseLogin />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
           <Route path="/inventory" element={<AddInventory />} />
           
-          {/* doctor */}
+          {/* Doctor */}
           <Route path="/doctorDashboard" element={<DoctorDashboard />} />
           <Route path="/viewChannel/:cid" element={<ViewChannel />} />
           <Route path="/editChannel/:cid" element={<EditChannel />} />
@@ -95,19 +68,19 @@ function App() {
           {/* <Route path="/addChannel" element={<AddChannel />} /> */}
           {/* <Route path="/doctorProfile" element={<DoctorProfile />} /> */}
           {/* <Route path="/viewpatient/:id" element={<Viewpatient />} /> */}
-          {/* <Route path="/addmit" element={<AddmitPatient />} /> */}
+          {/* <Route path="/admit" element={<AdmitPatient />} /> */}
           {/* <Route path="/allpatients" element={<AllPatients />} /> */}
-        
 
+          {/* Laboratory */}
           <Route path="/laboratory" element={<LaboratoryDashboard />} />
           <Route path="/addReport/:tid/:pid" element={<AddPatientReport />} />
           <Route path="/editReport/:tid/:pid" element={<EditReport />} />
 
+          {/* Staff */}
           <Route path="/staff" element={<StaffDashboard />} />
           <Route path="/doctor" element={<AddDoctor />} />
           <Route path="/editStaff/:sid" element={<EditStaff />} />
           <Route path="/staffProfile" element={<StaffProfile />} />
-
         </Routes>
       </Router>
     </div>
