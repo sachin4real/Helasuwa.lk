@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function CardPayment() {
   const [cardDetails, setCardDetails] = useState({
@@ -28,85 +27,88 @@ function CardPayment() {
   };
 
   return (
-    <div className="container">
-      <h3 className="mt-4">Select Payment Option</h3>
-      <form onSubmit={handleSubmit} className="p-4 rounded shadow-sm bg-light">
-        <div className="form-group mb-3">
-          <label htmlFor="cardNumber">Number on Card</label>
+    <div className="max-w-md mx-auto mt-8 p-6 bg-gray-50 rounded-lg shadow-lg">
+      <h3 className="text-2xl font-semibold text-gray-800 mb-6">Select Payment Option</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="cardNumber" className="block text-gray-600 font-medium mb-1">Number on Card</label>
           <input
             type="text"
-            className="form-control"
             id="cardNumber"
             name="cardNumber"
             maxLength="16"
             required
             value={cardDetails.cardNumber}
             onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
           />
         </div>
-        <div className="form-group mb-3">
-          <label htmlFor="cardName">Name on Card</label>
+        <div>
+          <label htmlFor="cardName" className="block text-gray-600 font-medium mb-1">Name on Card</label>
           <input
             type="text"
-            className="form-control"
             id="cardName"
             name="cardName"
             required
             value={cardDetails.cardName}
             onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
           />
         </div>
-        <div className="row mb-3">
-          <div className="col">
-            <label htmlFor="expYear">Exp Year</label>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="expYear" className="block text-gray-600 font-medium mb-1">Exp Year</label>
             <input
               type="text"
-              className="form-control"
               id="expYear"
               name="expYear"
               maxLength="4"
               required
               value={cardDetails.expYear}
               onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
             />
           </div>
-          <div className="col">
-            <label htmlFor="expMonth">Exp Month</label>
+          <div>
+            <label htmlFor="expMonth" className="block text-gray-600 font-medium mb-1">Exp Month</label>
             <input
               type="text"
-              className="form-control"
               id="expMonth"
               name="expMonth"
               maxLength="2"
               required
               value={cardDetails.expMonth}
               onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
             />
           </div>
-          <div className="col">
-            <label htmlFor="ccv">CCV</label>
+          <div>
+            <label htmlFor="ccv" className="block text-gray-600 font-medium mb-1">CCV</label>
             <input
               type="password"
-              className="form-control"
               id="ccv"
               name="ccv"
               maxLength="3"
               required
               value={cardDetails.ccv}
               onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
             />
           </div>
         </div>
-        <button type="submit" className="btn btn-primary w-100 mt-4">
+        <button
+          type="submit"
+          className="w-full py-2 mt-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition duration-200"
+        >
           Proceed To Payment
         </button>
         <button
-  type="button"
-  className="btn btn-success w-100 mt-2"
-  onClick={() => window.location.href = '/insurance-claim'}
->
-  Continue with Insurance
-</button>
+          type="button"
+          className="w-full py-2 mt-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition duration-200"
+          onClick={() => window.location.href = '/insurance-claim'}
+        >
+          Continue with Insurance
+        </button>
       </form>
     </div>
   );

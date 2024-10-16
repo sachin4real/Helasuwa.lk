@@ -31,9 +31,7 @@ import AddInventory from "./components/Admin/AddInventory";
 // import AddmitPatient from "./components/Doctor/AdmitPatient";
 // import DoctorProfile from "./components/Doctor/DoctorProfile";
 // import AddChannel from "./components/Doctor/AddChannel";
-import AllPatients from "./components/Doctor/AllPatients";
-import Viewpatient from "./components/Doctor/Viewpatient";
-import AddmitPatient from "./components/Doctor/AddmitPatient";
+
 import InsuranceClaim from "./components/Payment/InsuranceClaim";
 
 import MyPrescriptions from "./pages/Payment/Myprescriptions";
