@@ -33,8 +33,14 @@ import AddInventory from "./components/Admin/AddInventory";
 // import AddChannel from "./components/Doctor/AddChannel";
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
+=======
+import AllPatients from "./components/Doctor/AllPatients";
+import Viewpatient from "./components/Doctor/Viewpatient";
+import AddmitPatient from "./components/Doctor/AddmitPatient";
+>>>>>>> parent of 168a6fe (bootstrap removed)
 import InsuranceClaim from "./components/Payment/InsuranceClaim";
 
 import MyPrescriptions from "./pages/Payment/Myprescriptions";

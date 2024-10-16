@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'bootstrap/dist/css/bootstrap.min.css';
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+import 'bootstrap/dist/css/bootstrap.min.css';
+>>>>>>> parent of 168a6fe (bootstrap removed)
 
 function InsuranceClaim() {
   const [claimDetails, setClaimDetails] = useState({
@@ -54,15 +58,22 @@ function InsuranceClaim() {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div className="container mx-auto mt-8 p-4 bg-gray-50 rounded-lg shadow-md max-w-lg">
       <h3 className="text-xl font-semibold text-gray-700 mb-4">Insurance Claim Form</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
+=======
+    <div className="container mt-4">
+      <h3>Insurance Claim Form</h3>
+      <form onSubmit={handleSubmit} className="p-4 rounded shadow-sm bg-light">
+>>>>>>> parent of 168a6fe (bootstrap removed)
         {/* Basic Information */}
-        <div>
-          <label className="block text-gray-600 font-medium mb-1">First Name</label>
+        <div className="form-group mb-3">
+          <label>First Name</label>
           <input
             type="text"
             name="firstName"
+<<<<<<< HEAD
             className="w-full p-2 border border-gray-300 rounded"
 =======
     <div className="container mt-4">
@@ -76,11 +87,15 @@ function InsuranceClaim() {
             name="firstName"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.firstName}
             onChange={handleChange}
             required
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Last Name</label>
@@ -96,11 +111,20 @@ function InsuranceClaim() {
             name="lastName"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.lastName}
             onChange={handleChange}
             required
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Birth Date</label>
@@ -116,6 +140,14 @@ function InsuranceClaim() {
             name="birthDate"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Birth Date</label>
+          <input
+            type="date"
+            name="birthDate"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.birthDate}
             onChange={handleChange}
             required
@@ -123,6 +155,7 @@ function InsuranceClaim() {
         </div>
 
         {/* Sex Selection */}
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Sex</label>
@@ -152,6 +185,8 @@ function InsuranceClaim() {
               Female
             </label>
 =======
+=======
+>>>>>>> parent of 168a6fe (bootstrap removed)
         <div className="form-group mb-3">
           <label>Sex</label>
           <div>
@@ -171,11 +206,15 @@ function InsuranceClaim() {
               onChange={handleChange}
               required
             /> Female
+<<<<<<< HEAD
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+>>>>>>> parent of 168a6fe (bootstrap removed)
           </div>
         </div>
 
         {/* Relationship to Insured */}
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Relationship to Insured</label>
@@ -189,6 +228,13 @@ function InsuranceClaim() {
             name="relationshipToInsured"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Relationship to Insured</label>
+          <select
+            name="relationshipToInsured"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.relationshipToInsured}
             onChange={handleChange}
             required
@@ -202,6 +248,7 @@ function InsuranceClaim() {
 
         {/* Status */}
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Status</label>
           <select
@@ -214,6 +261,13 @@ function InsuranceClaim() {
             name="status"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Status</label>
+          <select
+            name="status"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.status}
             onChange={handleChange}
             required
@@ -227,6 +281,7 @@ function InsuranceClaim() {
         </div>
 
         {/* Address Fields */}
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Address Line 1</label>
@@ -242,11 +297,20 @@ function InsuranceClaim() {
             name="addressLine1"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Address Line 1</label>
+          <input
+            type="text"
+            name="addressLine1"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.addressLine1}
             onChange={handleChange}
             required
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Address Line 2</label>
@@ -262,10 +326,19 @@ function InsuranceClaim() {
             name="addressLine2"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Address Line 2</label>
+          <input
+            type="text"
+            name="addressLine2"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.addressLine2}
             onChange={handleChange}
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">City</label>
@@ -281,11 +354,20 @@ function InsuranceClaim() {
             name="city"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>City</label>
+          <input
+            type="text"
+            name="city"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.city}
             onChange={handleChange}
             required
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">State/Province</label>
@@ -301,11 +383,20 @@ function InsuranceClaim() {
             name="state"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>State/Province</label>
+          <input
+            type="text"
+            name="state"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.state}
             onChange={handleChange}
             required
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Postal Code</label>
@@ -321,11 +412,20 @@ function InsuranceClaim() {
             name="postalCode"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Postal Code</label>
+          <input
+            type="text"
+            name="postalCode"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.postalCode}
             onChange={handleChange}
             required
           />
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Mobile Number</label>
@@ -341,6 +441,14 @@ function InsuranceClaim() {
             name="mobileNumber"
             className="form-control"
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Mobile Number</label>
+          <input
+            type="text"
+            name="mobileNumber"
+            className="form-control"
+>>>>>>> parent of 168a6fe (bootstrap removed)
             value={claimDetails.mobileNumber}
             onChange={handleChange}
             required
@@ -348,6 +456,7 @@ function InsuranceClaim() {
         </div>
 
         {/* File Upload */}
+<<<<<<< HEAD
 <<<<<<< HEAD
         <div>
           <label className="block text-gray-600 font-medium mb-1">Upload Prescription</label>
@@ -365,6 +474,14 @@ function InsuranceClaim() {
 
         <button type="submit" className="btn btn-primary w-100">Claim</button>
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+        <div className="form-group mb-3">
+          <label>Upload Prescription</label>
+          <input type="file" className="form-control" onChange={handleFileChange} required />
+        </div>
+
+        <button type="submit" className="btn btn-primary w-100">Claim</button>
+>>>>>>> parent of 168a6fe (bootstrap removed)
       </form>
     </div>
   );

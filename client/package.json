@@ -11,11 +11,15 @@
     "axios": "^1.5.1",
 =======
     "axios": "^1.7.7",
+<<<<<<< HEAD
 >>>>>>> parent of dc471a2 (Revert "Merge pull request #9 from sachin4real/Dulan")
 =======
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
 >>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
+=======
+    "bootstrap": "^5.3.3",
+>>>>>>> parent of 168a6fe (bootstrap removed)
     "jspdf": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
