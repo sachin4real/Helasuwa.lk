@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaCalendarAlt, FaUserPlus, FaUserMd, FaUsers, FaDoorOpen } from 'react-icons/fa';
 
 export default function DoctorSidePanel({ setSelectedComponent }) {
   function logout() {
@@ -10,59 +9,47 @@ export default function DoctorSidePanel({ setSelectedComponent }) {
   }
 
   return (
-    <div className="flex flex-col justify-between bg-gradient-to-b from-gray-100 to-blue-100 min-h-screen w-64 p-6 shadow-2xl">
-      {/* Header */}
-      <div className="mb-4"> 
-        <h2 className="text-2xl font-semibold text-blue-700 mb-2">Doctor Panel</h2>
-        <p className="text-gray-600 text-sm">Welcome back, Doctor!</p>
-      </div>
-
+    <div className="flex flex-col justify-between bg-gray-100 min-h-screen w-64 p-6 shadow-lg">
       {/* Menu Items */}
-      <ul className="space-y-2 text-lg">
+      <ul className="space-y-4">
         <li
           onClick={() => setSelectedComponent("channels")}
-          className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
+          className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-sm"
         >
-          <FaCalendarAlt className="mr-3" />
           Appointments Times
         </li>
         <li
           onClick={() => setSelectedComponent("addChannel")}
-          className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
+          className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-sm"
         >
-          <FaUserPlus className="mr-3" />
           Create Appointment Slot
         </li>
         <li
           onClick={() => setSelectedComponent("profile")}
-          className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
+          className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-sm"
         >
-          <FaUserMd className="mr-3" />
           Profile
         </li>
         <li
           onClick={() => setSelectedComponent("allPatients")}
-          className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
+          className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-sm"
         >
-          <FaUsers className="mr-3" />
           Patients
         </li>
         <li
           onClick={() => setSelectedComponent("admitPatient")}
-          className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
+          className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-sm"
         >
-          <FaUserPlus className="mr-3" />
           Admit Patient
         </li>
       </ul>
 
       {/* Logout Button at the Bottom */}
-      <div className="mt-8">
+      <div className="mt-6">
         <button
           onClick={logout}
-          className="w-full px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-105 flex items-center justify-center"
+          className="w-full px-5 py-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-105"
         >
-          <FaDoorOpen className="mr-2" />
           Logout
         </button>
       </div>
