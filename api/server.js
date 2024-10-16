@@ -14,7 +14,6 @@ mongoose
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
-app.use('/uploads', express.static('uploads'));//prescription upload in insurance claim
 
 const patientRouter = require("./routes/patients");
 app.use("/patient", patientRouter);
@@ -56,12 +55,6 @@ app.use("/Order", orderRoutes);
 
 const pharmcyRoutes = require("./routes/pharmacyin");
 app.use("/PharmacyIn", pharmcyRoutes);
-
-const cardRoutes = require('./routes/CardRoutes.js');
-app.use("/card", cardRoutes)
-
-const insuranceRoutes = require('./routes/insuranceRoutes');
-app.use("/insurance", insuranceRoutes);
 
 
 app.listen(process.env.PORT || port, () =>
