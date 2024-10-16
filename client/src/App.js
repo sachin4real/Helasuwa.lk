@@ -33,7 +33,7 @@ import EditRecord from "./components/EditRecord";
 import AddInventory from "./components/Admin/AddInventory";
 import AllPatients from "./components/Doctor/AllPatients";
 import Viewpatient from "./components/Doctor/Viewpatient";
-import AddmitPatient from "./components/Doctor/AddmitPatient";
+import AddmitPatient from "./components/Doctor/AdmitPatient";
 
 
 function App() {
@@ -63,15 +63,15 @@ function App() {
           <Route path="/inventory" element={<AddInventory />} />
           
           {/* doctor */}
-          <Route path="/allpatients" element={<AllPatients />} />
+          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
           <Route path="/viewChannel/:cid" element={<ViewChannel />} />
-          <Route path="/addChannel" element={<AddChannel />} />
           <Route path="/editChannel/:cid" element={<EditChannel />} />
           <Route path="/searchChannels/:date?/:doctor?" element={<SearchChannels />} />
-          <Route path="/doctorProfile" element={<DoctorProfile />} />
-          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
-          <Route path="/viewpatient/:id" element={<Viewpatient />} />
-          <Route path="/addmit" element={<AddmitPatient />} />
+          {/* <Route path="/addChannel" element={<AddChannel />} /> */}
+          {/* <Route path="/doctorProfile" element={<DoctorProfile />} /> */}
+          {/* <Route path="/viewpatient/:id" element={<Viewpatient />} /> */}
+          {/* <Route path="/addmit" element={<AddmitPatient />} /> */}
+          {/* <Route path="/allpatients" element={<AllPatients />} /> */}
         
 
           <Route path="/laboratory" element={<LaboratoryDashboard />} />

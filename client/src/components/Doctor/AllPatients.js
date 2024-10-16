@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-export default function AllPatients() {
+export default function AllPatients({ onViewPatient }) {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8070/patient/")
@@ -24,10 +22,6 @@ export default function AllPatients() {
         setLoading(false);
       });
   }, []);
-
-  const handleViewDetails = (id) => {
-    navigate(`/viewpatient/${id}`);
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center p-8">
@@ -51,8 +45,8 @@ export default function AllPatients() {
                   </tr>
                 </thead>
                 <tbody>
-                  {patients.map((patient, index) => (
-                    <tr key={index} className="border-b last:border-none hover:bg-gray-100">
+                  {patients.map((patient) => (
+                    <tr key={patient._id} className="border-b last:border-none hover:bg-gray-100">
                       <td className="px-6 py-4 text-gray-700">
                         {patient.firstName} {patient.lastName}
                       </td>
@@ -60,7 +54,7 @@ export default function AllPatients() {
                       <td className="px-6 py-4 text-gray-700">{patient.medicalStatus}</td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleViewDetails(patient._id)}
+                          onClick={() => onViewPatient(patient._id)} // Pass patient ID to onViewPatient
                           className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow-md transition duration-200 transform hover:scale-105 hover:from-green-500 hover:to-blue-600"
                           aria-label={`View details for ${patient.firstName} ${patient.lastName}`}
                         >
