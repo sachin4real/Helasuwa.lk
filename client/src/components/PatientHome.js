@@ -105,9 +105,6 @@ const PatientHome = () => {
                   <a href="/records">
                     <li className='nav-element'>My Records</li>
                   </a>
-                  <a href="/myPrescriptions">
-                    <li className='nav-element'>My Prescriptions</li>
-                  </a>
                    
 
                 </ul>
