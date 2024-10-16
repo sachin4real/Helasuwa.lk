@@ -34,7 +34,6 @@ import MyPrescriptions from "./pages/Payment/Myprescriptions";
 // import DoctorProfile from "./components/Doctor/DoctorProfile";
 // import AddChannel from "./components/Doctor/AddChannel";
 
-
 function App() {
   return (
     <div className="App">
@@ -53,8 +52,6 @@ function App() {
           <Route path="/myAppointments" element={<PatientAppointments />} />
           <Route path="/editApt/:aid/:cid" element={<EditAppointment />} />
           <Route path="/makeApt/:cid" element={<MakeAppointment />} />
-       
-
           <Route path="/myPrescriptions" element={<MyPrescriptions />} />
           <Route path="/insurance-claim" element={<InsuranceClaim />} />
 
