@@ -1,79 +1,81 @@
-import React, { useEffect, useState } from "react";
-import "../../styles/dashboard.css";
-import axios from "axios";
-import DoctorChannels from "../../components/Doctor/DoctorChannels";
-import DoctorSidePanel from "../../components/Doctor/DoctorSidePanel";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import DoctorHeader from '../../components/Doctor/DoctorHeader';
+import DoctorSidePanel from '../../components/Doctor/DoctorSidePanel';
+import DoctorChannels from '../../components/Doctor/DoctorChannels';
+import AddChannel from '../../components/Doctor/AddChannel';
+import AdmitPatient from '../../components/Doctor/AdmitPatient';
+import AllPatients from '../../components/Doctor/AllPatients';
+import DoctorProfile from '../../components/Doctor/DoctorProfile';
+import ViewPatient from '../../components/Doctor/Viewpatient'; // Import ViewPatient component
 
 const DoctorDashboard = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [doctor, setDoctor] = useState([]);
-  const [name, setName] = useState("");
-  const [id, setId] = useState("");
-
-  const [maxPatients, setMaxPatients] = useState(0);
-  const [startDateTime, setStartDateTime] = useState("");
-
-  const [channels, setChannels] = useState([]);
+  const [selectedComponent, setSelectedComponent] = useState('channels');
+  const [selectedPatientId, setSelectedPatientId] = useState(null); // Track selected patient ID
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    // setToken(token)
-    console.log(token);
-
-    getUser();
-    localStorage.setItem("previous", true);
-    if (token == null) {
-      window.location.href = "/";
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/'); // Redirect to login if no token
     } else {
       getUser();
     }
+    localStorage.setItem('previous', true);
   }, []);
 
   const getUser = async () => {
-    await axios
-      .get("http://localhost:8070/doctor/check/", {
+    try {
+      const response = await axios.get('http://localhost:8070/doctor/check/', {
         headers: {
-          Authorization: `${localStorage.getItem("token")}`,
+          Authorization: `${localStorage.getItem('token')}`,
         },
-      })
-      .then((res) => {
-        setEmail(res.data.doctor.email);
-        setPassword(res.data.doctor.password);
-        setName(res.data.doctor.name);
-        setDoctor(res.data.doctor);
-        setId(res.data.doctor._id);
-        console.log(res.data.doctor._id);
-      })
-      .catch((err) => {
-        localStorage.removeItem("token");
-        window.location.href = "/";
       });
+      setDoctor(response.data.doctor);
+    } catch (error) {
+      localStorage.removeItem('token');
+      navigate('/'); // Redirect to login if fetching user fails
+    }
   };
 
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("type");
-    localStorage.setItem("previous", false);
-    alert("You have logged out");
-    window.location.href = "/";
-  }
+
+
+  const renderContent = () => {
+    switch (selectedComponent) {
+      case 'channels':
+        return <DoctorChannels id={doctor._id} />;
+      case 'addChannel':
+        return <AddChannel />;
+      case 'admitPatient':
+        return <AdmitPatient />;
+      case 'allPatients':
+        return (
+          <AllPatients onViewPatient={(patientId) => {
+            setSelectedPatientId(patientId); // Set selected patient ID
+            setSelectedComponent('viewPatient'); // Switch to ViewPatient component
+          }} />
+        );
+      case 'profile':
+        return <DoctorProfile />;
+      case 'viewPatient':
+        return <ViewPatient id={selectedPatientId} />; // Pass selected patient ID to ViewPatient
+      default:
+        return <DoctorChannels id={doctor._id} />;
+    }
+  };
+
   return (
-    <div> 
-      <DoctorHeader/>
-
-      <div className="main-container">
-        <DoctorSidePanel/>
-    
-
-        <div className="content-container">
-          <div>
-            
-            <DoctorChannels id={doctor._id} />
-          </div>
+    <div className="min-h-screen flex flex-col">
+      <DoctorHeader />
+      <div className="flex flex-1">
+        <DoctorSidePanel setSelectedComponent={setSelectedComponent} />
+        <div className="flex-1 bg-gray-100 p-6">
+          {renderContent()}
         </div>
       </div>
+ 
     </div>
   );
 };
