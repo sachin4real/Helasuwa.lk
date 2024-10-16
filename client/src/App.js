@@ -32,12 +32,21 @@ import AddInventory from "./components/Admin/AddInventory";
 // import DoctorProfile from "./components/Doctor/DoctorProfile";
 // import AddChannel from "./components/Doctor/AddChannel";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 import InsuranceClaim from "./components/Payment/InsuranceClaim";
 
 import MyPrescriptions from "./pages/Payment/Myprescriptions";
 >>>>>>> parent of dc471a2 (Revert "Merge pull request #9 from sachin4real/Dulan")
+=======
+import AllPatients from "./components/Doctor/AllPatients";
+import Viewpatient from "./components/Doctor/Viewpatient";
+import AddmitPatient from "./components/Doctor/AddmitPatient";
+import InsuranceClaim from "./components/Payment/InsuranceClaim";
+
+import MyPrescriptions from "./pages/Payment/Myprescriptions";
+>>>>>>> parent of 4d31801 (Revert "Merge pull request #7 from sachin4real/Dulan")
 
 
 function App() {
@@ -58,6 +67,12 @@ function App() {
           <Route path="/myAppointments" element={<PatientAppointments />} />
           <Route path="/editApt/:aid/:cid" element={<EditAppointment />} />
           <Route path="/makeApt/:cid" element={<MakeAppointment />} />
+
+          <Route path="/myPrescriptions" element={<MyPrescriptions />} />
+          <Route path="/insurance-claim" element={<InsuranceClaim />} />
+
+
+          
        
 
 
