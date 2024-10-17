@@ -3,7 +3,7 @@ import axios from "axios";
 import RowPrescriptionView from '../../components/Payment/RowPrescriptionView';
 import PrescriptionDetails from '../../components/Payment/PrescriptionDetails';
 import PatientSideBar from '../../components/PatientSideBar';
-import DoctorHeader from '../../components/Doctor/DoctorHeader';
+import Patientheader from '../../components/Payment/Patientheader.js';
 
 const MyPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -55,11 +55,11 @@ const MyPrescriptions = () => {
 
   return (
     <div>
-      <DoctorHeader />
+      <Patientheader />
       <div className="flex">
         <PatientSideBar />
         
-        <div className="ml-[240px] p-8 flex-1">
+        <div className="ml-[220px] mt-[80px] p-8 flex-1 bg-white shadow-lg rounded-lg">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">My Prescriptions</h1>
 
           <div className="mb-4">
