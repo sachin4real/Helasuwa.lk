@@ -1,41 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DashboardHeader from "../DashboardHeader";
-import SideBar from "../SideBar";
-
+import SideNav from "./SideNav"; // Assuming you are using the SideNav component for navigation
 import AddPatientReport from "../AddPatientReport";
-import AddLabTest from "../AddLabTest";
-import LabTests from "../LabTests";
+import AddLabTest from "./AddLabTest";
+import LabTests from "./LabTests";
 
 const LaboratoryDashboard = () => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <DashboardHeader />
 
-      <div className="main-container">
-      <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/laboratory">
-              <li className="nav-element active-element">Laboratory</li>
-            </a>
-            <a href="/staff">
-              <li className="nav-element">Staff Management</li>
-            </a>
-            <a href="/doctor">
-              <li className="nav-element">Add Doctor</li>
-            </a>
-            <a href="/staffProfile">
-              <li className="nav-element">Profile</li>
-            </a>
-            <a href="/inventory">
-              <li className="nav-element">Inventory</li>
-            </a>
-          </ul>
-        </div>
+      <div className="flex flex-col md:flex-row flex-grow">
+        {/* Sidebar */}
+        <SideNav /> {/* Use the SideNav component here */}
 
-        <div className="content-container">
-          <AddLabTest />
+        {/* Main Content */}
+        <div className="flex-grow p-6 space-y-6">
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <AddLabTest />
+          </div>
 
-          <LabTests />
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <LabTests />
+          </div>
         </div>
       </div>
     </div>

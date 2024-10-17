@@ -1,40 +1,29 @@
 import React from "react";
 import DashboardHeader from "../DashboardHeader";
-import SideBar from "../SideBar";
-import AddDoctor from "./AddDoctor";
-import AddStaff from "../AddStaff";
-import AllStaff from "../AllStaff";
+import SideNav from "./SideNav"; // Assuming SideNav is the updated sidebar component
+import AddStaff from "./AddStaff";
+import AllStaff from "./AllStaff";
 
 const StaffDashboard = () => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <DashboardHeader />
 
-      <div className="main-container">
-      <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/laboratory">
-              <li className="nav-element">Laboratory</li>
-            </a>
-            <a href="/staff">
-              <li className="nav-element active-element">Staff Management</li>
-            </a>
-            <a href="/doctor">
-              <li className="nav-element">Add Doctor</li>
-            </a>
-            <a href="/staffProfile">
-              <li className="nav-element">Profile</li>
-            </a>
-            <a href="/inventory">
-              <li className="nav-element">Inventory</li>
-            </a>
-          </ul>
-        </div>
+      <div className="flex flex-col md:flex-row flex-grow">
+        {/* Sidebar */}
+        <SideNav /> {/* Use the consistent SideNav component here */}
 
-        <div className='content-container'>
-         <AddStaff />
+        {/* Main Content */}
+        <div className="flex-grow p-6 space-y-6">
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <h1 className="text-2xl font-bold text-center mb-4">Add Staff</h1>
+            <AddStaff />
+          </div>
 
-         <AllStaff />
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <h1 className="text-2xl font-bold text-center mb-4">All Staff</h1>
+            <AllStaff />
+          </div>
         </div>
       </div>
     </div>
