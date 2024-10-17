@@ -1,4 +1,3 @@
-// models/InsuranceClaim.js
 const mongoose = require('mongoose');
 
 const insuranceClaimSchema = new mongoose.Schema({
@@ -8,13 +7,15 @@ const insuranceClaimSchema = new mongoose.Schema({
   sex: { type: String, required: true },
   relationshipToInsured: { type: String, required: true },
   status: { type: String, required: true },
+  policyNo: { type: Number, required: true },
   addressLine1: { type: String, required: true },
-  addressLine2: { type: String },
   city: { type: String, required: true },
-  state: { type: String, required: true },
   postalCode: { type: String, required: true },
   mobileNumber: { type: String, required: true },
-  prescriptionFilePath: { type: String }, // Path to uploaded file
-});
+  claimType: { type: String, required: true },
+  reason: { type: String, required: true },
+  prescriptionFilePath: { type: String },
+  claimId: { type: String, unique: true, default: () => `CLAIM-${Date.now()}` },
+}, { timestamps: true }); // This adds createdAt and updatedAt timestamps
 
 module.exports = mongoose.model('InsuranceClaim', insuranceClaimSchema);

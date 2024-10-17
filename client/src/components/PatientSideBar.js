@@ -29,6 +29,12 @@ const PatientSideBar = () => {
             My Prescriptions
           </li>
         </a>
+        <a href="/myClaims">
+          <li className="w-full py-3 px-5 my-2 text-lg font-medium text-black bg-[#f0ffff] hover:bg-gradient-to-r from-[#0E0F35] to-[#6441a5] hover:text-white transition-all duration-300 rounded-md shadow-lg hover:translate-x-1">
+            My Claims
+          </li>
+        </a>
+        
       </ul>
     </div>
   );
