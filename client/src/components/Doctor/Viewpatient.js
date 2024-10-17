@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PatientRowReports from "./PatientRowReports";
 
-export default function ViewPatient({ id }) { // Accept id as a prop
+export default function ViewPatient({ id }) {
   const [patient, setPatient] = useState(null);
+  const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (!id) return;
 
+    // Fetch patient details
     axios
       .get(`http://localhost:8070/patient/get/${id}`)
       .then((response) => {
@@ -19,7 +23,28 @@ export default function ViewPatient({ id }) { // Accept id as a prop
         setError("Failed to fetch patient details");
         setLoading(false);
       });
+
+    // Fetch patient reports
+    fetchReports(id);
   }, [id]);
+
+  // Function to fetch reports based on patient ID and query
+  const fetchReports = (patientId) => {
+    axios
+      .get(`http://localhost:8070/report/patient/search/${patientId}?query=${query}`)
+      .then((res) => {
+        setReports(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reports:", error);
+      });
+  };
+
+  // Function to handle search query updates
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+    fetchReports(id);  // Fetch reports based on updated query
+  };
 
   if (loading) {
     return <p className="text-center text-gray-500">Loading...</p>;
@@ -34,41 +59,52 @@ export default function ViewPatient({ id }) { // Accept id as a prop
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-10">
-      
-      <div className="w-full max-w-2xl bg-white p-8 shadow-lg rounded-lg">
+    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
+      <div className="w-full max-w-4xl bg-white p-10 shadow-lg rounded-lg">
         
+        {/* Patient Profile Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Patient Profile</h2>
-          <div className="space-y-4">
-            <p className="text-lg"><span className="font-medium text-gray-600">Name:</span> {patient.firstName} {patient.lastName}</p>
-            <p><b className="font-medium text-gray-600">Date of birth:</b> {patient.dob ? new Date(patient.dob).toDateString() : "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Email:</b> {patient.email || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Phone no:</b> {patient.phoneNo || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Gender:</b> {patient.gender || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Height:</b> {patient.height ? `${patient.height} cm` : "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Weight:</b> {patient.weight ? `${patient.weight} kg` : "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Blood Group:</b> {patient.bloodGroup || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Medical Status:</b> {patient.medicalStatus || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Allergies:</b> {patient.allergies || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Emergency No:</b> {patient.emergencyPhone || "N/A"}</p>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Patient Profile</h2>
+          <div className="space-y-2 text-gray-700">
+            <p><span className="font-medium">Name:</span> {patient.firstName} {patient.lastName}</p>
+            <p><span className="font-medium">Date of Birth:</span> {patient.dob ? new Date(patient.dob).toDateString() : "N/A"}</p>
+            <p><span className="font-medium">Email:</span> {patient.email || "N/A"}</p>
+            <p><span className="font-medium">Phone No:</span> {patient.phoneNo || "N/A"}</p>
+            <p><span className="font-medium">Gender:</span> {patient.gender || "N/A"}</p>
           </div>
         </div>
 
+        {/* Reports Section */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Guardian Details</h2>
-          <div className="space-y-4">
-            <p><b className="font-medium text-gray-600">Guardian Name:</b> {patient.guardianName || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Guardian Phone:</b> {patient.guardianPhone || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Guardian NIC:</b> {patient.guardianNIC || "N/A"}</p>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Insurance Details</h2>
-          <div className="space-y-4">
-            <p><b className="font-medium text-gray-600">Insurance No:</b> {patient.insuranceNo || "N/A"}</p>
-            <p><b className="font-medium text-gray-600">Insurance Company:</b> {patient.insuranceCompany || "N/A"}</p>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Reports</h2>
+          <input
+            type="text"
+            value={query}
+            onChange={handleSearch}
+            className="w-full p-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search reports"
+          />
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse bg-white shadow rounded-lg">
+              <thead>
+                <tr className="bg-blue-500 text-white">
+                  <th className="px-4 py-2 font-semibold">Report ID</th>
+                  <th className="px-4 py-2 font-semibold">Date</th>
+                  <th className="px-4 py-2 font-semibold">Test ID</th>
+                  <th className="px-4 py-2 font-semibold">Details</th>
+                  <th className="px-4 py-2 font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reports.length > 0 ? (
+                  reports.map((item) => <PatientRowReports key={item._id} item={item} />)
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center text-gray-500 py-4">No reports found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

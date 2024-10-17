@@ -63,7 +63,7 @@ const AddChannel = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center p-8">
       <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">Create Channeling Time</h1>
+        <h1 className="text-3xl font-semibold  mb-8 text-center">Create Channeling Time</h1>
         <form onSubmit={createChannel} className="space-y-6 bg-white p-8 rounded-lg shadow-lg">
           <div>
             <label className="block text-gray-700 mb-2">Doctor Name</label>

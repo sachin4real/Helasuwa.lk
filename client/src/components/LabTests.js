@@ -65,7 +65,7 @@ const LabTests = () => {
           <TestRow item={item} />
         ))}
       </table>
-    </div>
+    </div> 
   );
 };
 

@@ -37,7 +37,7 @@ export default function AllPatients({ onViewPatient }) {
             ) : (
               <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
                 <thead>
-                  <tr className="bg-blue-500 text-white">
+                  <tr className=" bg-gradient-to-r from-blue-700 to-indigo-800 ">
                     <th className="px-6 py-4 text-left font-semibold">Name</th>
                     <th className="px-6 py-4 text-left font-semibold">Gender</th>
                     <th className="px-6 py-4 text-left font-semibold">Medical Status</th>
@@ -46,7 +46,7 @@ export default function AllPatients({ onViewPatient }) {
                 </thead>
                 <tbody>
                   {patients.map((patient) => (
-                    <tr key={patient._id} className="border-b last:border-none hover:bg-gray-100">
+                    <tr key={patient._id} className="border-b bg-gradient-to-b from-gray-100 to-blue-100">
                       <td className="px-6 py-4 text-gray-700">
                         {patient.firstName} {patient.lastName}
                       </td>
