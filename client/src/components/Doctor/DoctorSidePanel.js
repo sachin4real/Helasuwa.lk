@@ -18,7 +18,7 @@ export default function DoctorSidePanel({ setSelectedComponent }) {
       </div>
 
       {/* Menu Items */}
-      <ul className="space-y-2 text-lg mb-6"> {/* Added margin-bottom here */}
+      <ul className="space-y-2 text-lg mb-6">
         <li
           onClick={() => setSelectedComponent("channels")}
           className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
@@ -57,7 +57,7 @@ export default function DoctorSidePanel({ setSelectedComponent }) {
       </ul>
 
       {/* Logout Button at the Bottom */}
-      <div className="mt-auto"> {/* Adjusted to align the button at the bottom */}
+      <div className="mt-auto">
         <button
           onClick={logout}
           className="w-full px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-105 flex items-center justify-center"

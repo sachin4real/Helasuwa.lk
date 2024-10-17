@@ -8,10 +8,10 @@ import AddChannel from '../../components/Doctor/AddChannel';
 import AdmitPatient from '../../components/Doctor/AdmitPatient';
 import AllPatients from '../../components/Doctor/AllPatients';
 import DoctorProfile from '../../components/Doctor/DoctorProfile';
-import ViewPatient from '../../components/Doctor/Viewpatient'; // Import ViewPatient component
+import ViewPatient from '../../components/Doctor/Viewpatient';
 
 const DoctorDashboard = () => {
-  const [doctor, setDoctor] = useState([]);
+  const [doctor, setDoctor] = useState(null); // Initialized as null for loading state
   const [selectedComponent, setSelectedComponent] = useState('channels');
   const [selectedPatientId, setSelectedPatientId] = useState(null); // Track selected patient ID
   const navigate = useNavigate();
@@ -40,12 +40,10 @@ const DoctorDashboard = () => {
     }
   };
 
-
-
   const renderContent = () => {
     switch (selectedComponent) {
       case 'channels':
-        return <DoctorChannels id={doctor._id} />;
+        return <DoctorChannels id={doctor?._id} />;
       case 'addChannel':
         return <AddChannel />;
       case 'admitPatient':
@@ -62,20 +60,20 @@ const DoctorDashboard = () => {
       case 'viewPatient':
         return <ViewPatient id={selectedPatientId} />; // Pass selected patient ID to ViewPatient
       default:
-        return <DoctorChannels id={doctor._id} />;
+        return <DoctorChannels id={doctor?._id} />;
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      <DoctorHeader />
+      {/* Pass doctor name to DoctorHeader */}
+      <DoctorHeader doctorName={doctor ? doctor.name : ''} /> 
       <div className="flex flex-1">
         <DoctorSidePanel setSelectedComponent={setSelectedComponent} />
         <div className="flex-1 bg-gray-100 p-6">
           {renderContent()}
         </div>
       </div>
- 
     </div>
   );
 };
