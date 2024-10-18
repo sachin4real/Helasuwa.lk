@@ -1,29 +1,22 @@
-// make appointment form page when click make an appointment 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import PatientHeader from "./PatientHeader";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "../../src/components/Payment/Patientheader"; // Update the path if necessary
+import PatientSideBar from "../../src/components/PatientSideBar"; // Update the path if necessary
 
-const MakeAppointment = (props) => {
+const MakeAppointment = () => {
   let { cid } = useParams();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [patient, setPatient] = useState("");
-
   const [channel, setChannel] = useState([]);
   const [notes, setNotes] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [contact, setContact] = useState(null);
   const [gender, setGender] = useState(null);
-
   const [doctor, setDoctor] = useState("");
   const [startDateTime, setStartDateTime] = useState("");
-  const [maxPatients, setMaxPatients] = useState("");
   const [drName, setDrName] = useState("");
-  const [completed, setCompleted] = useState("");
-  const [patients, setPatients] = useState(0);
 
   useEffect(() => {
     getUser();
@@ -37,20 +30,11 @@ const MakeAppointment = (props) => {
         setChannel(res.data.Channel);
         setDoctor(res.data.Channel.doctor);
         setStartDateTime(res.data.Channel.startDateTime);
-        //   setMaxPatients(res.data.channel.maxPatients);
         setDrName(res.data.Channel.drName);
-        setCompleted(res.data.Channel.completed);
-
-        console.log(res.data.Channel);
       })
       .catch((err) => {
         alert(err.message);
       });
-  };
-
-  const validatePhone = (phn) => {
-    const phoneNumberPattern = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
-    return phoneNumberPattern.test(phn);
   };
 
   function getUser() {
@@ -62,10 +46,7 @@ const MakeAppointment = (props) => {
       })
       .then((res) => {
         setEmail(res.data.patient.email);
-        setPassword(res.data.patient.password);
         setPatient(res.data.patient._id);
-
-        console.log(res.data.patient.email);
       })
       .catch((err) => {
         localStorage.removeItem("token");
@@ -73,9 +54,13 @@ const MakeAppointment = (props) => {
       });
   }
 
+  const validatePhone = (phn) => {
+    const phoneNumberPattern = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+    return phoneNumberPattern.test(phn);
+  };
+
   function makeApt(e) {
     e.preventDefault();
-
     if (age >= 0) {
       if (validatePhone(contact)) {
         const newApt = {
@@ -96,78 +81,53 @@ const MakeAppointment = (props) => {
             alert(err);
           });
       } else {
-        alert("Invalid phone Number");
+        alert("Invalid phone number");
       }
     } else {
-      alert("Age should be 0 or greater than zero");
+      alert("Age should be 0 or greater");
     }
   }
+
   return (
     <div>
-      <DashboardHeader />
+      {/* Updated header */}
+      <PatientHeader />
 
-      <div className="main-container">
-        <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/patientHome ">
-              <li className="nav-element active-element">Home</li>
-            </a>
-            <a href="/myAppointments">
-              <li className="nav-element">My Appointments</li>
-            </a>
+      <div className="flex">
+        {/* Updated sidebar */}
+        <PatientSideBar />
 
-            <a href="/patientProfile">
-              <li className="nav-element">Profile</li>
-            </a>
+        <div className="ml-[220px] mt-[80px] p-8 flex-1 bg-white shadow-lg rounded-lg">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Make an Appointment</h1>
 
-            <a href="/records">
-              <li className="nav-element">My Records</li>
-            </a>
-          </ul>
-        </div>
+          <h4>Channeling Doctor: {channel.drName}</h4>
+          <h4>Channeling Date and Time: {new Date(channel.startDateTime).toString()}</h4>
 
-        <div className="contetn-container">
-          <h1 className="heading-channels">Make an Appointment</h1>
-
-          <h4>Channeling Doctor - {channel.drName}</h4>
-          <h4>
-            Channeling Date and Time -{" "}
-            {new Date(channel.startDateTime).toString()}
-          </h4>
-
-          <form action="" onSubmit={makeApt}>
+          <form onSubmit={makeApt}>
             <input
               className="apt-inputs"
               type="text"
               placeholder="Patient Name"
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />{" "}
+              onChange={(e) => setName(e.target.value)}
+            />
             <br /> <br />
             <input
               className="apt-inputs"
-              type="Number"
+              type="number"
               placeholder="Patient Age"
-              onChange={(e) => {
-                setAge(e.target.value);
-              }}
-            />{" "}
+              onChange={(e) => setAge(e.target.value)}
+            />
             <br /> <br />
             <input
               className="apt-inputs"
-              type="Number"
+              type="number"
               placeholder="Patient Contact No"
-              onChange={(e) => {
-                setContact(e.target.value);
-              }}
-            />{" "}
+              onChange={(e) => setContact(e.target.value)}
+            />
             <br /> <br />
             <select
               className="apt-inputs"
-              onChange={(e) => {
-                setGender(e.target.value);
-              }}
+              onChange={(e) => setGender(e.target.value)}
             >
               <option value="">Gender</option>
               <option value="Male">Male</option>
@@ -177,18 +137,13 @@ const MakeAppointment = (props) => {
             <textarea
               className="apt-inputs"
               placeholder="Any Special Notes"
-              name=""
-              id=""
+              onChange={(e) => setNotes(e.target.value)}
               cols="30"
               rows="10"
-              onChange={(e) => {
-                setNotes(e.target.value);
-              }}
-            ></textarea>{" "}
-            <br />
-            <br />
+            />
+            <br /> <br />
             <button className="btn-makeApt" type="submit">
-              Make appointment
+              Make Appointment
             </button>
           </form>
         </div>
