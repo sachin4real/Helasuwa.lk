@@ -5,7 +5,7 @@ import DoctorHeader from '../../components/Doctor/DoctorHeader';
 import DoctorSidePanel from '../../components/Doctor/DoctorSidePanel';
 import DoctorChannels from '../../components/Doctor/DoctorChannels';
 import AddChannel from '../../components/Doctor/AddChannel';
-import AdmitPatient from '../../components/Doctor/AdmitPatient';
+import AddPatinetRecord from '../../components/Doctor/AddPatinetRecord';
 import AllPatients from '../../components/Doctor/AllPatients';
 import DoctorProfile from '../../components/Doctor/DoctorProfile';
 import ViewPatient from '../../components/Doctor/Viewpatient';
@@ -46,8 +46,8 @@ const DoctorDashboard = () => {
         return <DoctorChannels id={doctor?._id} />;
       case 'addChannel':
         return <AddChannel />;
-      case 'admitPatient':
-        return <AdmitPatient />;
+      case 'addPatinetRecord':
+        return <AddPatinetRecord />;
       case 'allPatients':
         return (
           <AllPatients onViewPatient={(patientId) => {
