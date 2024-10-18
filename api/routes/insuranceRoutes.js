@@ -39,7 +39,7 @@ const sendClaimEmail = async (patientEmail) => {
         from: "helasuwa@zohomail.com", 
         to: patientEmail, 
         subject: "Insurance Claim Request Received", 
-        text: "Hello, Your insurance claim request has been received and is being processed. The insurance company will review your claim and inform you of further details shortly.", // Plain text body
+        text: "Hello,\n Your insurance claim request has been received and is being processed. The insurance company will review your claim and inform you of further details shortly.", // Plain text body
     };
 
     try {
@@ -108,7 +108,7 @@ router.post('/', upload.single('prescription'), async (req, res) => {
 
     // Send confirmation email to the patient
     if (patient.email) {
-      await sendClaimEmail(patient.email); // Send email to the patient's email address
+      await sendClaimEmail(patient.email); 
     }
 
     res.status(201).json({
