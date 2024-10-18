@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import DashboardHeader from "../DashboardHeader";
-import SideBar from "../SideBar";
+import SideNav from "./SideNav"; // Assuming you have the SideNav component from before
 
 const AddInventory = () => {
   const [itemId, setItemId] = useState("");
@@ -31,71 +31,53 @@ const AddInventory = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <DashboardHeader />
 
-      <div className="main-container">
-        <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/laboratory">
-              <li className="nav-element">Laboratory</li>
-            </a>
-            <a href="/staff">
-              <li className="nav-element">Staff Management</li>
-            </a>
-            <a href="/doctor">
-              <li className="nav-element">Add Doctor</li>
-            </a>
-            <a href="/staffProfile">
-              <li className="nav-element">Profile</li>
-            </a>
-            <a href="/inventory">
-              <li className="nav-element active-element">Inventory</li>
-            </a>
-          </ul>
-        </div>
+      <div className="flex flex-col md:flex-row flex-grow">
+        {/* Sidebar */}
+        <SideNav /> {/* Include the SideNav component here */}
 
-        <div className="content">
-          <div className="add-inventory-container">
-            <form onSubmit={addInventory}>
-              <h1>Add Inventory Item</h1>
+        {/* Main Content */}
+        <div className="flex-grow p-6">
+          <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-8">
+            <h1 className="text-2xl font-bold text-center mb-6">Add Inventory Item</h1>
+            <form onSubmit={addInventory} className="space-y-4">
               <input
-                className="add-inventory-inputs"
                 type="text"
                 placeholder="Item ID"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setItemId(e.target.value)}
               />
-              <br />
               <input
-                className="add-inventory-inputs"
                 type="text"
                 placeholder="Item Name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setItemName(e.target.value)}
               />
-              <br />
               <input
-                className="add-inventory-inputs"
                 type="text"
                 placeholder="Category"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setCategory(e.target.value)}
               />
-              <br />
               <input
-                className="add-inventory-inputs"
                 type="number"
                 placeholder="Quantity"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setQuantity(e.target.value)}
               />
-              <br />
               <input
-                className="add-inventory-inputs"
                 type="number"
                 placeholder="Price"
                 step="0.01"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setPrice(e.target.value)}
               />
-              <br />
-              <button type="submit" id="add-inventory-button">
+              <button
+                type="submit"
+                className="w-full py-2 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg hover:opacity-90"
+              >
                 Add Inventory
               </button>
             </form>
