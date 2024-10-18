@@ -23,7 +23,7 @@ export default function PrescriptionDetails({ prescription, onBack }) {
     
         // Create a new image object
         const logo = new Image();
-        logo.src = "/images/Hospital-logo-W.png"; // Correct path to your logo image
+        logo.src = "/images/Hospital-logo-W.png"; 
     
         // Wait for the image to load before generating the PDF
         logo.onload = function () {
@@ -47,11 +47,11 @@ export default function PrescriptionDetails({ prescription, onBack }) {
             doc.text(formattedDate, margin, 60);
             doc.text(splitText, margin, 70);
     
-            // Add the total amount to the PDF
+            
             const totalAmount = calculateTotalAmount();
             doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, margin, 90 + splitText.length * 10);
     
-            // Save the document with a unique name based on prescription ID
+
             doc.save(`Prescription-${prescription._id}.pdf`);
         };
     
@@ -114,7 +114,7 @@ export default function PrescriptionDetails({ prescription, onBack }) {
                         {/* Render CardPayment Component Here */}
                         <CardPayment />
 
-                        {/* Close button */}
+
                         <button
                             onClick={() => setShowPaymentModal(false)}
                             className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
