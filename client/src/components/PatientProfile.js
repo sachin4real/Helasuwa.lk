@@ -1,8 +1,9 @@
-import PatientHeader from "./PatientHeader";
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "./Payment/Patientheader";
+import PatientSideBar from "./PatientSideBar";
 
 const PatientProfile = () => {
 

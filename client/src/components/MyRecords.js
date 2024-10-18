@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "./Payment/Patientheader";
 import PatientSideBar from "../components/PatientSideBar";
 import MyReports from "./MyReports";
 import AddRecord from "./AddRecord";

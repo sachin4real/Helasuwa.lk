@@ -1,6 +1,8 @@
-import React from "react";
+
 import SingleChannel from "./SingleChannel";
 import axios from "axios";
+import React, { useState } from 'react'; // Import useState
+
 
 const AllChannels = ({ channels }) => {
   const [channelsa, setChannels] = useState([]);

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import PatientHeader from "./PatientHeader";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "./Payment/Patientheader";
+import PatientSideBar from "./PatientSideBar";
+
 
 const EditAppointment = (props) => {
   let { aid, cid } = useParams();
