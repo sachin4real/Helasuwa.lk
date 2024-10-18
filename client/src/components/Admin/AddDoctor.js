@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AllDoctors from "../AllDoctors";
+import AllDoctors from "./AllDoctors";
 import DashboardHeader from "../DashboardHeader";
-import SideBar from "../SideBar";
+import SideNav from "./SideNav"; // Import SideNav component
 
 const AddDoctor = () => {
   const [name, setName] = useState("");
@@ -15,13 +15,7 @@ const AddDoctor = () => {
 
   const addDoctor = async (e) => {
     e.preventDefault();
-    const newDoctor = {
-      name,
-      email,
-      password,
-      specialization,
-      qualifications,
-    };
+    const newDoctor = { name, email, password, specialization, qualifications };
 
     axios
       .post(`http://localhost:8070/doctor/add`, newDoctor)
@@ -34,85 +28,56 @@ const AddDoctor = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <DashboardHeader />
 
-      <div className="main-container">
-      <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/laboratory">
-              <li className="nav-element">Laboratory</li>
-            </a>
-            <a href="/staff">
-              <li className="nav-element">Staff Management</li>
-            </a>
-            <a href="/doctor">
-              <li className="nav-element active-element">Add Doctor</li>
-            </a>
-            <a href="/staffProfile">
-              <li className="nav-element">Profile</li>
-            </a>
-            <a href="/inventory">
-              <li className="nav-element">Inventory</li>
-            </a>
-          </ul>
-        </div>
+      <div className="flex flex-col md:flex-row flex-grow">
+        {/* Sidebar */}
+        <SideNav /> {/* Use the new SideNav component here */}
 
-        <div className="content">
-          <div className="add-doctor-container" onSubmit={addDoctor}>
-            <form action="">
-              <h1>Add Doctor</h1>
+        {/* Main Content */}
+        <div className="flex-grow p-6">
+          <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-8">
+            <h1 className="text-2xl font-bold text-center mb-6">Add Doctor</h1>
+            <form onSubmit={addDoctor} className="space-y-4">
               <input
-                className="add-doctor-inputs"
                 type="text"
                 placeholder="Name"
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />{" "}
-              <br />
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setName(e.target.value)}
+              />
               <input
-                className="add-doctor-inputs"
                 type="email"
                 placeholder="Email"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />{" "}
-              <br />
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setEmail(e.target.value)}
+              />
               <input
-                className="add-doctor-inputs"
                 type="password"
-                placeholder="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />{" "}
-              <br />
+                placeholder="Password"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <input
-                className="add-doctor-inputs"
                 type="text"
                 placeholder="Specialization"
-                onChange={(e) => {
-                  setSpecialization(e.target.value);
-                }}
-              />{" "}
-              <br />
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setSpecialization(e.target.value)}
+              />
               <input
-                className="add-doctor-inputs"
                 type="text"
-                placeholder="qualifications"
-                onChange={(e) => {
-                  setQualifications(e.target.value);
-                }}
-              />{" "}
-              <br />
-              <button type="submit" id="add-doctor-button">
+                placeholder="Qualifications"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setQualifications(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="w-full py-2 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg hover:opacity-90"
+              >
                 Add Doctor
               </button>
             </form>
           </div>
-
           <AllDoctors />
         </div>
       </div>
