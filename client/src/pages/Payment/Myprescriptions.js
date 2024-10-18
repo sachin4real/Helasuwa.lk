@@ -3,8 +3,7 @@ import axios from "axios";
 import RowPrescriptionView from '../../components/Payment/RowPrescriptionView';
 import PrescriptionDetails from '../../components/Payment/PrescriptionDetails';
 import PatientSideBar from '../../components/PatientSideBar';
-import DashboardHeader from '../../components/DashboardHeader';
-
+import Patientheader from '../../components/Payment/PatientHeader.js';
 
 const MyPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -56,53 +55,56 @@ const MyPrescriptions = () => {
 
   return (
     <div>
-      <DashboardHeader />
-    <div className="main-dashboard-container">
-      <PatientSideBar />
+      <Patientheader />
+      <div className="flex">
+        <PatientSideBar />
+        
+        <div className="ml-[220px] mt-[80px] p-8 flex-1 bg-white shadow-lg rounded-lg">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">My Prescriptions</h1>
 
-      <div className="dashboard-content">
-        <h1 className="header-topic">My Prescriptions</h1>
+          <div className="mb-4">
+            <input
+              type="text"
+              onKeyUp={getSearch}
+              onKeyDown={getSearch}
+              className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+              placeholder="Search for a prescription"
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
 
-        <div className="search-container">
-          <input
-            type="text"
-            onKeyUp={getSearch}
-            onKeyDown={getSearch}
-            className="search-tests-input"
-            placeholder="Search"
-            onChange={(e) => setQuery(e.target.value)}
-          />
+          {selectedPrescription ? (
+            <PrescriptionDetails
+              prescription={selectedPrescription}
+              onBack={() => setSelectedPrescription(null)}
+            />
+          ) : (
+            <div className="overflow-auto rounded-lg shadow-lg">
+              <table className="min-w-full bg-white border border-gray-200">
+                <thead>
+                  <tr className="bg-blue-600 text-white">
+                    <th className="py-3 px-5 text-left font-semibold">Prescription ID</th>
+                    <th className="py-3 px-5 text-left font-semibold">Appointment ID</th>
+                    <th className="py-3 px-5 text-left font-semibold">Date</th>
+                    <th className="py-3 px-5 text-left font-semibold">Prescription</th>
+                    <th className="py-3 px-5 text-left font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {prescriptions.map((item) => (
+                    <RowPrescriptionView
+                      key={item._id}
+                      item={item}
+                      onClick={() => setSelectedPrescription(item)}
+                      className="hover:bg-gray-100 transition duration-200"
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-
-        {selectedPrescription ? (
-          <PrescriptionDetails
-            prescription={selectedPrescription}
-            onBack={() => setSelectedPrescription(null)}
-          />
-        ) : (
-          <table className="tests-table">
-            <thead>
-              <tr className="th-tests">
-                <th>Prescription Id</th>
-                <th>Appointment Id</th>
-                <th>Date</th>
-                <th>Prescription</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {prescriptions.map((item) => (
-                <RowPrescriptionView
-                  key={item._id}
-                  item={item}
-                  onClick={() => setSelectedPrescription(item)}
-                />
-              ))}
-            </tbody>
-          </table>
-        )}
       </div>
-    </div>
     </div>
   );
 };

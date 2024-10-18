@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadDir)) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir); // Save files in 'uploads/'
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -27,11 +27,20 @@ router.post('/', upload.single('prescription'), async (req, res) => {
       prescriptionFilePath: req.file ? req.file.path : null,
     });
     await newClaim.save();
-    res.status(201).json({ message: 'Insurance claim submitted successfully' });
+    res.status(201).json({ message: 'Insurance claim submitted successfully', claimId: newClaim.claimId });
   } catch (error) {
     console.error('Error submitting insurance claim:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const claims = await InsuranceClaim.find(); // Fetch all claims
+    res.json(claims); // Send back claims data
+  } catch (error) {
+    console.error('Error fetching claims:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 module.exports = router;

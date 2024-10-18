@@ -73,7 +73,7 @@ const DoctorProfile = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-8">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-lg w-full">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Doctor Profile</h2>
+        <h2 className="text-3xl font-semibold  mb-8 text-center">Doctor Profile</h2>
 
         <div className="space-y-4">
           <div>

@@ -1,10 +1,10 @@
 let Doctor = require("../models/Doctor");
 const router = require("express").Router();
-
 const nodemailer = require("nodemailer");
-
+const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const secretKey = "hey";
+dotenv.config();
 
 router.route("/add").post((req, res) => {
   const transporter = nodemailer.createTransport({
@@ -12,8 +12,8 @@ router.route("/add").post((req, res) => {
     port: 465,
     secure: true,
     auth: {
-      user: "hospitalitp@zohomail.com",
-      pass: "Sliit@321",
+      user: "helasuwa@zohomail.com",
+      pass: process.env.EmailPass,
     },
   });
 
@@ -35,11 +35,11 @@ router.route("/add").post((req, res) => {
     .save()
     .then(() => {
       const mailOptions = {
-        from: "hospitalitp@zohomail.com",
+        from: "helasuwa@zohomail.com",
         to: `${email}`,
-        subject: "Doctor Profile Created",
-        text: `Hello \nYour Doctor has been created.\n
-                \nEmail : ${email} \nPassword : ${password}\n\nThank You.`,
+        subject: "Helasuwa Doctor Profile",
+        text: `Thank You! \nDoctor For joined with us.\n
+                \nEmail : ${email} \nPassword : ${password}\n\n.`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
