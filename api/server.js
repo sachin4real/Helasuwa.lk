@@ -22,8 +22,8 @@ app.use("/patient", patientRouter);
 const admintRouter = require("./routes/admins");
 app.use("/admin", admintRouter);
 
-const doctorRouter = require("./routes/doctors");
-app.use("/doctor", doctorRouter);
+const doctorRoutes = require("./routes/doctorRoutes.js");
+app.use("/doctor", doctorRoutes);
 
 const channelRouter = require("./routes/channels");
 app.use("/channel", channelRouter);
@@ -39,15 +39,15 @@ const reportRouter = require("./routes/reports");
 app.use("/report", reportRouter);
 
 
-const testRouter = require("./routes/tests");
-app.use("/test", testRouter);
+const testRoutes = require("./routes/testRoutes");
+app.use("/test", testRoutes);
 
 
 const recordtRouter = require("./routes/records");
 app.use("/record", recordtRouter);
 
 
-const inventoryRoutes = require("./routes/inventory.js")
+const inventoryRoutes = require("./routes/inventoryRoutes");
 app.use("/Inventory", inventoryRoutes);
 
 const orderRoutes = require("./routes/order.js");
