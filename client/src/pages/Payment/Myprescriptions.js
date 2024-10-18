@@ -85,7 +85,7 @@ const MyPrescriptions = () => {
                   <tr className="bg-blue-600 text-white">
                     <th className="py-3 px-5 text-left font-semibold">Prescription ID</th>
                     <th className="py-3 px-5 text-left font-semibold">Appointment ID</th>
-                    <th className="py-3 px-5 text-left font-semibold">Date</th>
+                    <th className="py-3 px-5 text-left font-semibold">Date/Time</th>
                     <th className="py-3 px-5 text-left font-semibold">Prescription</th>
                     <th className="py-3 px-5 text-left font-semibold">Actions</th>
                   </tr>

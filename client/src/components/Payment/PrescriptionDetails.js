@@ -4,9 +4,9 @@ import jsPDF from 'jspdf';
 import CardPayment from './CardPayment';
 
 export default function PrescriptionDetails({ prescription, onBack }) {
-    const [showPaymentModal, setShowPaymentModal] = useState(false); // Track if payment modal should be shown
+    const [showPaymentModal, setShowPaymentModal] = useState(false); 
 
-    // Function to calculate total amount by parsing the text field
+
     function calculateTotalAmount() {
         const regex = /Price:\s*\$(\d+\.\d{2})/g;
         let total = 0;
@@ -18,7 +18,7 @@ export default function PrescriptionDetails({ prescription, onBack }) {
         return total;
     }
 
-    // Function to download prescription details as PDF
+
     function downloadPrescription() {
         const doc = new jsPDF();
         doc.setFontSize(18);
@@ -78,24 +78,24 @@ export default function PrescriptionDetails({ prescription, onBack }) {
                         Download Prescription
                     </button>
                     <button 
-                        onClick={() => setShowPaymentModal(true)} // Show modal on click
+                        onClick={() => setShowPaymentModal(true)} 
                         className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200"
                     >
-                        Total Amount: ${calculateTotalAmount().toFixed(2)}
+                        Pay Now: ${calculateTotalAmount().toFixed(2)}
                     </button>
                 </div>
             </div>
 
-            {/* Payment Modal */}
+                            
             {showPaymentModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
                         <h2 className="text-xl font-semibold text-gray-800 mb-4">Proceed with Payment</h2>
                         
-                        {/* Render CardPayment Component Here */}
+                        
                         <CardPayment />
 
-                        {/* Close button */}
+                        
                         <button
                             onClick={() => setShowPaymentModal(false)}
                             className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
