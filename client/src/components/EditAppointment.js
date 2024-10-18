@@ -82,19 +82,18 @@ const EditAppointment = (props) => {
       <PatientSideBar />
 
       <div className="flex-1 p-8 mt-16 bg-gray-50 min-h-screen ml-64"> {/* Added margin-left for sidebar */}
-        <h1 className="text-3xl font-semibold mb-4">Edit Appointment</h1>
+        <h1 className="text-3xl font-semibold mb-6">Edit Appointment</h1>
 
-        <div className="channel-details-apt mb-6">
-          <h4>Channeling Doctor - {channel.drName}</h4>
-          <h4>
-            Channeling Date and Time -{" "}
-            {new Date(channel.startDateTime).toString()}
+        <div className="channel-details-apt mb-6 bg-white p-4 shadow rounded-lg">
+          <h4 className="text-lg font-bold">Channeling Doctor: {channel.drName}</h4>
+          <h4 className="text-gray-600">
+            Channeling Date and Time: {new Date(channel.startDateTime).toString()}
           </h4>
         </div>
 
-        <form onSubmit={editApt}>
+        <form onSubmit={editApt} className="space-y-4">
           <input
-            className="apt-inputs mb-4"
+            className="apt-inputs w-full px-4 py-2 border border-gray-300 rounded-lg"
             type="text"
             placeholder="Patient Name"
             defaultValue={name}
@@ -104,7 +103,7 @@ const EditAppointment = (props) => {
           />
 
           <input
-            className="apt-inputs mb-4"
+            className="apt-inputs w-full px-4 py-2 border border-gray-300 rounded-lg"
             type="number"
             placeholder="Patient Age"
             defaultValue={age}
@@ -114,7 +113,7 @@ const EditAppointment = (props) => {
           />
 
           <input
-            className="apt-inputs mb-4"
+            className="apt-inputs w-full px-4 py-2 border border-gray-300 rounded-lg"
             type="tel"
             placeholder="Contact No"
             defaultValue={contact}
@@ -124,7 +123,7 @@ const EditAppointment = (props) => {
           />
 
           <select
-            className="apt-inputs mb-4"
+            className="apt-inputs w-full px-4 py-2 border border-gray-300 rounded-lg"
             defaultValue={gender}
             onChange={(e) => {
               setGender(e.target.value);
@@ -136,7 +135,7 @@ const EditAppointment = (props) => {
           </select>
 
           <textarea
-            className="apt-inputs mb-4"
+            className="apt-inputs w-full px-4 py-2 border border-gray-300 rounded-lg"
             placeholder="Any Special Notes"
             cols="30"
             rows="10"
@@ -146,7 +145,10 @@ const EditAppointment = (props) => {
             }}
           ></textarea>
 
-          <button className="btn-makeApt" type="submit">
+          <button
+            className="btn-makeApt bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
+            type="submit"
+          >
             Update and Save
           </button>
         </form>

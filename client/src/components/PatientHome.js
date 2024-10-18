@@ -4,6 +4,7 @@ import PatientHeader from "../../src/components/Payment/Patientheader";
 import PatientSideBar from "../components/PatientSideBar";
 import AllChannels from './AllChannels';
 
+
 const PatientHome = () => {
     const dt = new Date().toISOString().split("T")[0]; 
 

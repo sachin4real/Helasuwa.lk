@@ -100,27 +100,35 @@ const PatientProfile = () => {
   };
 
   return (
-    <div>
+    <div className="bg-gray-100 min-h-screen">
       <PatientHeader />
       <div className="flex">
         <PatientSideBar />
-        <div className="flex-1 p-8 mt-16 ml-64 bg-gray-50 min-h-screen">
-          <button className="btn-profile-delete" onClick={deletePatient}>
-            Delete Profile
-          </button>
-          <br /> <br />
-          <div className="patientProfile">
-            <h2>
+        <div className="flex-1 p-8 mt-16 ml-64 bg-white shadow-lg rounded-lg">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-semibold text-gray-800">
+              Patient Profile
+            </h1>
+            <button
+              className="px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600"
+              onClick={deletePatient}
+            >
+              Delete Profile
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-gray-700">
               Patient Name: {patient.firstName} {patient.lastName}
             </h2>
             <p>
-              <b>Date of birth:</b> {new Date(patient.dob).toDateString()}
+              <b>Date of Birth:</b> {new Date(patient.dob).toDateString()}
             </p>
             <p>
               <b>Email:</b> {patient.email}
             </p>
             <p>
-              <b>Phone no:</b> {patient.phoneNo}
+              <b>Phone No:</b> {patient.phoneNo}
             </p>
             <p>
               <b>Gender:</b> {patient.gender}
@@ -129,7 +137,7 @@ const PatientProfile = () => {
               <b>Height:</b> {patient.height} cm
             </p>
             <p>
-              <b>Weight:</b> {patient.weight}
+              <b>Weight:</b> {patient.weight} kg
             </p>
             <p>
               <b>Blood Group:</b> {patient.bloodGroup}
@@ -141,9 +149,10 @@ const PatientProfile = () => {
               <b>Allergies:</b> {patient.allergies}
             </p>
             <p>
-              <b>Emergency No:</b> {patient.emergencyPhone}
+              <b>Emergency Phone No:</b> {patient.emergencyPhone}
             </p>
-            <h2>Guardian Details</h2>
+
+            <h2 className="text-lg font-semibold">Guardian Details</h2>
             <p>
               <b>Guardian Name:</b> {patient.guardianName}
             </p>
@@ -153,7 +162,8 @@ const PatientProfile = () => {
             <p>
               <b>Guardian NIC:</b> {patient.guardianNIC}
             </p>
-            <h2>Insurance Details</h2>
+
+            <h2 className="text-lg font-semibold">Insurance Details</h2>
             <p>
               <b>Insurance No:</b> {patient.insuranceNo}
             </p>
@@ -161,13 +171,20 @@ const PatientProfile = () => {
               <b>Insurance Company:</b> {patient.insuranceCompany}
             </p>
           </div>
-          <br /> <br />
-          <a href="/editPatientProfile">
-            <button className="update-btn-profile">Edit</button>
-          </a>
-          <button className="download-profile-btn" onClick={downloadProfile}>
-            Download Profile
-          </button>
+
+          <div className="mt-6 flex space-x-4">
+            <a href="/editPatientProfile">
+              <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">
+                Edit
+              </button>
+            </a>
+            <button
+              className="px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600"
+              onClick={downloadProfile}
+            >
+              Download Profile
+            </button>
+          </div>
         </div>
       </div>
     </div>

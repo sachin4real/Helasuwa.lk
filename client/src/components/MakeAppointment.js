@@ -100,49 +100,52 @@ const MakeAppointment = () => {
         <div className="ml-[220px] mt-[80px] p-8 flex-1 bg-white shadow-lg rounded-lg">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Make an Appointment</h1>
 
-          <h4>Channeling Doctor: {channel.drName}</h4>
-          <h4>Channeling Date and Time: {new Date(channel.startDateTime).toString()}</h4>
+          <h4 className="text-lg text-gray-700 font-medium">Channeling Doctor: {channel.drName}</h4>
+          <h4 className="text-lg text-gray-700 font-medium">Channeling Date and Time: {new Date(channel.startDateTime).toString()}</h4>
 
-          <form onSubmit={makeApt}>
+          <form onSubmit={makeApt} className="space-y-6 mt-4">
             <input
-              className="apt-inputs"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="text"
               placeholder="Patient Name"
               onChange={(e) => setName(e.target.value)}
             />
-            <br /> <br />
+            
             <input
-              className="apt-inputs"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="number"
               placeholder="Patient Age"
               onChange={(e) => setAge(e.target.value)}
             />
-            <br /> <br />
+            
             <input
-              className="apt-inputs"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               type="number"
               placeholder="Patient Contact No"
               onChange={(e) => setContact(e.target.value)}
             />
-            <br /> <br />
+            
             <select
-              className="apt-inputs"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               onChange={(e) => setGender(e.target.value)}
             >
               <option value="">Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
-            <br /> <br />
+
             <textarea
-              className="apt-inputs"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Any Special Notes"
               onChange={(e) => setNotes(e.target.value)}
               cols="30"
-              rows="10"
+              rows="4"
             />
-            <br /> <br />
-            <button className="btn-makeApt" type="submit">
+            
+            <button
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+              type="submit"
+            >
               Make Appointment
             </button>
           </form>

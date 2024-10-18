@@ -1,4 +1,3 @@
-// SingleChannel.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -19,24 +18,22 @@ const SingleChannel = ({ channel }) => {
   };
 
   return (
-    <div className="channel-container-doctor">
-      <div>
-        <h5>Doctor: {channel.drName}</h5>
-        <h5>Specialized In: {channel.specialization}</h5>
-        <h5>{new Date(channel.startDateTime).toString()}</h5>
-        <h5>
-          Available Spots: {parseInt(channel.maxPatients) - parseInt(count)}
-        </h5>
-      </div>
+    <div className="bg-white shadow-lg rounded-lg p-6">
+      <h5 className="font-bold text-lg mb-2">Doctor: {channel.drName}</h5>
+      <p className="text-sm text-gray-600 mb-2">Specialized In: {channel.specialization}</p>
+      <p className="text-sm text-gray-600 mb-2">{new Date(channel.startDateTime).toString()}</p>
+      <p className="text-sm text-gray-600 mb-4">
+        Available Spots: {parseInt(channel.maxPatients) - parseInt(count)}
+      </p>
 
       <div>
         {channel.maxPatients === count ? (
-          <button id="make-apt-btn" disabled>
+          <button className="bg-red-500 text-white py-2 px-4 rounded cursor-not-allowed" disabled>
             Appointment Full
           </button>
         ) : (
           <a href={`/makeApt/${channel._id}`}>
-            <button id="make-apt-btn">Make Appointment</button>
+            <button className="bg-blue-500 text-white py-2 px-4 rounded">Make Appointment</button>
           </a>
         )}
       </div>

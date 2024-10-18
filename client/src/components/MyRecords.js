@@ -25,20 +25,28 @@ const MyRecords = () => {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
       <PatientHeader />
-      <div className="flex">
+
+      {/* Main content area with sidebar and page content */}
+      <div className="flex flex-1">
+        {/* Sidebar */}
         <PatientSideBar />
 
-        {/* Main content container with padding for spacing and margin-top for header gap */}
-        <div className="flex-1 p-8 mt-16 ml-64 bg-gray-50 min-h-screen">
-          <h1 className="text-3xl font-semibold mb-4">My Records</h1>
-          
+        {/* Main content container */}
+        <div className="flex-1 p-8 bg-gray-50 min-h-screen mt-16 ml-64">
+          <h1 className="text-3xl font-bold mb-6">My Records</h1>
+
           {/* AddRecord Component */}
-          <AddRecord />
+          <div className="mb-10">
+            <AddRecord />
+          </div>
 
           {/* MyReports Component */}
-          <MyReports />
+          <div>
+            <MyReports />
+          </div>
         </div>
       </div>
     </div>
