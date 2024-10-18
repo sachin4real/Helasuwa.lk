@@ -3,11 +3,7 @@ import axios from "axios";
 import RowPrescriptionView from '../../components/Payment/RowPrescriptionView';
 import PrescriptionDetails from '../../components/Payment/PrescriptionDetails';
 import PatientSideBar from '../../components/PatientSideBar';
-<<<<<<< Updated upstream
 import Patientheader from '../../components/Payment/Patientheader';
-=======
-import Patientheader from '../../components/Payment/Patientheader.js';
->>>>>>> Stashed changes
 
 const MyPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
