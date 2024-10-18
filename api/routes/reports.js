@@ -4,6 +4,9 @@ let Report = require("../models/Report");
 const Test = require("../models/Test");
 const Patient = require("../models/Patient");
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 router.route("/add").post(async (req, res) => {
   const details = req.body.details;
@@ -16,8 +19,8 @@ router.route("/add").post(async (req, res) => {
     port: 465,
     secure: true,
     auth: {
-      user: "hospitalitp@zohomail.com",
-      pass: "Sliit@321",
+      user: "helasuwa@zohomail.com",
+      pass: process.env.EmailPass,
     },
   });
 
@@ -41,7 +44,7 @@ router.route("/add").post(async (req, res) => {
           const usr = Patient.findById(patient)
             .then((patient) => {
               const mailOptions = {
-                from: "hospitalitp@zohomail.com",
+                from: "helasuwa@zohomail.com",
                 to: `${patient.email}`,
                 subject: "Appointment Made",
                 text: `Hello \nYour report results have been updated check your profile.\n Thank you !`,
