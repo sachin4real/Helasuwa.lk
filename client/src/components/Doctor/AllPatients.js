@@ -35,27 +35,25 @@ export default function AllPatients({ onViewPatient }) {
             {patients.length === 0 ? (
               <p className="text-center text-gray-600">No patients found.</p>
             ) : (
-              <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
+              <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
                 <thead>
-                  <tr className=" bg-gradient-to-r from-blue-700 to-indigo-800 ">
-                    <th className="px-6 py-4 text-left font-semibold">Name</th>
-                    <th className="px-6 py-4 text-left font-semibold">Gender</th>
-                    <th className="px-6 py-4 text-left font-semibold">Medical Status</th>
-                    <th className="px-6 py-4 text-left font-semibold">Actions</th>
+                  <tr className="bg-gray-200 text-gray-800">
+                    <th className="px-6 py-4 text-left font-semibold border-b border-gray-300">Name</th>
+                    <th className="px-6 py-4 text-left font-semibold border-b border-gray-300">Gender</th>
+                    <th className="px-6 py-4 text-left font-semibold border-b border-gray-300">Medical Status</th>
+                    <th className="px-6 py-4 text-left font-semibold border-b border-gray-300">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {patients.map((patient) => (
-                    <tr key={patient._id} className="border-b bg-gradient-to-b from-gray-100 to-blue-100">
-                      <td className="px-6 py-4 text-gray-700">
-                        {patient.firstName} {patient.lastName}
-                      </td>
-                      <td className="px-6 py-4 text-gray-700">{patient.gender}</td>
-                      <td className="px-6 py-4 text-gray-700">{patient.medicalStatus}</td>
+                    <tr key={patient._id} className="border-b hover:bg-gray-100">
+                      <td className="px-6 py-4 text-gray-800">{patient.firstName} {patient.lastName}</td>
+                      <td className="px-6 py-4 text-gray-800">{patient.gender}</td>
+                      <td className="px-6 py-4 text-gray-800">{patient.medicalStatus}</td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => onViewPatient(patient._id)} // Pass patient ID to onViewPatient
-                          className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow-md transition duration-200 transform hover:scale-105 hover:from-green-500 hover:to-blue-600"
+                          onClick={() => onViewPatient(patient._id)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-4 rounded-lg shadow-md transition duration-200"
                           aria-label={`View details for ${patient.firstName} ${patient.lastName}`}
                         >
                           View

@@ -47,12 +47,13 @@ export default function DoctorSidePanel({ setSelectedComponent }) {
           <FaUsers className="mr-3" />
           Patients
         </li>
+      
         <li
-          onClick={() => setSelectedComponent("admitPatient")}
+          onClick={() => setSelectedComponent("addPatinetRecord")}
           className="flex items-center px-4 py-3 text-gray-700 bg-white rounded-lg hover:bg-blue-500 hover:text-white transition duration-200 cursor-pointer shadow-md"
         >
           <FaUserPlus className="mr-3" />
-          Admit Patient
+          Add Records
         </li>
       </ul>
 

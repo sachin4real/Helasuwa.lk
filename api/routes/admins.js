@@ -9,15 +9,15 @@ const secretKey = 'hey';
 router.route("/add").post( (req, res) => {
 
    
-    const transporter = nodemailer.createTransport({
-        host: "smtp.zoho.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: "hospitalitp@zohomail.com",
-          pass: "Sliit@321",
-        },
-      });
+  const transporter = nodemailer.createTransport({
+    host: "smtp.zoho.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "helasuwa@zohomail.com",
+      pass: process.env.EmailPass,
+    },
+  });
 
 
     const email = req.body.email ;
@@ -43,7 +43,7 @@ router.route("/add").post( (req, res) => {
     newAdmin.save().then( ()=> {
 
         const mailOptions = {
-            from: "hospitalitp@zohomail.com",
+            from: "helasuwa@zohomail.com",
             to: `${email}`,
             subject: "Staff Profile Created",
             text: `Hello \nYour Staff Account has been created.\n

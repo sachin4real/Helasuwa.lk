@@ -2,6 +2,8 @@ const router = require("express").Router();
 let Appointment = require("../models/Appointment");
 let Channel = require("../models/Channel");
 let Patient = require("../models/Patient");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const nodemailer = require("nodemailer");
 
@@ -51,8 +53,8 @@ router.route("/makeapt").post(async (req, res) => {
     port: 465,
     secure: true,
     auth: {
-      user: "hospitalitp@zohomail.com",
-      pass: "Sliit@321",
+      user: "helasuwa@zohomail.com",
+      pass: process.env.EmailPass,
     },
   });
 
@@ -108,7 +110,7 @@ router.route("/makeapt").post(async (req, res) => {
           const usr = Patient.findById(patient)
             .then((pt) => {
               const mailOptions = {
-                from: "hospitalitp@zohomail.com",
+                from: "helasuwa@zohomail.com",
                 to: `${pt.email}`,
                 subject: "Appointment Made",
                 text: `Hello \nYour Appointment has been made for Dr.${drName}.\n Appointment No :${appointmentNo} 
