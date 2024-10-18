@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import PatientHeader from "./Payment/Patientheader";
-import PatientSideBar from "../components/PatientSideBar"; // Adjust path as needed
+import PatientHeader from "./PatientHeader";
+import DashboardHeader from "./DashboardHeader";
 
 const EditAppointment = (props) => {
   let { aid, cid } = useParams();
@@ -27,10 +27,12 @@ const EditAppointment = (props) => {
       .then((res) => {
         setAppointment(res.data.apt);
         setNotes(res.data.apt.notes);
-        setName(res.data.apt.name);
-        setAge(res.data.apt.age);
-        setContact(res.data.apt.contact);
-        setGender(res.data.apt.gender);
+        setName(res.data.apt.name) ;
+        setAge(res.data.apt.age) ;
+        setContact(res.data.apt.contact) ;
+        setGender(res.data.apt.gender) ;
+
+        console.log(res.data.apt.age);
       })
       .catch((err) => {
         alert(err.message);
@@ -42,6 +44,8 @@ const EditAppointment = (props) => {
       .get(`http://localhost:8070/channel/get/${cid}`)
       .then((res) => {
         setChannel(res.data.Channel);
+
+        console.log(res.data.Channel);
       })
       .catch((err) => {
         alert(err.message);
@@ -53,16 +57,11 @@ const EditAppointment = (props) => {
 
     const updatedApt = {
       notes,
-      name,
-      age,
-      contact,
-      gender,
     };
-
     axios
       .put(`http://localhost:8070/appointment/update/${aid}`, updatedApt)
       .then((res) => {
-        alert("Appointment Updated");
+        alert("Appointment Udpated");
       })
       .catch((err) => {
         alert(err);
@@ -75,7 +74,6 @@ const EditAppointment = (props) => {
     alert("You have logged out");
     window.location.href = "/";
   }
-
   return (
     <div className="flex">
       <PatientHeader />

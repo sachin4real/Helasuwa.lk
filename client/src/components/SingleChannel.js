@@ -2,21 +2,29 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const SingleChannel = ({ channel }) => {
+  const did = channel.doctor ;
   const [count, setCount] = useState(0);
+  const [doctor, setDoctor] = useState([]);
+  
 
   useEffect(() => {
     getPatientNo();
-  }, [channel._id]);
+   
+  }, []);
 
   const getPatientNo = async () => {
-    try {
-      const res = await axios.get(`http://localhost:8070/channel/NoOfAppointments/${channel._id}`);
-      setCount(res.data.count);
-    } catch (err) {
-      alert(err.message);
-    }
+    axios
+      .get(`http://localhost:8070/channel/NoOfAppointments/${channel._id}`)
+      .then((res) => {
+        setCount(res.data.count);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   };
 
+  
   return (
     <div className="bg-white shadow-lg rounded-lg p-6">
       <h5 className="font-bold text-lg mb-2">Doctor: {channel.drName}</h5>
@@ -27,10 +35,12 @@ const SingleChannel = ({ channel }) => {
       </p>
 
       <div>
-        {channel.maxPatients === count ? (
-          <button className="bg-red-500 text-white py-2 px-4 rounded cursor-not-allowed" disabled>
-            Appointment Full
-          </button>
+        {channel.maxPatients == count ? (
+          <a href={"/makeApt/" + channel._id}>
+            <button id="make-apt-btn" disabled>
+              Appointment Full
+            </button>
+          </a>
         ) : (
           <a href={`/makeApt/${channel._id}`}>
             <button className="bg-blue-500 text-white py-2 px-4 rounded">Make Appointment</button>

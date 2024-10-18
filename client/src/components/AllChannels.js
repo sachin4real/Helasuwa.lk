@@ -1,7 +1,10 @@
 import React from "react";
 import SingleChannel from "./SingleChannel";
+import axios from "axios";
 
 const AllChannels = ({ channels }) => {
+  const [channelsa, setChannels] = useState([]);
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6 text-center">All Channels</h1>

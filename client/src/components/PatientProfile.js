@@ -1,21 +1,38 @@
+import PatientHeader from "./PatientHeader";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import PatientHeader from "../../src/components/Payment/Patientheader";
-import PatientSideBar from "../components/PatientSideBar";
+import DashboardHeader from "./DashboardHeader";
 
 const PatientProfile = () => {
+
   const logo = new Image();
   logo.src = "/images/Hospital-logo-W.png";
+
 
   const [patient, setPatient] = useState([]);
   const [pid, setPid] = useState("");
 
-  useEffect(() => {
-    getUser();
-  }, []);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
 
-  const getUser = () => {
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (tpassword) => {
+    const pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+    return pattern.test(tpassword);
+  };
+
+  function getUser() {
     axios
       .get("http://localhost:8070/patient/check/", {
         headers: {
@@ -25,13 +42,20 @@ const PatientProfile = () => {
       .then((res) => {
         setPatient(res.data.patient);
         setPid(res.data.patient._id);
+        setFirstName(res.data.patient.firstName);
+        setLastName(res.data.patient.lastName);
+        setEmail(res.data.patient.email);
+        setGender(res.data.patient.gender);
+        setDob(res.data.patient.dob);
+        setPassword(res.data.patient.password);
+        setConfirm(res.data.patient.password);
         console.log(res.data.patient.email);
       })
       .catch((err) => {
         localStorage.removeItem("token");
         window.location.href = "/";
       });
-  };
+  }
 
   const deletePatient = async () => {
     axios
@@ -44,9 +68,10 @@ const PatientProfile = () => {
       });
   };
 
-  const downloadProfile = () => {
+  function downloadProfile() {
     const doc = new jsPDF();
     const margin = 10;
+    const lineHeight = 5;
 
     const text = `\n\nPatient Report \n\n
       Name : ${patient.firstName}  ${patient.lastName} \n
@@ -60,13 +85,13 @@ const PatientProfile = () => {
       Civil Status : ${patient.civilStatus} \n
       Medical Status : ${patient.medicalStatus}\n
       Emergency Phone : ${patient.emergencyPhone}\n
-      Guardian Name : ${patient.guardianName}\n
-      Guardian NIC : ${patient.guardianNIC}\n
-      Guardian Phone No : ${patient.guardianPhone}\n
+      Gaurdian Name : ${patient.gaurdianName}\n
+      Gaurdian NIC : ${patient.gaurdianNIC}\n
+      Gaurdian Phone No : ${patient.gaurdianPhone}\n
       Insurance No : ${patient.insuranceNo} \n
-      Insurance Company : ${patient.insuranceCompany} \n
-    `;
-    
+      Insurnace Company : ${patient.insuranceCompany} \n
+  
+      `;
     const splitText = doc.splitTextToSize(
       text,
       doc.internal.pageSize.width - margin * 2
@@ -74,6 +99,8 @@ const PatientProfile = () => {
     doc.text(splitText, 10, 60);
 
     const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = doc.internal.pageSize.getHeight();
+
     const canvas1 = document.createElement("canvas");
     canvas1.width = logo.width;
     canvas1.height = logo.height;
@@ -97,8 +124,11 @@ const PatientProfile = () => {
     );
 
     doc.save(`${patient._id}.pdf`);
-  };
+  }
 
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
     <div className="bg-gray-100 min-h-screen">
       <PatientHeader />
@@ -121,32 +151,33 @@ const PatientProfile = () => {
             <h2 className="text-xl font-bold text-gray-700">
               Patient Name: {patient.firstName} {patient.lastName}
             </h2>
+            <div></div>
             <p>
               <b>Date of Birth:</b> {new Date(patient.dob).toDateString()}
             </p>
             <p>
-              <b>Email:</b> {patient.email}
+              <b>Email :</b> {patient.email}
             </p>
             <p>
               <b>Phone No:</b> {patient.phoneNo}
             </p>
             <p>
-              <b>Gender:</b> {patient.gender}
+              <b>Gender :</b> {patient.gender}
             </p>
             <p>
-              <b>Height:</b> {patient.height} cm
+              <b>Height :</b> {patient.height}cm
             </p>
             <p>
               <b>Weight:</b> {patient.weight} kg
             </p>
             <p>
-              <b>Blood Group:</b> {patient.bloodGroup}
+              <b>Blood Gorup :</b> {patient.bloodGroup}
             </p>
             <p>
-              <b>Medical Status:</b> {patient.medicalStatus}
+              <b>Medical Status :</b> {patient.medicalStatus}
             </p>
             <p>
-              <b>Allergies:</b> {patient.allergies}
+              <b>Allergies :</b> {patient.allergies}
             </p>
             <p>
               <b>Emergency Phone No:</b> {patient.emergencyPhone}
@@ -154,21 +185,21 @@ const PatientProfile = () => {
 
             <h2 className="text-lg font-semibold">Guardian Details</h2>
             <p>
-              <b>Guardian Name:</b> {patient.guardianName}
+              <b>Gaurdian Name :</b> {patient.gaurdianName}
             </p>
             <p>
-              <b>Guardian Phone:</b> {patient.guardianPhone}
+              <b>Gaurdian Phone :</b> {patient.gaurdianPhone}
             </p>
             <p>
-              <b>Guardian NIC:</b> {patient.guardianNIC}
+              <b>Gaurdian NIC :</b> {patient.gaurdianNIC}
             </p>
 
             <h2 className="text-lg font-semibold">Insurance Details</h2>
             <p>
-              <b>Insurance No:</b> {patient.insuranceNo}
+              <b>Insurance No :</b> {patient.insuranceNo}
             </p>
             <p>
-              <b>Insurance Company:</b> {patient.insuranceCompany}
+              <b>Insurance Company :</b> {patient.insuranceCompany}
             </p>
           </div>
 
