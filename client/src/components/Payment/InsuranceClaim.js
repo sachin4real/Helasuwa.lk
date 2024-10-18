@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Patientheader from './PatientHeader';
+import Patientheader from './Patientheader';
 import PatientSideBar from '../PatientSideBar';
 
 function InsuranceClaim() {

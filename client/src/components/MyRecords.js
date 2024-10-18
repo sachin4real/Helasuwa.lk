@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "../../src/components/Payment/Patientheader"; // Adjust path as needed
 import PatientSideBar from "../components/PatientSideBar";
 import MyReports from "./MyReports";
 import AddRecord from "./AddRecord";
@@ -26,13 +26,18 @@ const MyRecords = () => {
 
   return (
     <div>
-      <DashboardHeader />
-      <div className="main-dashboard-container"> {/* Updated for consistent layout */}
+      <PatientHeader />
+      <div className="flex">
         <PatientSideBar />
 
-        <div className="dashboard-content"> {/* Updated to match MyPrescriptions layout */}
-          <h1 className="header-topic">My Records</h1>
+        {/* Main content container with padding for spacing and margin-top for header gap */}
+        <div className="flex-1 p-8 mt-16 ml-64 bg-gray-50 min-h-screen">
+          <h1 className="text-3xl font-semibold mb-4">My Records</h1>
+          
+          {/* AddRecord Component */}
           <AddRecord />
+
+          {/* MyReports Component */}
           <MyReports />
         </div>
       </div>
