@@ -3,7 +3,7 @@ import axios from "axios";
 import RowPrescriptionView from '../../components/Payment/RowPrescriptionView';
 import PrescriptionDetails from '../../components/Payment/PrescriptionDetails';
 import PatientSideBar from '../../components/PatientSideBar';
-import Patientheader from '../../components/Payment/Patientheader';
+import Patientheader from '../../components/Payment/PatientHeader.js';
 
 const MyPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -85,7 +85,7 @@ const MyPrescriptions = () => {
                   <tr className="bg-blue-600 text-white">
                     <th className="py-3 px-5 text-left font-semibold">Prescription ID</th>
                     <th className="py-3 px-5 text-left font-semibold">Appointment ID</th>
-                    <th className="py-3 px-5 text-left font-semibold">Date</th>
+                    <th className="py-3 px-5 text-left font-semibold">Date/Time</th>
                     <th className="py-3 px-5 text-left font-semibold">Prescription</th>
                     <th className="py-3 px-5 text-left font-semibold">Actions</th>
                   </tr>

@@ -16,6 +16,6 @@ const insuranceClaimSchema = new mongoose.Schema({
   reason: { type: String, required: true },
   prescriptionFilePath: { type: String },
   claimId: { type: String, unique: true, default: () => `CLAIM-${Date.now()}` },
-}, { timestamps: true }); // This adds createdAt and updatedAt timestamps
+}, { timestamps: true }); 
 
 module.exports = mongoose.model('InsuranceClaim', insuranceClaimSchema);

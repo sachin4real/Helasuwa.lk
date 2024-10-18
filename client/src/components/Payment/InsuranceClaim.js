@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Patientheader from './Patientheader';
+import Patientheader from './PatientHeader';
 import PatientSideBar from '../PatientSideBar';
 
 function InsuranceClaim() {
@@ -10,7 +10,7 @@ function InsuranceClaim() {
     birthDate: '',
     sex: '',
     relationshipToInsured: '',
-    status: '', // marital status field
+    status: '',
     addressLine1: '',
     city: '',
     postalCode: '',
@@ -30,8 +30,31 @@ function InsuranceClaim() {
     setFile(e.target.files[0]);
   };
 
+  // Function to validate policy number before submission
+  const validatePolicyNumber = async () => {
+    try {
+      const response = await axios.post('http://localhost:8070/insurance/validatePolicy', {
+        firstName: claimDetails.firstName,
+        lastName: claimDetails.lastName,
+        mobileNumber: claimDetails.mobileNumber,
+        policyNo: claimDetails.policyNo,
+      });
+
+      return response.data.message === 'Policy number validated successfully';
+    } catch (error) {
+      console.error('Error validating policy number:', error);
+      alert('Policy number does not match the registered insurance number.');
+      return false;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // First, validate the policy number
+    const isValid = await validatePolicyNumber();
+    if (!isValid) return;
+
     const formData = new FormData();
     Object.keys(claimDetails).forEach((key) => {
       formData.append(key, claimDetails[key]);
@@ -255,7 +278,7 @@ function InsuranceClaim() {
               </div>
 
               <button type="submit" className="w-full mt-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">
-                Claim
+                Request Claim
               </button>
             </form>
           </div>
