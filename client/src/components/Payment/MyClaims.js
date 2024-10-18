@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Patientheader from './Patientheader';
+import Patientheader from './PatientHeader';
 import PatientSideBar from '../PatientSideBar';
 
 const MyClaims = () => {
