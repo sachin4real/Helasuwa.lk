@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import RowPrescriptionView from "./Payment/RowPrescriptionView";
 import RowReports from "./RowReports";
 
 const MyReports = () => {
@@ -8,11 +7,9 @@ const MyReports = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pid, setPid] = useState("");
-
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    // getUser() ;
     getPrescriptions();
   }, []);
 
@@ -20,10 +17,9 @@ const MyReports = () => {
     axios
       .get(`http://localhost:8070/report/patient/search/${pid}?query=${query}`)
       .then((res) => {
-        console.log(res.data);
         setReports(res.data);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -39,17 +35,15 @@ const MyReports = () => {
         setEmail(res.data.patient.email);
         setPassword(res.data.patient.password);
         setPid(res.data.patient._id);
-        console.log(res.data.patient._id);
 
         axios
           .get(
             `http://localhost:8070/report/patient/search/${res.data.patient._id}?query=${query}`
           )
           .then((res) => {
-            console.log(res.data);
             setReports(res.data);
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
           });
       })
@@ -58,33 +52,40 @@ const MyReports = () => {
         window.location.href = "/";
       });
   };
+
   return (
-    <div>
-      <div>
-        <h1 className="header-topic">My Reports</h1>
+    <div className="p-8 bg-white rounded-lg shadow-md">
+      {/* Header and Search Bar */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">My Reports</h1>
         <input
           type="text"
           onKeyUp={getSearch}
           onKeyDown={getSearch}
-          className="search-tests-input"
-          placeholder="Search"
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          placeholder="Search Reports"
           onChange={(e) => {
             setQuery(e.target.value);
           }}
         />
       </div>
-      <table className="tests-table">
-        <tr className="th-tests">
-          <th>Report Id</th>
-          <th>Date</th>
-          <th>Test Id</th>
-          <th>Details</th>
-          <th>Actions</th>
-        </tr>
 
-        {reports.map((item, index) => (
-          <RowReports item={item} />
-        ))}
+      {/* Reports Table */}
+      <table className="w-full table-auto bg-white border border-gray-200">
+        <thead className="bg-gray-100">
+          <tr className="text-left">
+            <th className="p-4 border-b">Report Id</th>
+            <th className="p-4 border-b">Date</th>
+            <th className="p-4 border-b">Test Id</th>
+            <th className="p-4 border-b">Details</th>
+            <th className="p-4 border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reports.map((item, index) => (
+            <RowReports key={index} item={item} />
+          ))}
+        </tbody>
       </table>
     </div>
   );
