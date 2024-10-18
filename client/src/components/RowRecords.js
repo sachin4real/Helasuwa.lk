@@ -3,10 +3,7 @@ import jsPDF from "jspdf";
 import axios from "axios";
 
 const RowRecords = ({ item }) => {
-  const img = new Image();
   const logo = new Image();
-  const date = new Date();
-
   logo.src = "/images/Hospital-logo-W.png";
 
   const deleteRecord = async () => {
@@ -20,22 +17,13 @@ const RowRecords = ({ item }) => {
       });
   };
 
-  function downloadRecord() {
+  const downloadRecord = () => {
     const doc = new jsPDF();
     const margin = 10;
     const lineHeight = 5;
 
-    const text = `\n\nDate :${new Date(item.date).toString()} \n\n\n Title :${
-      item.title
-    }\n Reason :${item.reason}\n\n Prescriptions : ${
-      item.prescriptions
-    } \n Reports : ${item.reports} \n Appointments : ${
-      item.appointments
-    } \n Tests :${item.tests}`;
-    const splitText = doc.splitTextToSize(
-      text,
-      doc.internal.pageSize.width - margin * 2
-    );
+    const text = `\n\nDate: ${new Date(item.date).toString()}\n\nTitle: ${item.title}\nReason: ${item.reason}\n\nPrescriptions: ${item.prescriptions}\nReports: ${item.reports}\nAppointments: ${item.appointments}\nTests: ${item.tests}`;
+    const splitText = doc.splitTextToSize(text, doc.internal.pageSize.width - margin * 2);
     doc.text(splitText, 10, 60);
 
     const pdfWidth = doc.internal.pageSize.getWidth();
@@ -48,39 +36,37 @@ const RowRecords = ({ item }) => {
     ctx1.drawImage(logo, 0, 0, logo.width, logo.height);
     const dataURL1 = canvas1.toDataURL("image/png");
 
-    doc.addImage(
-      dataURL1,
-      "PNG",
-      5,
-      5,
-      pdfWidth / 4,
-      (pdfWidth / 4) * (logo.height / logo.width)
-    );
+    doc.addImage(dataURL1, "PNG", 5, 5, pdfWidth / 4, (pdfWidth / 4) * (logo.height / logo.width));
 
-    doc.text(
-      "Helasuwa.lk \nTel: 0771231231 \nAddress No: No:11,Kandy road,\n",
-      pdfWidth / 4 + 15,
-      20
-    );
+    doc.text("Helasuwa.lk\nTel: 0771231231\nAddress No: No:11, Kandy Road,\n", pdfWidth / 4 + 15, 20);
 
     doc.save(`${item._id}.pdf`);
-  }
+  };
+
   return (
-    <tr>
-      <td>{item._id}</td>
-      <td>{item.patient}</td>
-      <td>{item.title}</td>
-      <td>{item.reason}</td>
-      <td>{new Date(item.date).toLocaleString()}</td>
-      <td>
-        <button className="download-records-btn" onClick={downloadRecord}>
+    <tr className="border-b hover:bg-gray-100">
+      <td className="px-4 py-2">{item._id}</td>
+      <td className="px-4 py-2">{item.patient}</td>
+      <td className="px-4 py-2">{item.title}</td>
+      <td className="px-4 py-2">{item.reason}</td>
+      <td className="px-4 py-2">{new Date(item.date).toLocaleString()}</td>
+      <td className="px-4 py-2 flex space-x-2">
+        <button
+          className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          onClick={downloadRecord}
+        >
           Download
         </button>
-        <button className="delete-records-btn" onClick={deleteRecord}>
+        <button
+          className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          onClick={deleteRecord}
+        >
           Delete
         </button>
         <a href={"editRecord/" + item._id}>
-          <button className="edit-records-btn">Update</button>
+          <button className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
+            Update
+          </button>
         </a>
       </td>
     </tr>

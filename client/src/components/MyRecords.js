@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "./Payment/Patientheader";
 import PatientSideBar from "../components/PatientSideBar";
 import MyReports from "./MyReports";
 import AddRecord from "./AddRecord";
@@ -25,15 +25,28 @@ const MyRecords = () => {
   }, []);
 
   return (
-    <div>
-      <DashboardHeader />
-      <div className="main-dashboard-container"> {/* Updated for consistent layout */}
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <PatientHeader />
+
+      {/* Main content area with sidebar and page content */}
+      <div className="flex flex-1">
+        {/* Sidebar */}
         <PatientSideBar />
 
-        <div className="dashboard-content"> {/* Updated to match MyPrescriptions layout */}
-          <h1 className="header-topic">My Records</h1>
-          <AddRecord />
-          <MyReports />
+        {/* Main content container */}
+        <div className="flex-1 p-8 bg-gray-50 min-h-screen mt-16 ml-64">
+          <h1 className="text-3xl font-bold mb-6">My Records</h1>
+
+          {/* AddRecord Component */}
+          <div className="mb-10">
+            <AddRecord />
+          </div>
+
+          {/* MyReports Component */}
+          <div>
+            <MyReports />
+          </div>
         </div>
       </div>
     </div>

@@ -60,58 +60,62 @@ const AddRecord = () => {
   };
 
   return (
-    <div className="add-record-container">
-      <h1>Create My Records</h1>
-      <label htmlFor="">Record Title</label> <br />
-
-      <form onSubmit={addRecord}>
-      <input
-        className="add-doctor-inputs"
-        placeholder="Title"
-        type="text"
-        Title
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-        required
-      />{" "}
-      <br /> <br />
-      <label htmlFor="">Reason</label> <br />
-      <input
-        className="add-doctor-inputs"
-        type="text"
-        placeholder="Reason"
-        onChange={(e) => {
-          setReason(e.target.value);
-        }}
-        required
-      />{" "}
-      <br /> <br />
-
-      <h4>
-        This will create a record of my patient account upto today's date.
-      </h4>{" "}
-      <br />
-      <button className="btn-makeApt" type="submit" >
-        Get My Record
-      </button>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6 text-center">Create My Records</h1>
+      <form onSubmit={addRecord} className="space-y-6 max-w-xl mx-auto">
+        <div>
+          <label className="block text-lg font-medium mb-2" htmlFor="title">
+            Record Title
+          </label>
+          <input
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Title"
+            type="text"
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-lg font-medium mb-2" htmlFor="reason">
+            Reason
+          </label>
+          <input
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text"
+            placeholder="Reason"
+            onChange={(e) => setReason(e.target.value)}
+            required
+          />
+        </div>
+        <h4 className="text-gray-600">This will create a record of my patient account up to today's date.</h4>
+        <button
+          className="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300"
+          type="submit"
+        >
+          Get My Record
+        </button>
       </form>
-     
-      <h1>My Records</h1>
-      <table className="tests-table">
-        <tr className="th-tests">
-          <th>Record Id</th>
-          <th>Patient Id</th>
-          <th>Title</th>
-          <th>Reason</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
 
-        {records.map((item, index) => (
-          <RowRecords item={item} />
-        ))}
-      </table>
+      <h1 className="text-3xl font-bold mt-12 mb-4 text-center">My Records</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="px-6 py-4 border-b font-medium">Record Id</th>
+              <th className="px-6 py-4 border-b font-medium">Patient Id</th>
+              <th className="px-6 py-4 border-b font-medium">Title</th>
+              <th className="px-6 py-4 border-b font-medium">Reason</th>
+              <th className="px-6 py-4 border-b font-medium">Date</th>
+              <th className="px-6 py-4 border-b font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.map((item, index) => (
+              <RowRecords key={index} item={item} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
