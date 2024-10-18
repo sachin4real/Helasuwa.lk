@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import PatientHeader from "./Payment/Patientheader";
-import PatientSideBar from "../components/PatientSideBar"; // Adjust path as needed
+import PatientHeader from "./PatientHeader";
+import DashboardHeader from "./DashboardHeader";
 
 const EditAppointment = (props) => {
   let { aid, cid } = useParams();
@@ -27,10 +27,12 @@ const EditAppointment = (props) => {
       .then((res) => {
         setAppointment(res.data.apt);
         setNotes(res.data.apt.notes);
-        setName(res.data.apt.name);
-        setAge(res.data.apt.age);
-        setContact(res.data.apt.contact);
-        setGender(res.data.apt.gender);
+        setName(res.data.apt.name) ;
+        setAge(res.data.apt.age) ;
+        setContact(res.data.apt.contact) ;
+        setGender(res.data.apt.gender) ;
+
+        console.log(res.data.apt.age);
       })
       .catch((err) => {
         alert(err.message);
@@ -42,6 +44,8 @@ const EditAppointment = (props) => {
       .get(`http://localhost:8070/channel/get/${cid}`)
       .then((res) => {
         setChannel(res.data.Channel);
+
+        console.log(res.data.Channel);
       })
       .catch((err) => {
         alert(err.message);
@@ -53,16 +57,11 @@ const EditAppointment = (props) => {
 
     const updatedApt = {
       notes,
-      name,
-      age,
-      contact,
-      gender,
     };
-
     axios
       .put(`http://localhost:8070/appointment/update/${aid}`, updatedApt)
       .then((res) => {
-        alert("Appointment Updated");
+        alert("Appointment Udpated");
       })
       .catch((err) => {
         alert(err);
@@ -75,81 +74,113 @@ const EditAppointment = (props) => {
     alert("You have logged out");
     window.location.href = "/";
   }
-
   return (
-    <div className="flex">
-      <PatientHeader />
-      <PatientSideBar />
+    <div>
+       <DashboardHeader />
 
-      <div className="flex-1 p-8 mt-16 bg-gray-50 min-h-screen ml-64"> {/* Added margin-left for sidebar */}
-        <h1 className="text-3xl font-semibold mb-4">Edit Appointment</h1>
+      <div className="main-container">
+        <div className="nav-bar">
+          <ul className="nav-list">
+            <a href="/patientHome ">
+              <li className="nav-element active-element">Home</li>
+            </a>
+            <a href="/myAppointments">
+              <li className="nav-element">My Appointments</li>
+            </a>
 
-        <div className="channel-details-apt mb-6">
-          <h4>Channeling Doctor - {channel.drName}</h4>
-          <h4>
-            Channeling Date and Time -{" "}
-            {new Date(channel.startDateTime).toString()}
-          </h4>
+            <a href="/patientProfile">
+              <li className="nav-element">Profile</li>
+            </a>
+          </ul>
         </div>
 
-        <form onSubmit={editApt}>
-          <input
-            className="apt-inputs mb-4"
-            type="text"
-            placeholder="Patient Name"
-            defaultValue={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
+        <div className="contetn-container">
+          <h1 className="heading-channels">Edit Appointment</h1>
+
+          <div className="channel-details-apt">
+            <h4>Channeling Doctor - {channel.drName}</h4>
+            <h4>
+              Channeling Date and Time -{" "}
+              {new Date(channel.startDateTime).toString()}
+            </h4>
+          </div>
+
+          <form action="" onSubmit={editApt}>
+            {/* <input
+              className="apt-inputs"
+              type="text"
+              placeholder="Patient Name"
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />{" "}
+            <br /> <br /> */}
 
           <input
-            className="apt-inputs mb-4"
-            type="number"
-            placeholder="Patient Age"
-            defaultValue={age}
-            onChange={(e) => {
-              setAge(e.target.value);
-            }}
-          />
+              className="apt-inputs"
+              type="text"
+              placeholder="Patient Name"
+              defaultValue={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />{" "}
+            <br /> <br />
 
-          <input
-            className="apt-inputs mb-4"
-            type="tel"
-            placeholder="Contact No"
-            defaultValue={contact}
-            onChange={(e) => {
-              setContact(e.target.value);
-            }}
-          />
+            <input
+              className="apt-inputs"
+              type="Number"
+              placeholder="Patient Age"
+              defaultValue={age}
+              onChange={(e) => {
+                setAge(e.target.value);
+              }}
+            />{" "}
+            <br /> <br />
 
-          <select
-            className="apt-inputs mb-4"
-            defaultValue={gender}
-            onChange={(e) => {
-              setGender(e.target.value);
-            }}
-          >
-            <option value="">Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
+            <input
+              className="apt-inputs"
+              type="tel"
+              placeholder="Contact No"
+              defaultValue={contact}
+              onChange={(e) => {
+                setContact(e.target.value);
+              }}
+            />{" "}
+            <br /> <br />
 
-          <textarea
-            className="apt-inputs mb-4"
-            placeholder="Any Special Notes"
-            cols="30"
-            rows="10"
-            defaultValue={notes}
-            onChange={(e) => {
-              setNotes(e.target.value);
-            }}
-          ></textarea>
 
-          <button className="btn-makeApt" type="submit">
-            Update and Save
-          </button>
-        </form>
+            <select
+              className="apt-inputs"
+              defaultValue={gender}
+              onChange={(e) => {
+                setGender(e.target.value);
+              }}
+            >
+              <option value="">Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <br /> <br />
+            <textarea
+              className="apt-inputs"
+              placeholder="Any Special Notes"
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              defaultValue={notes}
+              onChange={(e) => {
+                setNotes(e.target.value);
+              }}
+            ></textarea>{" "}
+            <br />
+            <br />
+            <button className="btn-makeApt" type="submit">
+              Update and Save
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
