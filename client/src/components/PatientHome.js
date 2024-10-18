@@ -1,153 +1,91 @@
-import React, { useEffect, useState } from 'react'
-import '../styles/dashboard.css'
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import SideBar from './SideBar';
-import DashboardHeader from './DashboardHeader';
-import SingleChannel from './SingleChannel';
-import PatientHeader from './PatientHeader';
+import PatientHeader from "../../src/components/Payment/Patientheader";
+import PatientSideBar from "../components/PatientSideBar";
 import AllChannels from './AllChannels';
-import PatientSideBar from './PatientSideBar';
 
 const PatientHome = () => {
     const dt = new Date().toISOString().split("T")[0]; 
 
-    const [email, setEmail] = useState("") ;
-    const [password , setPassword] = useState("") ;
-    const [ channels, setChannels] = useState([]); 
-    const [searched, setSearched] = useState(false) ;
-    const [sChannels, setSChannels] = useState([]) ; 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [channels, setChannels] = useState([]);
+    const [doctor, setDoctor] = useState("");
+    const [date, setDate] = useState(new Date());
 
-    const [doctor , setDoctor] = useState("") ;
-    const [date ,setDate] = useState(new Date()) ;
-    const changes = 1 ;
+    useEffect(() => {
+        const token = localStorage.getItem("token");
 
-
-    useEffect(()=>{
-        const token = localStorage.getItem("token")
-        // setToken(token)
-        console.log(token) ;
-
-        getUser()
-        localStorage.setItem("previous" , true)
         if (token == null) {
-            
             window.location.href = "/";
-            
-            
-            
-          } else {
-            getUser() ;
-            getChannels() ;
-          }
+        } else {
+            getUser();
+            getChannels();
+        }
+    }, []);
 
-    },[])
-    
     const getChannels = async () => {
-        
-        axios
-          .get(`http://localhost:8070/channel/`)
-          .then((res) => {
-            console.log(res.data);
+        try {
+            const res = await axios.get(`http://localhost:8070/channel/`);
             setChannels(res.data);
-          })
-          .catch(function (error) {
+        } catch (error) {
             console.log(error);
-          });
-      };
+        }
+    };
 
-      
-    function getUser() {
+    const getUser = async () => {
+        try {
+            const res = await axios.get("http://localhost:8070/patient/check/", {
+                headers: { Authorization: `${localStorage.getItem("token")}` }
+            });
+            setEmail(res.data.patient.email);
+            setPassword(res.data.patient.password);
+        } catch (err) {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
+    };
 
+    const logout = () => {
+        localStorage.removeItem("token");
+        alert("You have logged out");
+        window.location.href = "/";
+    };
 
-        
-        axios.get("http://localhost:8070/patient/check/" , 
-        {headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-          } }).then((res)=>{ 
-            setEmail(res.data.patient.email)
-            setPassword(res.data.patient.password)
-            console.log(res.data.patient.email)
-        }).catch( (err)=> {
-            
+    return (
+        <div className="flex flex-col h-screen">
+            <PatientHeader />
 
-            localStorage.removeItem("token") ;
-            window.location.href = "/"
-            
-            
-        }) 
-    }
+            <div className="flex flex-grow">
+                <PatientSideBar />
 
+                <div className="flex-grow p-8 bg-gray-100 ml-64 mt-8"> {/* Adjust padding and margin-left here */}
+                    <div className='search-container mb-4 mt-10'> {/* Added mt-4 */}
+                        <input 
+                            className='search-inputs border border-gray-300 rounded p-2 w-full md:w-1/3' 
+                            type="text" 
+                            placeholder="Search Doctor" 
+                            onChange={(e) => setDoctor(e.target.value)} 
+                            required 
+                        />
+                        <input 
+                            className='search-inputs border border-gray-300 rounded p-2 w-full md:w-1/3 ml-2' 
+                            type="date"  
+                            placeholder="Channeling Date" 
+                            min={dt} 
+                            onChange={(e) => setDate(new Date(e.target.value))} 
+                            required 
+                        />
+                        <a href={`/searchChannels/${date}/${doctor}`}>
+                            <button className='search-btn bg-blue-500 text-white rounded p-2 ml-2'>Search</button>
+                        </a>
+                    </div>
 
-    function logout() {
-        localStorage.removeItem("token") ;
-        localStorage.setItem("previous" , false)
-        alert("You have logged out")
-        window.location.href= "/" ;
-    }
-  return (
-    <div>
-
-    <DashboardHeader />
-
-    <div className='main-container'>
-    <div className='nav-bar'>
-                <ul className='nav-list'>
-                  <a href="/patientHome ">
-                    <li className='nav-element active-element'>Home</li>
-                  </a>
-                  <a href="/myAppointments">
-                    <li className='nav-element'>My Appointments</li>
-                  </a>
-
-                  <a href="/patientProfile">
-                    <li className='nav-element'>Profile</li>
-                  </a>
-                  <a href="/records">
-                    <li className='nav-element'>My Records</li>
-                  </a>
-                  <a href="/myPrescriptions">
-                    <li className='nav-element'>My Prescriptions</li>
-                  </a>
-                   
-
-                </ul>
+                    <AllChannels channels={channels} />
+                </div>
             </div>
+        </div>
+    );
+};
 
-      <div className='content-container'>
-        
-      <div className='search-container'>
-            
-              <input className='search-inputs' type="text" placeholder="Search Doctor" onChange={(e)=>{
-                setDoctor(e.target.value);
-              }} required/>
-              <input className='search-inputs' type="date"  placeholder="Channeling Date" min={dt} onChange={(e)=>{
-                setDate(new Date(e.target.value)) ;
-              }} required/>
-
-              <a href={"/searchChannels/"+date+"/"+doctor}>
-              <button className='search-btn' type='submit'>Search</button>
-
-              </a>
-            
-          </div>
-
-        
-      {/* {channels.map((item,index)=>(
-              <div>
-                  <SingleChannel channel={item}/>
-
-              </div>
-          ))} */}
-
-          <AllChannels channels={channels} />
-
-      </div>
-
-    </div>
-
-    
-    </div>
-  )
-}
-
-export default PatientHome
+export default PatientHome;
