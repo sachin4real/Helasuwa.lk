@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "../styles/dashboard.css";
 import axios from "axios";
-import SideBar from "./SideBar";
-import DashboardHeader from "./DashboardHeader";
-import SingleChannel from "./SingleChannel";
-import PatientHeader from "./PatientHeader";
-import AllChannels from "./AllChannels";
-import PatientSideBar from "./PatientSideBar";
-import MyPrescriptions from "./MyPrescriptions";
+import PatientHeader from "../../src/components/Payment/Patientheader"; // Adjust path as needed
+import PatientSideBar from "../components/PatientSideBar";
 import MyReports from "./MyReports";
 import AddRecord from "./AddRecord";
 
@@ -17,50 +11,33 @@ const MyRecords = () => {
   const [channels, setChannels] = useState([]);
   const [searched, setSearched] = useState(false);
   const [sChannels, setSChannels] = useState([]);
-
   const [doctor, setDoctor] = useState("");
   const [date, setDate] = useState(new Date());
-  const changes = 1;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    // setToken(token)
-    console.log(token);
-
-    localStorage.setItem("previous", true);
     if (token == null) {
       window.location.href = "/";
     } else {
+      localStorage.setItem("previous", true);
+      console.log(token);
     }
   }, []);
 
   return (
     <div>
-      <DashboardHeader />
+      <PatientHeader />
+      <div className="flex">
+        <PatientSideBar />
 
-      <div className="main-container">
-        <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/patientHome ">
-              <li className="nav-element">Home</li>
-            </a>
-            <a href="/myAppointments">
-              <li className="nav-element">My Appointments</li>
-            </a>
-
-            <a href="/patientProfile">
-              <li className="nav-element">Profile</li>
-            </a>
-            <a href="/records">
-              <li className="nav-element active-element">My Records</li>
-            </a>
-          </ul>
-        </div>
-
-        <div className="content-container">
+        {/* Main content container with padding for spacing and margin-top for header gap */}
+        <div className="flex-1 p-8 mt-16 ml-64 bg-gray-50 min-h-screen">
+          <h1 className="text-3xl font-semibold mb-4">My Records</h1>
+          
+          {/* AddRecord Component */}
           <AddRecord />
-          <MyPrescriptions />
 
+          {/* MyReports Component */}
           <MyReports />
         </div>
       </div>

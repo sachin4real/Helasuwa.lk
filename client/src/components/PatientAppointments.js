@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import PatientHeader from "./PatientHeader";
 import axios from "axios";
 import PatientAppointment from "./PatientAppointment";
-import DashboardHeader from "./DashboardHeader";
+import Patientheader from "../../src/components/Payment/Patientheader"; // Update the import path if necessary
+import PatientSideBar from "../../src/components/PatientSideBar"; // Update the import path if necessary
+
 const PatientAppointments = () => {
   const [user, setUser] = useState([]);
   const [apts, setApts] = useState([]);
@@ -26,14 +27,11 @@ const PatientAppointments = () => {
             `http://localhost:8070/appointment/patientAppointments/${res.data.patient._id}`
           )
           .then((res) => {
-            console.log(res.data.data);
             setApts(res.data.data);
           })
           .catch(function (error) {
             console.log(error);
           });
-
-        console.log(res.data.patient.email);
       })
       .catch((err) => {
         localStorage.removeItem("token");
@@ -43,34 +41,19 @@ const PatientAppointments = () => {
 
   return (
     <div>
-      <DashboardHeader />
+      <Patientheader />
 
-      <div className="main-container">
-        <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/patientHome ">
-              <li className="nav-element">Home</li>
-            </a>
-            <a href="/myAppointments">
-              <li className="nav-element active-element">My Appointments</li>
-            </a>
+      <div className="flex">
+        <PatientSideBar />
+        
+        <div className="ml-[220px] mt-[80px] p-8 flex-1 bg-white shadow-lg rounded-lg">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">My Appointments</h1>
 
-            <a href="/patientProfile">
-              <li className="nav-element">Profile</li>
-            </a>
-
-            <a href="/records">
-              <li className="nav-element">My Records</li>
-            </a>
-          </ul>
-        </div>
-
-        <div className="content-container">
-          <h1 className="heading-channels">My Appointments</h1>
-
-          {apts.map((item, index) => (
-            <PatientAppointment apt={item} />
-          ))}
+          <div className="grid grid-cols-1 gap-6">
+            {apts.map((item, index) => (
+              <PatientAppointment key={index} apt={item} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
