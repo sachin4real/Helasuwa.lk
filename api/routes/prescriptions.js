@@ -1,191 +1,112 @@
-const router  = require("express").Router() ;
-let Prescription = require("../models/Prescription") ; 
-let Patient = require("../models/Patient") ;
+const express = require("express");
+const router = express.Router();
+const nodemailer = require("nodemailer");
+const Prescription = require("../models/Prescription");
+const Patient = require("../models/Patient");
 const fs = require('fs');
-const nodemailer = require("nodemailer") ;
 
+// Nodemailer transporter configuration
+const transporter = nodemailer.createTransport({
+    host: "smtp.zoho.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: "helasuwa@zohomail.com", // Your Zoho email address
+        pass: process.env.EmailPass, // Email password stored in environment variable
+    },
+});
 
-router.route("/add").post( (req, res) => {
+// Function to send email to the patient
+const sendEmailToPatient = async (patientEmail) => {
+    const mailOptions = {
+        from: "helasuwa@zohomail.com", // sender address
+        to: patientEmail, // recipient's email address
+        subject: "Prescription Sent", // Subject line
+        text: "Your prescription has been sent successfully.", // Plain text body
+    };
 
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully");
+    } catch (error) {
+        console.error("Error sending email: ", error);
+    }
+};
 
-    const text = req.body.text ;
+// Route to add a new prescription
+router.route("/add").post(async (req, res) => {
+    const text = req.body.text;
     const appointment = req.body.apt;
-    const patient = req.body.pid ;
-    
-    const newPrescription = new Prescription({
+    const patientId = req.body.pid;
 
+    const newPrescription = new Prescription({
         text,
         appointment,
-        patient
+        patient: patientId,
+    });
 
-    }) 
-
-    newPrescription.save().then( ()=> {
-        res.json("Prescription Added");
-    }).catch( (err)=> {
-        console.log(err) ;
-    })
-
-}) 
-
-
-router.route("/appointmentPrescriptions/:id").get( async (req,res)=> {
-    let aid = req.params.id ;
-    
-    const prs = await Prescription.find(
-        {appointment : aid}
-    ).then( (prescriptions) => {
-        res.status(200).json({data: prescriptions});
-
-    }).catch( (err)=>{
-        console.log(err.message);
-        res.status(500).send({status: "Error in getting prescription details" , error:err.message}) ;
-    })
-})
-
-
-router.route("/patientPrescriptions/:id").get( async (req,res)=> {
-    let pid = req.params.id ;
-    
-    const prs = await Prescription.find(
-        {patient : pid}
-    ).then( (prescriptions) => {
-        res.status(200).json({data: prescriptions});
-
-    }).catch( (err)=>{
-        console.log(err.message);
-        res.status(500).send({status: "Error in getting prescription details" , error:err.message}) ;
-    })
-})
-
-router.get("/patient/search/:id", async (req, res) => {
-    let pid = req.params.id ;
     try {
-      const query = req.query.query; 
-      const results = await Prescription.find({ patient :  pid ,
-        $or: [
-          { text: { $regex: query, $options: "i" } }
-        ],
-      });
-      res.json(results);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Server error" });
+        await newPrescription.save();
+        
+        // Fetch patient email from the database
+        const patient = await Patient.findById(patientId);
+        if (patient && patient.email) {
+            await sendEmailToPatient(patient.email); // Send email to the patient's email address
+        } else {
+            console.warn("Patient email not found");
+        }
+
+        res.json("Prescription Added");
+    } catch (err) {
+        console.error("Error saving prescription: ", err);
+        res.status(500).send({ status: "Error in adding prescription", error: err.message });
     }
-  });
+});
 
-router.route("/send/:id").post( async(req, res) => {
+// Route to get prescriptions by appointment ID
+router.route("/appointmentPrescriptions/:id").get(async (req, res) => {
+    let aid = req.params.id;
 
-    let pid = req.params.id ;
+    try {
+        const prescriptions = await Prescription.find({ appointment: aid });
+        res.status(200).json({ data: prescriptions });
+    } catch (err) {
+        console.error("Error fetching prescriptions: ", err.message);
+        res.status(500).send({ status: "Error in getting prescription details", error: err.message });
+    }
+});
 
-    // const email = req.body.email.toString() ;
-    // const drname = req.body.drname ;
-    // const qualifications = req.body.qualifications ;
-    // console.log(email) ;
+// Route to get prescriptions by patient ID
+router.route("/patientPrescriptions/:id").get(async (req, res) => {
+    let pid = req.params.id;
 
-    const pres = await Prescription.findById(pid).then( (prescription)=>{
+    try {
+        const prescriptions = await Prescription.find({ patient: pid });
+        res.status(200).json({ data: prescriptions });
+    } catch (err) {
+        console.error("Error fetching prescriptions: ", err.message);
+        res.status(500).send({ status: "Error in getting prescription details", error: err.message });
+    }
+});
 
-        const patient = Patient.findById(prescription.patient).then((patient)=>{
+// Route to search prescriptions by patient ID
+router.get("/patient/search/:id", async (req, res) => {
+    let pid = req.params.id;
+    const query = req.query.query; 
 
-            console.log(patient) ;
+    try {
+        const results = await Prescription.find({
+            patient: pid,
+            $or: [
+                { text: { $regex: query, $options: "i" } }
+            ],
+        });
+        res.json(results);
+    } catch (error) {
+        console.error("Error searching prescriptions: ", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
-            setTimeout(() => {
-                const filePath = `${prescription._id}.pdf`;
-                const fileContent = fs.readFileSync(filePath);
-        
-        
-                const transporter = nodemailer.createTransport({
-                    host: 'smtp.zoho.com',
-                    port: 465,
-                    secure: true,
-                    auth: {
-                        user: 'helasuwa@zohomail.com',
-                        pass: 'sachin@44'
-                    }
-                });
-                const mailOptions = {
-                    from: 'helasuwa@zohomail.com',
-                    to: `${patient.email}`,
-                    subject: 'Prescription',
-                    text: `Your prescription has been attached below.\n ${prescription.text}`,
-                    attachments: [
-                        {
-                          filename: `./Prescriptions/${prescription._id}.pdf`,
-                          content: fileContent
-                        }
-                    ]
-                };
-            
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('Email sent: ' + info.response);
-                    }
-                });
-        
-        
-        
-                res.status(200).send({status: "User fetched", prescription})
-               
-              }, 5000);
-
-
-
-        }).catch((err)=>{
-            console.log(err.message);
-            res.status(500).send({status: "Error in getting patient details" , error:err.message}) ;
-        })
-
-
-        
-    }).catch( (err)=>{
-        console.log(err.message);
-        res.status(500).send({status: "Error in getting prescription details" , error:err.message}) ;
-    })
-
-        
-    // const pres = await Prescription.findById(pid).then( (prescription)=>{
-        
-    //     const aid = prescription.appointment ;
-
-        
-
-
-    //     const apt = Appointment.findById(aid).then( (appointment)=>{
-    //         const ptid = appointment.patient
-    //         const ptnt = Patient.findById(ptid).then( (patient)=> {
-
-    //             const email = patient.email ;
-
-               
-
-
-
-
-    //         }).catch( (err)=>{
-    //             console.log(err.message);
-    //             res.status(500).send({status: "Error in getting prescription details" , error:err.message}) ;
-
-    //     }).catch( (err)=>{
-    //     console.log(err.message);
-    //     res.status(500).send({status: "Error in getting prescription details" , error:err.message}) ;
-    // })
-
-    // }).catch( (err)=>{
-    //     console.log(err.message);
-    //     res.status(500).send({status: "Error in getting prescription details" , error:err.message}) ;
-    // })
-
-    
-
-    
-
-   
-
-// }) 
-
-})
-
-
-module.exports = router ;
+// Export the router
+module.exports = router;

@@ -2,6 +2,8 @@ const router = require("express").Router();
 let Appointment = require("../models/Appointment");
 let Channel = require("../models/Channel");
 let Patient = require("../models/Patient");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const nodemailer = require("nodemailer");
 
@@ -52,7 +54,7 @@ router.route("/makeapt").post(async (req, res) => {
     secure: true,
     auth: {
       user: "helasuwa@zohomail.com",
-      pass: "sachin@44",
+      pass: process.env.EmailPass,
     },
   });
 

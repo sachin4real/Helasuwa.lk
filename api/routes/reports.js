@@ -4,6 +4,9 @@ let Report = require("../models/Report");
 const Test = require("../models/Test");
 const Patient = require("../models/Patient");
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 router.route("/add").post(async (req, res) => {
   const details = req.body.details;
@@ -17,7 +20,7 @@ router.route("/add").post(async (req, res) => {
     secure: true,
     auth: {
       user: "helasuwa@zohomail.com",
-      pass: "sachin@44",
+      pass: process.env.EmailPass,
     },
   });
 
