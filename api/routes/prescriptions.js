@@ -99,12 +99,12 @@ router.route("/send/:id").post( async(req, res) => {
                     port: 465,
                     secure: true,
                     auth: {
-                        user: 'hospitalitp@zohomail.com',
-                        pass: 'Sliit@321'
+                        user: 'helasuwa@zohomail.com',
+                        pass: 'sachin@44'
                     }
                 });
                 const mailOptions = {
-                    from: 'hospitalitp@zohomail.com',
+                    from: 'helasuwa@zohomail.com',
                     to: `${patient.email}`,
                     subject: 'Prescription',
                     text: `Your prescription has been attached below.\n ${prescription.text}`,

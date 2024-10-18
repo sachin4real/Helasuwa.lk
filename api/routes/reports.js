@@ -16,8 +16,8 @@ router.route("/add").post(async (req, res) => {
     port: 465,
     secure: true,
     auth: {
-      user: "hospitalitp@zohomail.com",
-      pass: "Sliit@321",
+      user: "helasuwa@zohomail.com",
+      pass: "sachin@44",
     },
   });
 
@@ -41,7 +41,7 @@ router.route("/add").post(async (req, res) => {
           const usr = Patient.findById(patient)
             .then((patient) => {
               const mailOptions = {
-                from: "hospitalitp@zohomail.com",
+                from: "helasuwa@zohomail.com",
                 to: `${patient.email}`,
                 subject: "Appointment Made",
                 text: `Hello \nYour report results have been updated check your profile.\n Thank you !`,
