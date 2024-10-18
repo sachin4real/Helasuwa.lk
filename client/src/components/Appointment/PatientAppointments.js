@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PatientAppointment from "./PatientAppointment";
-import Patientheader from "../../src/components/Payment/Patientheader"; // Update the import path if necessary
-import PatientSideBar from "../../src/components/PatientSideBar"; // Update the import path if necessary
+import Patientheader from "../Payment/Patientheader";
+import PatientSideBar from "../PatientSideBar";
 
 const PatientAppointments = () => {
   const [user, setUser] = useState([]);

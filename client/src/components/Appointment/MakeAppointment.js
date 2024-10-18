@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import PatientHeader from "../../src/components/Payment/Patientheader"; // Update the path if necessary
-import PatientSideBar from "../../src/components/PatientSideBar"; // Update the path if necessary
+import PatientHeader from "../Payment/Patientheader";
+import PatientSideBar from "../PatientSideBar";
 
 const MakeAppointment = () => {
   let { cid } = useParams();

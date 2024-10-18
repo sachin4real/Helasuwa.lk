@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import PatientHeader from "./Payment/Patientheader";
-import PatientSideBar from "./PatientSideBar";
+import PatientHeader from "../Payment/Patientheader";
+import PatientSideBar from "../PatientSideBar";
 
 
 const EditAppointment = (props) => {
@@ -58,6 +58,7 @@ const EditAppointment = (props) => {
 
     const updatedApt = {
       notes,
+      
     };
     axios
       .put(`http://localhost:8070/appointment/update/${aid}`, updatedApt)
