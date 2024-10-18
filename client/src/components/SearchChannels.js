@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import PatientHeader from "./PatientHeader";
 import SideBar from "./SideBar";
 import AllChannels from "./AllChannels";
 import { useParams } from "react-router-dom";
