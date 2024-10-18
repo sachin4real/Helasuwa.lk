@@ -1,38 +1,21 @@
-import PatientHeader from "./PatientHeader";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import DashboardHeader from "./DashboardHeader";
+import PatientHeader from "../../src/components/Payment/Patientheader";
+import PatientSideBar from "../components/PatientSideBar";
 
 const PatientProfile = () => {
-
   const logo = new Image();
   logo.src = "/images/Hospital-logo-W.png";
-
 
   const [patient, setPatient] = useState([]);
   const [pid, setPid] = useState("");
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  useEffect(() => {
+    getUser();
+  }, []);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (tpassword) => {
-    const pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
-    return pattern.test(tpassword);
-  };
-
-  function getUser() {
+  const getUser = () => {
     axios
       .get("http://localhost:8070/patient/check/", {
         headers: {
@@ -42,20 +25,13 @@ const PatientProfile = () => {
       .then((res) => {
         setPatient(res.data.patient);
         setPid(res.data.patient._id);
-        setFirstName(res.data.patient.firstName);
-        setLastName(res.data.patient.lastName);
-        setEmail(res.data.patient.email);
-        setGender(res.data.patient.gender);
-        setDob(res.data.patient.dob);
-        setPassword(res.data.patient.password);
-        setConfirm(res.data.patient.password);
         console.log(res.data.patient.email);
       })
       .catch((err) => {
         localStorage.removeItem("token");
         window.location.href = "/";
       });
-  }
+  };
 
   const deletePatient = async () => {
     axios
@@ -68,10 +44,9 @@ const PatientProfile = () => {
       });
   };
 
-  function downloadProfile() {
+  const downloadProfile = () => {
     const doc = new jsPDF();
     const margin = 10;
-    const lineHeight = 5;
 
     const text = `\n\nPatient Report \n\n
       Name : ${patient.firstName}  ${patient.lastName} \n
@@ -85,13 +60,13 @@ const PatientProfile = () => {
       Civil Status : ${patient.civilStatus} \n
       Medical Status : ${patient.medicalStatus}\n
       Emergency Phone : ${patient.emergencyPhone}\n
-      Gaurdian Name : ${patient.gaurdianName}\n
-      Gaurdian NIC : ${patient.gaurdianNIC}\n
-      Gaurdian Phone No : ${patient.gaurdianPhone}\n
+      Guardian Name : ${patient.guardianName}\n
+      Guardian NIC : ${patient.guardianNIC}\n
+      Guardian Phone No : ${patient.guardianPhone}\n
       Insurance No : ${patient.insuranceNo} \n
-      Insurnace Company : ${patient.insuranceCompany} \n
-  
-      `;
+      Insurance Company : ${patient.insuranceCompany} \n
+    `;
+    
     const splitText = doc.splitTextToSize(
       text,
       doc.internal.pageSize.width - margin * 2
@@ -99,8 +74,6 @@ const PatientProfile = () => {
     doc.text(splitText, 10, 60);
 
     const pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfHeight = doc.internal.pageSize.getHeight();
-
     const canvas1 = document.createElement("canvas");
     canvas1.width = logo.width;
     canvas1.height = logo.height;
@@ -124,95 +97,68 @@ const PatientProfile = () => {
     );
 
     doc.save(`${patient._id}.pdf`);
-  }
+  };
 
-  useEffect(() => {
-    getUser();
-  }, []);
   return (
     <div>
-      <DashboardHeader />
-
-      <div className="main-container">
-        <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/patientHome ">
-              <li className="nav-element">Home</li>
-            </a>
-            <a href="/myAppointments">
-              <li className="nav-element">My Appointments</li>
-            </a>
-
-            <a href="/patientProfile">
-              <li className="nav-element active-element">Profile</li>
-            </a>
-
-            <a href="/records">
-              <li className="nav-element">My Records</li>
-            </a>
-            <a href="/myPrescriptions">
-              <li className="nav-element">My Prescriptions</li>
-            </a>
-          </ul>
-        </div>
-
-        <div className="content-container">
+      <PatientHeader />
+      <div className="flex">
+        <PatientSideBar />
+        <div className="flex-1 p-8 mt-16 ml-64 bg-gray-50 min-h-screen">
           <button className="btn-profile-delete" onClick={deletePatient}>
             Delete Profile
           </button>
           <br /> <br />
           <div className="patientProfile">
             <h2>
-              Patient Name : {patient.firstName} {patient.lastName}
+              Patient Name: {patient.firstName} {patient.lastName}
             </h2>
-            <div></div>
             <p>
-              <b>Date of birth :</b> {new Date(patient.dob).toDateString()}
+              <b>Date of birth:</b> {new Date(patient.dob).toDateString()}
             </p>
             <p>
-              <b>Email :</b> {patient.email}
+              <b>Email:</b> {patient.email}
             </p>
             <p>
-              <b>Phone no :</b> {patient.phoneNo}
+              <b>Phone no:</b> {patient.phoneNo}
             </p>
             <p>
-              <b>Gender :</b> {patient.gender}
+              <b>Gender:</b> {patient.gender}
             </p>
             <p>
-              <b>Height :</b> {patient.height}cm
+              <b>Height:</b> {patient.height} cm
             </p>
             <p>
-              <b>Weight :</b> {patient.weight}
+              <b>Weight:</b> {patient.weight}
             </p>
             <p>
-              <b>Blood Gorup :</b> {patient.bloodGroup}
+              <b>Blood Group:</b> {patient.bloodGroup}
             </p>
             <p>
-              <b>Medical Status :</b> {patient.medicalStatus}
+              <b>Medical Status:</b> {patient.medicalStatus}
             </p>
             <p>
-              <b>Allergies :</b> {patient.allergies}
+              <b>Allergies:</b> {patient.allergies}
             </p>
             <p>
-              <b>Emergency No :</b> {patient.emergencyPhone}
+              <b>Emergency No:</b> {patient.emergencyPhone}
             </p>
-            <h2>Gaurdian Details</h2> <div></div>
+            <h2>Guardian Details</h2>
             <p>
-              <b>Gaurdian Name :</b> {patient.gaurdianName}
-            </p>
-            <p>
-              <b>Gaurdian Phone :</b> {patient.gaurdianPhone}
+              <b>Guardian Name:</b> {patient.guardianName}
             </p>
             <p>
-              <b>Gaurdian NIC :</b> {patient.gaurdianNIC}
-            </p>
-            <div></div>
-            <h2>Insurance Details</h2> <div></div>
-            <p>
-              <b>Insurance No :</b> {patient.insuranceNo}
+              <b>Guardian Phone:</b> {patient.guardianPhone}
             </p>
             <p>
-              <b>Insurance Company :</b> {patient.insuranceCompany}
+              <b>Guardian NIC:</b> {patient.guardianNIC}
+            </p>
+            <h2>Insurance Details</h2>
+            <p>
+              <b>Insurance No:</b> {patient.insuranceNo}
+            </p>
+            <p>
+              <b>Insurance Company:</b> {patient.insuranceCompany}
             </p>
           </div>
           <br /> <br />
@@ -220,7 +166,6 @@ const PatientProfile = () => {
             <button className="update-btn-profile">Edit</button>
           </a>
           <button className="download-profile-btn" onClick={downloadProfile}>
-            {" "}
             Download Profile
           </button>
         </div>
