@@ -105,54 +105,59 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-row bg-gradient-to-br from-gray-100 to-gray-50">
-      {/* Sidebar */}
-      <SideNav />
-      
-      {/* Main Content Area */}
-      <div className="flex-grow flex flex-col p-6 space-y-6 overflow-auto">
-        <DashboardHeader />
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      {/* Header at the top */}
+      <DashboardHeader />
 
-        {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { label: "Total Doctors", value: doctorCount, color: "bg-gradient-to-r from-blue-500 to-blue-400" },
-            { label: "Total Staff", value: staffCount, color: "bg-gradient-to-r from-green-500 to-green-400" },
-            { label: "Total Patients", value: patientCount, color: "bg-gradient-to-r from-yellow-500 to-yellow-400" },
-            { label: "Monthly Revenue", value: `$${monthlyRevenue}`, color: "bg-gradient-to-r from-pink-500 to-pink-400" },
-            { label: "Total Channels", value: channelCount, color: "bg-gradient-to-r from-indigo-500 to-indigo-400" },
-            { label: "Insurance Claims", value: insuranceClaimCount, color: "bg-gradient-to-r from-red-500 to-red-400" }
-          ].map((item, index) => (
-            <div
-              key={index}
-              className={`${item.color} shadow-lg rounded-2xl p-6 text-center transform transition-transform hover:scale-105`}
-            >
-              <h2 className="text-lg font-semibold text-white mb-2">{item.label}</h2>
-              <p className="text-4xl font-bold text-white">{item.value}</p>
+      {/* Main Content Area with Sidebar and Flexible Layout */}
+      <div className="flex flex-grow flex-col md:flex-row">
+        
+        {/* Sidebar (Fixed on the left for larger screens) */}
+        <SideNav />
+
+        {/* Main content area, flexible and responsive */}
+        <div className="flex-grow p-6 bg-white overflow-auto">
+          {/* Overview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { label: "Total Doctors", value: doctorCount, color: "bg-gradient-to-r from-blue-500 to-blue-400" },
+              { label: "Total Staff", value: staffCount, color: "bg-gradient-to-r from-green-500 to-green-400" },
+              { label: "Total Patients", value: patientCount, color: "bg-gradient-to-r from-yellow-500 to-yellow-400" },
+              { label: "Monthly Revenue", value: `$${monthlyRevenue}`, color: "bg-gradient-to-r from-pink-500 to-pink-400" },
+              { label: "Total Channels", value: channelCount, color: "bg-gradient-to-r from-indigo-500 to-indigo-400" },
+              { label: "Insurance Claims", value: insuranceClaimCount, color: "bg-gradient-to-r from-red-500 to-red-400" }
+            ].map((item, index) => (
+              <div
+                key={index}
+                className={`${item.color} shadow-lg rounded-2xl p-6 text-center transform transition-transform hover:scale-105`}
+              >
+                <h2 className="text-lg font-semibold text-white mb-2">{item.label}</h2>
+                <p className="text-4xl font-bold text-white">{item.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Graph Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div className="bg-white shadow-lg rounded-2xl p-8">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Revenue Over Time</h2>
+              <Line data={revenueData} />
             </div>
-          ))}
-        </div>
-
-        {/* Graph Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white shadow-lg rounded-2xl p-8">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Revenue Over Time</h2>
-            <Line data={revenueData} />
+            <div className="bg-white shadow-lg rounded-2xl p-8">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Doctor vs. Patient Ratio</h2>
+              <Bar data={barData} />
+            </div>
           </div>
-          <div className="bg-white shadow-lg rounded-2xl p-8">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Doctor vs. Patient Ratio</h2>
-            <Bar data={barData} />
-          </div>
-        </div>
 
-        {/* Data Tables */}
-        <div className="bg-white shadow-lg rounded-2xl p-8">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Doctors</h2>
-          <AllDoctors />
-        </div>
-        <div className="bg-white shadow-lg rounded-2xl p-8">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Staff</h2>
-          <AllStaff />
+          {/* Data Tables */}
+          <div className="bg-white shadow-lg rounded-2xl p-8 mt-6">
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Doctors</h2>
+            <AllDoctors />
+          </div>
+          <div className="bg-white shadow-lg rounded-2xl p-8 mt-6">
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Staff</h2>
+            <AllStaff />
+          </div>
         </div>
       </div>
     </div>
