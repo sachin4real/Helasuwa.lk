@@ -6,7 +6,6 @@ import CardPayment from './CardPayment';
 export default function PrescriptionDetails({ prescription, onBack }) {
     const [showPaymentModal, setShowPaymentModal] = useState(false); 
 
-
     function calculateTotalAmount() {
         const regex = /Price:\s*\$(\d+\.\d{2})/g;
         let total = 0;
@@ -18,27 +17,51 @@ export default function PrescriptionDetails({ prescription, onBack }) {
         return total;
     }
 
-
     function downloadPrescription() {
         const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text("Prescription Details", 10, 10);
-        
-        doc.setFontSize(12);
-        doc.text(`Prescription ID: ${prescription._id}`, 10, 30);
-        doc.text(`Appointment ID: ${prescription.appointment || 'N/A'}`, 10, 40);
-        doc.text(`Date: ${new Date(prescription.date).toLocaleString()}`, 10, 50);
-
-        const prescriptionText = prescription.text || "No details available";
-        const splitText = doc.splitTextToSize(prescriptionText, 180);
-        doc.text(splitText, 10, 70);
-
-        const totalAmount = calculateTotalAmount();
-        doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 10, 90 + splitText.length * 10);
-
-        doc.save(`Prescription_${prescription._id}.pdf`);
+        const margin = 10;
+    
+        // Create a new image object
+        const logo = new Image();
+        logo.src = "/images/Hospital-logo-W.png"; // Correct path to your logo image
+    
+        // Wait for the image to load before generating the PDF
+        logo.onload = function () {
+            // Logo and header settings
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const canvas = document.createElement("canvas");
+            canvas.width = logo.width;
+            canvas.height = logo.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(logo, 0, 0, logo.width, logo.height);
+            const dataURL = canvas.toDataURL("image/png");
+    
+            // Add logo and clinic information to the PDF
+            doc.addImage(dataURL, "PNG", 10, 10, pdfWidth / 4, (pdfWidth / 4) * (logo.height / logo.width));
+            doc.text("Helasuwa.lk\nTel: 0771231231\nAddress: No:11, Kandy road,", pdfWidth / 4 + 15, 20);
+    
+            // Format the prescription content with date and text
+            const prescriptionText = prescription.text || "No prescription details available";
+            const formattedDate = `Date: ${new Date(prescription.date).toLocaleString()}\n\n`;
+            const splitText = doc.splitTextToSize(prescriptionText, doc.internal.pageSize.width - margin * 2);
+            doc.text(formattedDate, margin, 60);
+            doc.text(splitText, margin, 70);
+    
+            // Add the total amount to the PDF
+            const totalAmount = calculateTotalAmount();
+            doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, margin, 90 + splitText.length * 10);
+    
+            // Save the document with a unique name based on prescription ID
+            doc.save(`Prescription-${prescription._id}.pdf`);
+        };
+    
+        logo.onerror = function () {
+            console.error("Error loading the logo image.");
+            alert("Failed to load the logo image. Please check the file path.");
+        };
     }
-
+    
+    
     return (
         <div className="p-8 bg-gray-50 min-h-screen">
             <button 
@@ -70,10 +93,7 @@ export default function PrescriptionDetails({ prescription, onBack }) {
                 <div className="flex space-x-4">
                     <button 
                         className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            downloadPrescription();
-                        }}
+                        onClick={downloadPrescription}
                     >
                         Download Prescription
                     </button>
@@ -86,16 +106,15 @@ export default function PrescriptionDetails({ prescription, onBack }) {
                 </div>
             </div>
 
-                            
             {showPaymentModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
                         <h2 className="text-xl font-semibold text-gray-800 mb-4">Proceed with Payment</h2>
                         
-                        
+                        {/* Render CardPayment Component Here */}
                         <CardPayment />
 
-                        
+                        {/* Close button */}
                         <button
                             onClick={() => setShowPaymentModal(false)}
                             className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
