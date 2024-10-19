@@ -16,10 +16,7 @@ describe('Doctor Controller Tests', () => {
     await mongoose.disconnect();
   });
 
-  afterEach(async () => {
-    await Doctor.deleteMany({});
-  });
-
+  
   it('should add a doctor successfully', async () => {
     const res = await request(app)
       .post('/doctor/add')
