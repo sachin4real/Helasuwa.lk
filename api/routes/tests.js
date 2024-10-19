@@ -82,4 +82,15 @@ router.route("/delete/:id").delete(async (req, res) => {
     });
 });
 
+app.get('/test/patient/:patientId', async (req, res) => {
+  try {
+    const patientId = req.params.patientId;
+    const tests = await Test.find({ patient: patientId }); // Adjust according to your schema
+    res.json(tests);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching tests' });
+  }
+});
+
+
 module.exports = router;
