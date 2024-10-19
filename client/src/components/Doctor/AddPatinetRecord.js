@@ -28,9 +28,14 @@ export default function AddPatientRecord() {
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
+    
     // Here you would handle the submission of the new patient record
     console.log("Submitting record for patient ID:", selectedPatientId);
-    // Add your submission logic here
+    
+    // Simulate a successful submission
+    alert("Patient record added successfully!"); // Displaying alert
+
+    // Add your submission logic here (e.g., API call to save the record)
   };
 
   return (
@@ -57,7 +62,7 @@ export default function AddPatientRecord() {
             </select>
           </div>
 
-          {/* Other Patient Details (as before) */}
+          {/* Other Patient Details */}
           <div className="flex flex-col">
             <label className="text-gray-700 mb-1">Patient Blood Pressure</label>
             <input
