@@ -1,15 +1,13 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import PatientHeader from "./Payment/Patientheader";
 import PatientSideBar from "./PatientSideBar";
+import { QRCodeSVG } from "qrcode.react"; // Correct import for QR code
 
 const PatientProfile = () => {
-
   const logo = new Image();
   logo.src = "/images/Hospital-logo-W.png";
-
 
   const [patient, setPatient] = useState([]);
   const [pid, setPid] = useState("");
@@ -24,7 +22,6 @@ const PatientProfile = () => {
 
   const validateEmail = (email) => {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
     return emailRegex.test(email);
   };
 
@@ -91,8 +88,7 @@ const PatientProfile = () => {
       Gaurdian Phone No : ${patient.gaurdianPhone}\n
       Insurance No : ${patient.insuranceNo} \n
       Insurnace Company : ${patient.insuranceCompany} \n
-  
-      `;
+    `;
     const splitText = doc.splitTextToSize(
       text,
       doc.internal.pageSize.width - margin * 2
@@ -127,9 +123,28 @@ const PatientProfile = () => {
     doc.save(`${patient._id}.pdf`);
   }
 
+  const patientDetails = JSON.stringify({
+    Name: `${firstName} ${lastName}`,
+    "Date of Birth": new Date(dob).toDateString(),
+    Email: email,
+    Gender: gender,
+    Height: patient.height,
+    Weight: patient.weight,
+    "Phone No": patient.phoneNo,
+    "Blood Group": patient.bloodGroup,
+    "Medical Status": patient.medicalStatus,
+    "Emergency Phone": patient.emergencyPhone,
+    "Guardian Name": patient.gaurdianName,
+    "Guardian NIC": patient.gaurdianNIC,
+    "Guardian Phone No": patient.gaurdianPhone,
+    "Insurance No": patient.insuranceNo,
+    "Insurance Company": patient.insuranceCompany,
+  });
+
   useEffect(() => {
     getUser();
   }, []);
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <PatientHeader />
@@ -137,9 +152,7 @@ const PatientProfile = () => {
         <PatientSideBar />
         <div className="flex-1 p-8 mt-16 ml-64 bg-white shadow-lg rounded-lg">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-semibold text-gray-800">
-              Patient Profile
-            </h1>
+            <h1 className="text-2xl font-semibold text-gray-800">Patient Profile</h1>
             <button
               className="px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600"
               onClick={deletePatient}
@@ -150,20 +163,20 @@ const PatientProfile = () => {
 
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-gray-700">
-              Patient Name: {patient.firstName} {patient.lastName}
+              Patient Name: {firstName} {lastName}
             </h2>
             <div></div>
             <p>
-              <b>Date of Birth:</b> {new Date(patient.dob).toDateString()}
+              <b>Date of Birth:</b> {new Date(dob).toDateString()}
             </p>
             <p>
-              <b>Email :</b> {patient.email}
+              <b>Email :</b> {email}
             </p>
             <p>
               <b>Phone No:</b> {patient.phoneNo}
             </p>
             <p>
-              <b>Gender :</b> {patient.gender}
+              <b>Gender :</b> {gender}
             </p>
             <p>
               <b>Height :</b> {patient.height}cm
@@ -216,6 +229,12 @@ const PatientProfile = () => {
             >
               Download Profile
             </button>
+          </div>
+          
+          {/* QR Code Display */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-800">QR Code</h2>
+            <QRCodeSVG value={patientDetails} size={128} />
           </div>
         </div>
       </div>

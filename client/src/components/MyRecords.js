@@ -4,6 +4,7 @@ import PatientHeader from "./Payment/Patientheader";
 import PatientSideBar from "../components/PatientSideBar";
 import MyReports from "./MyReports";
 import AddRecord from "./AddRecord";
+import LabTests from "./Patienttest";
 
 const MyRecords = () => {
   const [email, setEmail] = useState("");
@@ -47,6 +48,10 @@ const MyRecords = () => {
           <div>
             <MyReports />
           </div>
+          <div>
+            <LabTests />
+          </div>
+
         </div>
       </div>
     </div>
