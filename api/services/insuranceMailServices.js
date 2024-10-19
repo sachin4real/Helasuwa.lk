@@ -1,4 +1,3 @@
-// services/insuranceMailServices.js
 const nodemailer = require('nodemailer');
 
 // Nodemailer transporter configuration
