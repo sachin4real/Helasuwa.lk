@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../../styles/PrescriptionDetails.css';
 import jsPDF from 'jspdf';
 import CardPayment from './CardPayment';
 
