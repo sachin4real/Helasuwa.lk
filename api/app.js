@@ -23,8 +23,8 @@ connectToDatabase() // Use the Singleton function to connect to the database
 const patientRouter = require("./routes/route.patient.js");
 app.use("/patient", patientRouter);
 
-const admintRouter = require("./routes/admins");
-app.use("/admin", admintRouter);
+const adminRoutes = require("./routes/routes.admin.js");
+app.use("/admin", adminRoutes);
 
 const doctorRoutes = require("./routes/route.doctors.js");
 app.use("/doctor", doctorRoutes);
@@ -41,13 +41,13 @@ app.use("/prescription", prescriptionRouter);
 const reportRouter = require("./routes/reports");
 app.use("/report", reportRouter);
 
-const testRoutes = require("./routes/testRoutes");
+const testRoutes = require("./routes/route.tests.js");
 app.use("/test", testRoutes);
 
 const recordtRouter = require("./routes/records");
 app.use("/record", recordtRouter);
 
-const inventoryRoutes = require("./routes/inventoryRoutes");
+const inventoryRoutes = require("./routes/route.inventory.js");
 app.use("/Inventory", inventoryRoutes);
 
 const orderRoutes = require("./routes/order.js");
