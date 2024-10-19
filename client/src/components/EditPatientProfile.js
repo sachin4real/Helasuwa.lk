@@ -1,7 +1,6 @@
-import PatientHeader from "./PatientHeader";
+import Patientheader from "./Payment/Patientheader";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DashboardHeader from "./DashboardHeader";
 
 const EditPatientProfile = () => {
   const [patient, setPatient] = useState([]);
@@ -121,7 +120,7 @@ const EditPatientProfile = () => {
               )
               .then((res) => {
                 alert("Patient profile updated!!");
-                Window.location.reload();
+                window.location.reload();
               })
               .catch(function (error) {
                 console.log(error);
@@ -134,7 +133,7 @@ const EditPatientProfile = () => {
         }
       } else {
         alert(
-          "Password must conatin 8 characters including 1 lower case letter , one upper case letter , one number and atleast one special character"
+          "Password must contain 8 characters including 1 lower case letter , one upper case letter , one number and at least one special character"
         );
       }
     } else {
@@ -145,324 +144,289 @@ const EditPatientProfile = () => {
   useEffect(() => {
     getUser();
   }, []);
+
   return (
-    <div>
-      <DashboardHeader />
+    <div className="min-h-screen bg-gray-100">
+      <Patientheader />
+      <div className="container mx-auto p-4">
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-bold mb-4">Edit Patient Profile</h2>
 
-      <div className="main-container">
-        <div className="nav-bar">
-          <ul className="nav-list">
-            <a href="/patientHome ">
-              <li className="nav-element">Home</li>
-            </a>
-            <a href="/myAppointments">
-              <li className="nav-element">My Appointments</li>
-            </a>
+          <form onSubmit={updatePatient} className="space-y-4">
+            {/* First Name */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1" htmlFor="firstName">
+                First Name
+              </label>
+              <input
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                type="text"
+                id="firstName"
+                defaultValue={patient.firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
 
-            <a href="/patientProfile">
-              <li className="nav-element active-element">Profile</li>
-            </a>
-          </ul>
-        </div>
+            {/* Last Name */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1" htmlFor="lastName">
+                Last Name
+              </label>
+              <input
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                type="text"
+                id="lastName"
+                defaultValue={patient.lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
 
-        <div className="content-container">
-          <br />
-          <br />
+            {/* Date of Birth */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1" htmlFor="dob">
+                Date Of Birth
+              </label>
+              <input
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                type="date"
+                id="dob"
+                value={dob.toISOString().split("T")[0]}
+                onChange={(e) => setDob(new Date(e.target.value))}
+              />
+            </div>
 
-          <form action="" onSubmit={updatePatient}>
-            <label className="profile-labels" htmlFor="">
-              First Name
-            </label>{" "}
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="firstName"
-              defaultValue={patient.firstName}
-              onChange={(e) => {
-                setFirstName(e.target.value);
-              }}
-            />{" "}
-            <br />
-            <br />
-            <label className="profile-labels" htmlFor="">
-              Last Name
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="lastName"
-              defaultValue={patient.lastName}
-              onChange={(e) => {
-                setLastName(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Date Of birth
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="date"
-              id="dob"
-              value={dob.toISOString().split("T")[0]}
-              onChange={(e) => {
-                setDob(new Date(e.target.value));
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Email{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="email"
-              id="email"
-              defaultValue={patient.email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Gender
-            </label>{" "}
-            <br />
-            <select
-              className="profile-inputs"
-              defaultValue={patient.gender}
-              onChange={(e) => {
-                setGender(e.target.value);
-              }}
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Phone No
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.phoneNo}
-              onChange={(e) => {
-                setPhone(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Civil Status
-            </label>{" "}
-            <br />
-            <select
-              className="profile-inputs"
-              defaultValue={patient.gender}
-              onChange={(e) => {
-                setCivilStatus(e.target.value);
-              }}
-            >
-              <option value="Married">Married</option>
-              <option value="Single">Single</option>
-              <option value="Other">Other</option>
-            </select>{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Height{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="number"
-              id="email"
-              defaultValue={patient.height}
-              onChange={(e) => {
-                setHeight(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Weight{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="number"
-              id="email"
-              defaultValue={patient.weight}
-              onChange={(e) => {
-                setWeight(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Blood Group
-            </label>{" "}
-            <br />
-            <select
-              className="profile-inputs"
-              defaultValue={patient.bloodGroup}
-              onChange={(e) => {
-                setBloodGroup(e.target.value);
-              }}
-            >
-              <option value="A+">A positive</option>
-              <option value="A-">A negative</option>
-              <option value="B+">B positive</option>
-              <option value="B-">B negative</option>
-              <option value="O+">O positive</option>
-              <option value="O-">O negative</option>
-              <option value="AB+">AB positive</option>
-              <option value="AB-">AB negative</option>
-            </select>{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Medical Status{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.medicalStatus}
-              onChange={(e) => {
-                setMedicalStatus(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Alergies
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.allergies}
-              onChange={(e) => {
-                setAllergies(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Emergency Phone no{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.emergencyPhone}
-              onChange={(e) => {
-                setEmergencyPhone(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Gaurdian Name
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.gaurdianName}
-              onChange={(e) => {
-                setGaurdianName(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Gaurdian NIC
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.gaurdianNIC}
-              onChange={(e) => {
-                setGaurdianNIC(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Gaurdian Name
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.gaurdianPhone}
-              onChange={(e) => {
-                setGaurdianPhone(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Insurance No
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.insuranceNo}
-              onChange={(e) => {
-                setInsuranceNo(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Gaurdian Name
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="text"
-              id="email"
-              defaultValue={patient.insuranceCompany}
-              onChange={(e) => {
-                setInsuranceCompany(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Password{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="password"
-              id="email"
-              defaultValue={patient.password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <label className="profile-labels" htmlFor="">
-              Confirm Password{" "}
-            </label>
-            <br />
-            <input
-              className="profile-inputs"
-              type="password"
-              id="email"
-              defaultValue={patient.password}
-              onChange={(e) => {
-                setConfirm(e.target.value);
-              }}
-            />{" "}
-            <br /> <br />
-            <button className="update-btn-profile">Update And Save</button>
-          </form>
+            {/* Email */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                type="email"
+                id="email"
+                defaultValue={patient.email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1" htmlFor="gender">
+                Gender
+              </label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                defaultValue={patient.gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1" htmlFor="phone">
+                Phone No
+              </label>
+              <input
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                type="text"
+                id="phone"
+                defaultValue={patient.phoneNo}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+
+            {/* Other form inputs with similar Tailwind CSS styling */}
+       
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Phone No
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.phoneNo}
+      onChange={(e) => setPhone(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Civil Status
+    </label>
+    <select
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      defaultValue={patient.civilStatus}
+      onChange={(e) => setCivilStatus(e.target.value)}
+    >
+      <option value="Married">Married</option>
+      <option value="Single">Single</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Height
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="number"
+      defaultValue={patient.height}
+      onChange={(e) => setHeight(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Weight
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="number"
+      defaultValue={patient.weight}
+      onChange={(e) => setWeight(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Blood Group
+    </label>
+    <select
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      defaultValue={patient.bloodGroup}
+      onChange={(e) => setBloodGroup(e.target.value)}
+    >
+      <option value="A+">A positive</option>
+      <option value="A-">A negative</option>
+      <option value="B+">B positive</option>
+      <option value="B-">B negative</option>
+      <option value="O+">O positive</option>
+      <option value="O-">O negative</option>
+      <option value="AB+">AB positive</option>
+      <option value="AB-">AB negative</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Medical Status
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.medicalStatus}
+      onChange={(e) => setMedicalStatus(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Allergies
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.allergies}
+      onChange={(e) => setAllergies(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Emergency Phone No
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.emergencyPhone}
+      onChange={(e) => setEmergencyPhone(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Guardian Name
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.gaurdianName}
+      onChange={(e) => setGaurdianName(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Guardian NIC
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.gaurdianNIC}
+      onChange={(e) => setGaurdianNIC(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Insurance No
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.insuranceNo}
+      onChange={(e) => setInsuranceNo(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Insurance Company
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="text"
+      defaultValue={patient.insuranceCompany}
+      onChange={(e) => setInsuranceCompany(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Password
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="password"
+      defaultValue={patient.password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2">
+      Confirm Password
+    </label>
+    <input
+      className="profile-inputs w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="password"
+      defaultValue={patient.password}
+      onChange={(e) => setConfirm(e.target.value)}
+    />
+  </div>
+
+  <div className="flex justify-end">
+    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow-sm transition-all duration-200">
+      Update and Save
+    </button>
+  </div>
+</form>
+
+           
         </div>
       </div>
     </div>
