@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DashboardHeader from "./DashboardHeader";
-import SideBar from "./SideBar";
+import Patientheader from "./Payment/Patientheader";
+import PatientSideBar from "./PatientSideBar";
 import { useParams } from "react-router-dom";
 
 const AddPatientReport = () => {
   let { tid, pid } = useParams();
   const [patient, setPatient] = useState([]);
-
   const [details, setDetails] = useState("");
-
   const [result, setResult] = useState(null);
   const [test, setTest] = useState("");
 
   useEffect(() => {
     getPatient();
-
-    getLabTest()
+    getLabTest();
   }, []);
 
   const getPatient = async () => {
@@ -42,6 +39,7 @@ const AddPatientReport = () => {
         console.log(error);
       });
   };
+
   const createReport = async (e) => {
     e.preventDefault();
     const newReport = {
@@ -60,80 +58,64 @@ const AddPatientReport = () => {
         console.log(error);
       });
   };
+
   return (
-    <div>
-      <DashboardHeader />
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <PatientSideBar />
 
-      <div className="main-container">
-      <div className="nav-bar">
-      <ul className="nav-list">
-        <a href="/laboratory">
-          <li className="nav-element active-element">Laboratory</li>
-        </a>
-        <a href="/staff">
-          <li className="nav-element">Staff Management</li>
-        </a>
-        <a href="/doctor">
-          <li className="nav-element">Add Doctor</li>
-        </a>
-        <a href="/staffProfile">
-          <li className="nav-element">Profile</li>
-        </a>
-      </ul>
-    </div>
+      {/* Main Content */}
+      <div className="flex-grow flex flex-col">
+        <Patientheader />
 
-        <div className="content-container">
-          <div className="add-patient-report-container">
-            <h1>Add a report</h1>
+        <div className="p-6 flex-grow bg-gray-100">
+          <div className="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto mt-20">
+            <h1 className="text-2xl font-bold mb-6">Add a Patient Report</h1>
 
-            <form action="" onSubmit={createReport}>
-              {/* <select className='patient-report-inputs' name="" id="" onChange={(e)=>{
-                    setPid(e.target.value)
-                  }}>
-                    <option value="">Select Patient</option>
-                    {patients.map((item,index)=>(
-                      <option value={item._id}>{item.firstName} {item.lastName} , ID: {item._id}</option>
-                    ))}
-                  </select> <br /> */}
-              <input
-                className="patient-report-inputs"
-                type="text"
-                placeholder="Lab Test"
-                value={patient.firstName +" " + patient.lastName + "-" + patient._id}
-                readOnly
-              />
-              <br />
-              <h4>Test ID : {test._id}</h4>
-              <h4>Test Date : {(new Date(test.date)).toLocaleString()}</h4>
-              <h4>Test Type : {test.type}</h4>
-              <h4>Test Status : {test.status}</h4>
-              <br />
-              <select
-                className="patient-report-inputs"
-                name=""
-                id=""
-                placeholder="Test Results"
-                onChange={(e) => {
-                  setResult(e.target.value);
-                }}
+            <form onSubmit={createReport}>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">Patient</label>
+                <input
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                  type="text"
+                  value={`${patient.firstName} ${patient.lastName} - ${patient._id}`}
+                  readOnly
+                />
+              </div>
+
+              <div className="mb-4">
+                <h4 className="font-semibold text-gray-700">Test ID: {test._id}</h4>
+                <h4 className="font-semibold text-gray-700">Test Date: {new Date(test.date).toLocaleString()}</h4>
+                <h4 className="font-semibold text-gray-700">Test Type: {test.type}</h4>
+                <h4 className="font-semibold text-gray-700">Test Status: {test.status}</h4>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">Test Result</label>
+                <select
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                  onChange={(e) => setResult(e.target.value)}
+                >
+                  <option value="">Test Result</option>
+                  <option value="true">Positive</option>
+                  <option value="false">Negative</option>
+                </select>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-gray-700 font-bold mb-2">Test Details</label>
+                <textarea
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                  rows="5"
+                  placeholder="Enter test details"
+                  onChange={(e) => setDetails(e.target.value)}
+                ></textarea>
+              </div>
+
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                type="submit"
               >
-                <option value="">Test Result</option>
-                <option value="true">Positive</option>
-                <option value="false">Negative</option>
-              </select>{" "}
-              <br />
-              <textarea
-                className="patient-report-inputs"
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="Test Details"
-                onChange={(e) => {
-                  setDetails(e.target.value);
-                }}
-              ></textarea>
-              <button id="create-patient-report-btn" type="submit">
                 Create Report
               </button>
             </form>
