@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PatientHeader() {
+export default function Patientheader() {
   function logout() {
     localStorage.removeItem("token");
     localStorage.setItem("previous", false);
