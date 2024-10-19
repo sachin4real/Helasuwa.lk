@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import jsPDF from "jspdf";
-import SinglePrescription from "./SinglePrescription";
+import SinglePrescription from "../../components/Doctor/SinglePrescription";
 
 const SingleAppointment = ({ apt }) => {
   const logo = new Image();
