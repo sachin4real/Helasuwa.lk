@@ -22,22 +22,22 @@ mongoose
   .catch((err) => console.log(err));
 
 // Routes
-const patientRouter = require("./routes/patients");
+const patientRouter = require("./routes/route.patient.js");
 app.use("/patient", patientRouter);
 
 const admintRouter = require("./routes/admins");
 app.use("/admin", admintRouter);
 
-const doctorRoutes = require("./routes/doctorRoutes.js");
+const doctorRoutes = require("./routes/route.doctors.js");
 app.use("/doctor", doctorRoutes);
 
-const channelRouter = require("./routes/channels");
+const channelRouter = require("./routes/route.channels.js");
 app.use("/channel", channelRouter);
 
-const appointmentRouter = require("./routes/appointments");
+const appointmentRouter = require("./routes/route.appointment.js");
 app.use("/appointment", appointmentRouter);
 
-const prescriptionRouter = require("./routes/prescriptions");
+const prescriptionRouter = require("./routes/route.prescription.js");
 app.use("/prescription", prescriptionRouter);
 
 const reportRouter = require("./routes/reports");
