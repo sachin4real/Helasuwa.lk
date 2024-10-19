@@ -36,36 +36,38 @@ const LabTests = () => {
         console.log(error);
       });
   };
+
   return (
-    <div>
+    <div className="p-4">
       <input
         type="text"
         onKeyUp={searchTest}
-        onKeyDown={searchTest}
-        className="search-tests-input"
+        className="mb-4 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Search"
-        onChange={(e)=>{
-          setQuery(e.target.value) 
+        onChange={(e) => {
+          setQuery(e.target.value);
         }}
       />
-      <table className="tests-table">
-        <tr className="th-tests">
-          <th>Test ID</th>
-          <th>Patient ID</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Report</th>
-        </tr>
-
-        {tests.map((item, index) => (
-      
-          <TestRow item={item} />
-        ))}
+      <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+        <thead>
+          <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            <th className="py-3 px-6 text-left">Test ID</th>
+            <th className="py-3 px-6 text-left">Patient ID</th>
+            <th className="py-3 px-6 text-left">Name</th>
+            <th className="py-3 px-6 text-left">Age</th>
+            <th className="py-3 px-6 text-left">Date</th>
+            <th className="py-3 px-6 text-left">Type</th>
+            <th className="py-3 px-6 text-left">Status</th>
+            <th className="py-3 px-6 text-left">Report</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tests.map((item, index) => (
+            <TestRow key={index} item={item} />
+          ))}
+        </tbody>
       </table>
-    </div> 
+    </div>
   );
 };
 
