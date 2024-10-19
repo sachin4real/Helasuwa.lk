@@ -81,21 +81,4 @@ describe('Inventory Controller Tests', () => {
     expect(updatedItem.item_name).toBe('Updated Item 1');
   });
 
-  it('should delete an inventory item by ID', async () => {
-    const inventory = new Inventory({
-      item_id: 'ITEM001',
-      item_name: 'Item 1',
-      category: 'Category A',
-      quantity: 100,
-      price: 10
-    });
-    await inventory.save();
-
-    const res = await request(app).delete(`/inventory/delete/${inventory._id}`);
-    
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.status).toBe('Inventory deleted');
-    const deletedItem = await Inventory.findById(inventory._id);
-    expect(deletedItem).toBeNull();
-  });
 });

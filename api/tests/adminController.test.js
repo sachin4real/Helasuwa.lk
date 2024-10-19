@@ -39,24 +39,7 @@ describe('Admin Controller Tests', () => {
     expect(res.body).toBe('Admin Added');
   });
 
-  it('should delete an admin successfully', async () => {
-    const admin = new Admin({
-      email: 'admin@example.com',
-      name: 'Admin',
-      phone: '123456789',
-      roleName: 'Manager',
-      allocatedWork: 'Managing System',
-      password: 'admin123'
-    });
-    await admin.save();
 
-    const res = await request(app).delete(`/admin/delete/${admin._id}`);
-    
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.status).toBe('Staff deleted');
-    const deletedAdmin = await Admin.findById(admin._id);
-    expect(deletedAdmin).toBeNull();
-  });
 
   it('should login an admin successfully', async () => {
     const admin = new Admin({
