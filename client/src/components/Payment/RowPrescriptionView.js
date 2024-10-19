@@ -17,7 +17,7 @@ export default function RowPrescriptionView({ item, onClick }) {
             <td>{item.text ? (item.text.length > 20 ? `${item.text.slice(0, 20)}...` : item.text) : 'No details'}</td>
             <td>
                 <button 
-                    className="download-btn-pres" 
+                    className="download-btn-pres bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105" 
                     onClick={(e) => {
                         e.stopPropagation(); 
                         onClick(); 
@@ -25,7 +25,6 @@ export default function RowPrescriptionView({ item, onClick }) {
                 >
                     View
                 </button>
-               
             </td>
         </tr>
     );
