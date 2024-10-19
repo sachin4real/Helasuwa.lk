@@ -1,8 +1,7 @@
-// app.js
 const express = require("express");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const { connectToDatabase } = require("./Configurations/DB_Connection.js"); // Import the Singleton connection function
 
 dotenv.config();
 
@@ -16,10 +15,9 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use('/uploads', express.static('uploads')); // Prescription upload in insurance claim
 
 // Database connection
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => console.log("Database Connected"))
-  .catch((err) => console.log(err));
+connectToDatabase() // Use the Singleton function to connect to the database
+  .then(() => console.log("Database connection successful"))
+  .catch((err) => console.error("Database connection error:", err));
 
 // Routes
 const patientRouter = require("./routes/route.patient.js");
