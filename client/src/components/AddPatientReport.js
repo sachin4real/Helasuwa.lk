@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Patientheader from "./Payment/Patientheader";
-import PatientSideBar from "./PatientSideBar";
+import SideNav from "./Admin/SideNav";
 import { useParams } from "react-router-dom";
 
 const AddPatientReport = () => {
@@ -62,7 +62,7 @@ const AddPatientReport = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <PatientSideBar />
+      <SideNav />
 
       {/* Main Content */}
       <div className="flex-grow flex flex-col">
