@@ -16,9 +16,6 @@ describe('Admin Controller Tests', () => {
     await mongoose.disconnect();
   });
 
-  afterEach(async () => {
-    await Admin.deleteMany({});
-  });
 
   it('should add an admin successfully', async () => {
     const res = await request(app)
