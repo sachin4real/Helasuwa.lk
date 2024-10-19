@@ -28,7 +28,7 @@ app.use("/patient", patientRouter);
 const admintRouter = require("./routes/admins");
 app.use("/admin", admintRouter);
 
-const doctorRoutes = require("./routes/doctorRoutes.js");
+const doctorRoutes = require("./routes/route.doctors.js");
 app.use("/doctor", doctorRoutes);
 
 const channelRouter = require("./routes/route.channels.js");
