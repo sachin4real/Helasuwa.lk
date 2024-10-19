@@ -109,5 +109,33 @@ exports.getAllClaims = async (req, res) => {
   }
 };
 
+// Delete a claim by ID
+exports.deleteClaimById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedClaim = await InsuranceClaim.findByIdAndDelete(id);
+
+    if (!deletedClaim) {
+      return res.status(404).json({ message: 'Insurance claim not found' });
+    }
+
+    res.status(200).json({ message: 'Insurance claim deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting claim:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Delete all claims
+exports.deleteAllClaims = async (req, res) => {
+  try {
+    await InsuranceClaim.deleteMany({});
+    res.status(200).json({ message: 'All insurance claims deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all claims:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Export the upload functionality for file handling
 exports.upload = upload;

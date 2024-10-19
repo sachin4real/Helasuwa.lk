@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server-core');
 
 const express = require('express');
-const Card = require('../models/Card'); // The Card model
-const cardRoutes = require('../routes/CardRoutes'); // Your card routes
+const Card = require('../models/Card'); 
+const cardRoutes = require('../routes/CardRoutes'); 
 
 let mongoServer;
 const app = express();
-app.use(express.json()); // Middleware to parse JSON request bodies
-app.use('/cards', cardRoutes); // Routes for card
+app.use(express.json()); 
+app.use('/cards', cardRoutes); 
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create(); // Start the in-memory MongoDB server
