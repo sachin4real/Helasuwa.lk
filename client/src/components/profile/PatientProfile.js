@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import PatientHeader from "./Payment/Patientheader";
-import PatientSideBar from "./PatientSideBar";
+import PatientHeader from "../Payment/Patientheader";
+import PatientSideBar from "../PatientSideBar";
 import { QRCodeSVG } from "qrcode.react"; // Correct import for QR code
 
 const PatientProfile = () => {

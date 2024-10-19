@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import PatientHeader from "../../components/Payment/Patientheader";
 import PatientSideBar from "../../components/PatientSideBar";
-import AllChannels from '../../components/AllChannels';
+import AllChannels from '../../components/Appointment/AllChannels';
 
 
 const PatientHome = () => {

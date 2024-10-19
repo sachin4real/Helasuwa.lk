@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PatientHeader from "./Payment/Patientheader";
-import PatientSideBar from "../components/PatientSideBar";
+import PatientHeader from "../Payment/Patientheader";
+import PatientSideBar from "../PatientSideBar";
 import MyReports from "./MyReports";
 import AddRecord from "./AddRecord";
-import LabTests from "./Patienttest";
+import LabTests from "../Patienttest";
 
 const MyRecords = () => {
   const [email, setEmail] = useState("");

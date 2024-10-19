@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import PatientSideBar from "../components/PatientSideBar"; // Import PatientSideBar
+import PatientSideBar from '../PatientSideBar';
 import AllChannels from "./AllChannels";
 import { useParams } from "react-router-dom";
-import Patientheader from "./Payment/Patientheader";
+import Patientheader from "../Payment/Patientheader";
 
 const SearchChannels = () => {
   let { date, doctor } = useParams();
