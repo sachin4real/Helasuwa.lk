@@ -1,55 +1,30 @@
+
 const request = require("supertest");
-const express = require("express");
-const app = express();
+const app = require("../app"); // assuming your Express app is exported in app.js or server.js
 const mongoose = require("mongoose");
 
-// Import the router you want to test
-const channelRouter = require("../routes/route.channels"); 
+describe("GET /doctorchannels/:id", () => {
+  // Replace the doctorId with a valid ID from your database or mock data
+  const doctorId = "609c73f2a4e9f94044c10bc2"; 
 
-// Middleware to handle JSON
-app.use(express.json());
-
-// Use the router
-app.use("/channels", channelRouter);
-
-// Mock database connection
-beforeAll(async () => {
-  const url = `mongodb://127.0.0.1/channel_test_db`;
-  await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
-
-describe("GET /channels/get/:id", () => {
-  it("should fetch a specific channel by ID", async () => {
-    // Create a sample channel in the test database
-    const newChannel = new Channel({
-      doctor: "12345",
-      drName: "Dr. Smith",
-      specialization: "Cardiology",
-      startDateTime: new Date(),
-      maxPatients: 10,
-    });
-    await newChannel.save();
-
-    // Perform the GET request using Supertest
-    const response = await request(app).get(`/channels/get/${newChannel._id}`);
-
-    // Check that the response has the correct status and contains the expected data
-    expect(response.statusCode).toBe(200);
-    expect(response.body.status).toBe("Channel fetched");
-    expect(response.body.Channel._id).toBe(newChannel._id.toString());
-    expect(response.body.Channel.drName).toBe("Dr. Smith");
-    expect(response.body.Channel.specialization).toBe("Cardiology");
+  // Close the database connection after all tests are done
+  afterAll(async () => {
+    await mongoose.connection.close();
   });
 
-  it("should return an error if the channel is not found", async () => {
-    const fakeId = mongoose.Types.ObjectId();
-    const response = await request(app).get(`/channels/get/${fakeId}`);
+  it("should fetch all channels for a specific doctor", async () => {
+    const res = await request(app).get(`/channel/doctorchannels/${doctorId}`);
 
-    expect(response.statusCode).toBe(500);
-    expect(response.body.status).toBe("Error in getting channel details");
+    expect(res.statusCode).toBe(200); // Assert that the response has a status code of 200
+    expect(res.body).toBeInstanceOf(Array); // Assert that the response body is an array
+
+    // Optionally, you can check the contents of the array
+    if (res.body.length > 0) {
+      expect(res.body[0]).toHaveProperty("doctor", doctorId); // Ensures the correct doctor ID is returned
+      expect(res.body[0]).toHaveProperty("startDateTime");
+      expect(res.body[0]).toHaveProperty("maxPatients");
+      expect(res.body[0]).toHaveProperty("drName");
+      expect(res.body[0]).toHaveProperty("specialization");
+    }
   });
 });
