@@ -1,8 +1,7 @@
-// app.js
 const express = require("express");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const { connectToDatabase } = require("./Configurations/DB_Connection.js"); // Import the Singleton connection function
 
 dotenv.config();
 
@@ -16,40 +15,39 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use('/uploads', express.static('uploads')); // Prescription upload in insurance claim
 
 // Database connection
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => console.log("Database Connected"))
-  .catch((err) => console.log(err));
+connectToDatabase() // Use the Singleton function to connect to the database
+  .then(() => console.log("Database connection successful"))
+  .catch((err) => console.error("Database connection error:", err));
 
 // Routes
-const patientRouter = require("./routes/patients");
+const patientRouter = require("./routes/route.patient.js");
 app.use("/patient", patientRouter);
 
-const admintRouter = require("./routes/admins");
-app.use("/admin", admintRouter);
+const adminRoutes = require("./routes/routes.admin.js");
+app.use("/admin", adminRoutes);
 
-const doctorRoutes = require("./routes/doctorRoutes.js");
+const doctorRoutes = require("./routes/route.doctors.js");
 app.use("/doctor", doctorRoutes);
 
-const channelRouter = require("./routes/channels");
+const channelRouter = require("./routes/route.channels.js");
 app.use("/channel", channelRouter);
 
-const appointmentRouter = require("./routes/appointments");
+const appointmentRouter = require("./routes/route.appointment.js");
 app.use("/appointment", appointmentRouter);
 
-const prescriptionRouter = require("./routes/prescriptions");
+const prescriptionRouter = require("./routes/route.prescription.js");
 app.use("/prescription", prescriptionRouter);
 
 const reportRouter = require("./routes/reports");
 app.use("/report", reportRouter);
 
-const testRoutes = require("./routes/testRoutes");
+const testRoutes = require("./routes/route.tests.js");
 app.use("/test", testRoutes);
 
 const recordtRouter = require("./routes/records");
 app.use("/record", recordtRouter);
 
-const inventoryRoutes = require("./routes/inventoryRoutes");
+const inventoryRoutes = require("./routes/route.inventory.js");
 app.use("/Inventory", inventoryRoutes);
 
 const orderRoutes = require("./routes/order.js");
