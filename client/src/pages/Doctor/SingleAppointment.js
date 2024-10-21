@@ -205,9 +205,10 @@ const SingleAppointment = ({ apt }) => {
             </div>
 
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Price</label>
+              <label className="block text-gray-700 font-semibold mb-2"></label>
               <input
                 type="text"
+                hidden= "true"
                 className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
                 placeholder="Price"
                 value={price > 0 ? `$${price}` : ""}
@@ -314,7 +315,7 @@ const SingleAppointment = ({ apt }) => {
               onClick={generatePres}
               className="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg shadow hover:bg-green-700 transition duration-300"
             >
-              Generate Prescription
+              Send Prescription
             </button>
             <button
               onClick={addToPres}

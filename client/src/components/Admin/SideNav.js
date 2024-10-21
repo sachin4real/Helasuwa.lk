@@ -73,7 +73,7 @@ const SideNav = () => {
           }
         >
           <FaBox className="mr-3" />
-          <span>Inventory</span>
+          <span>Pharmacy</span>
         </NavLink>
       </nav>
     </div>

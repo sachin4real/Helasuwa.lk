@@ -41,7 +41,7 @@ const AddInventory = () => {
         {/* Main Content */}
         <div className="flex-grow p-6">
           <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-8">
-            <h1 className="text-2xl font-bold text-center mb-6">Add Inventory Item</h1>
+            <h1 className="text-2xl font-bold text-center mb-6">Add Pharmacy Item</h1>
             <form onSubmit={addInventory} className="space-y-4">
               <input
                 type="text"
@@ -78,7 +78,7 @@ const AddInventory = () => {
                 type="submit"
                 className="w-full py-2 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg hover:opacity-90"
               >
-                Add Inventory
+                Add Item
               </button>
             </form>
           </div>
