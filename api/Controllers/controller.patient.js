@@ -1,154 +1,186 @@
+// Controllers/controller.patient.js
 const Patient = require("../models/Patient");
-const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const secretKey = "hey";
+const { isObjectId } = require("../utils/ids"); // tiny helper we created earlier
 
-// Controller to add a new patient
-exports.addPatient = (req, res) => {
-  const {
-    email,
-    password,
-    firstName,
-    lastName,
-    gender,
-    dob,
-    civilStatus,
-    phone,
-    emergencyPhone,
-    gaurdianNIC,
-    gaurdianName,
-    gaurdianPhone,
-    height,
-    weight,
-    bloodGroup,
-    allergies,
-    medicalStatus,
-    insuranceNo,
-    insuranceCompany,
-  } = req.body;
+// Use env in prod; fallback keeps local dev working
+const JWT_SECRET = process.env.JWT_SECRET || "hey";
 
-  const newPatient = new Patient({
-    email,
-    firstName,
-    lastName,
-    dob,
-    gender,
-    password,
-    civilStatus,
-    phoneNo: phone,
-    emergencyPhone,
-    gaurdianName,
-    gaurdianNIC,
-    gaurdianPhone,
-    height,
-    weight,
-    bloodGroup,
-    allergies,
-    medicalStatus,
-    insuranceCompany,
-    insuranceNo,
-  });
-
-  newPatient
-    .save()
-    .then(() => res.json("Patient Added"))
-    .catch((err) => console.log(err));
-};
-
-// Controller for login
-exports.loginPatient = async (req, res) => {
-  const { email, password } = req.body;
-  const patient = await Patient.findOne({ email });
-
+/* ------------------------------ add patient ------------------------------- */
+exports.addPatient = async (req, res) => {
   try {
-    if (patient) {
-      const result = password === patient.password;
+    const {
+      email,
+      password,          // TODO: hash with bcrypt in production
+      firstName,
+      lastName,
+      gender,
+      dob,
+      civilStatus,
+      phone,
+      emergencyPhone,
+      gaurdianNIC,
+      gaurdianName,
+      gaurdianPhone,
+      height,
+      weight,
+      bloodGroup,
+      allergies,
+      medicalStatus,
+      insuranceNo,
+      insuranceCompany,
+    } = req.body;
 
-      if (result) {
-        const token = jwt.sign({ email: patient.email }, secretKey, {
-          expiresIn: "1h",
-        });
-        res.status(200).send({ rst: "success", data: patient, tok: token });
-      } else {
-        res.status(200).send({ rst: "incorrect password" });
-      }
-    } else {
-      res.status(200).send({ rst: "invalid user" });
-    }
-  } catch (error) {
-    res.status(500).send({ error });
+    const newPatient = new Patient({
+      email,
+      firstName,
+      lastName,
+      dob,
+      gender,
+      password,
+      civilStatus,
+      phoneNo: phone,
+      emergencyPhone,
+      gaurdianName,
+      gaurdianNIC,
+      gaurdianPhone,
+      height,
+      weight,
+      bloodGroup,
+      allergies,
+      medicalStatus,
+      insuranceCompany,
+      insuranceNo,
+    });
+
+    await newPatient.save();
+    return res.json("Patient Added");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to add patient" });
   }
 };
 
-// Controller to verify JWT token
-exports.checkToken = async (req, res) => {
-  const token = req.headers.authorization;
-  let email = null;
+/* ---------------------------------- login --------------------------------- */
+exports.loginPatient = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const patient = await Patient.findOne({ email });
+    if (!patient) return res.status(401).send({ rst: "invalid user" });
 
-  jwt.verify(token, secretKey, (error, decoded) => {
-    if (error) {
-      console.log(error);
-      return res.status(401).send("Unauthorized");
+    // plaintext compare for now to match your DB
+    if (password !== patient.password) {
+      return res.status(401).send({ rst: "incorrect password" });
     }
-    email = decoded.email;
-  });
 
-  const patient = await Patient.findOne({ email });
-  res.status(200).send({ rst: "checked", patient });
+    const token = jwt.sign(
+      { id: patient._id, role: "patient", email: patient.email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).send({ rst: "success", data: patient, tok: token });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: "Login failed" });
+  }
 };
 
-// Controller to get patient by ID
-exports.getPatientById = async (req, res) => {
-  const pid = req.params.id;
-
+/* ------------------------------- check token ------------------------------ */
+exports.checkToken = async (req, res) => {
   try {
-    const patient = await Patient.findById(pid);
-    res.status(200).send({ status: "Patient fetched", patient });
+    const header = req.headers.authorization || "";
+    if (!header.startsWith("Bearer ")) {
+      return res.status(401).send({ rst: "no token", error: "Missing Bearer token" });
+    }
+
+    const token = header.slice(7);
+    let payload;
+    try {
+      payload = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("JWT verify failed:", err.message);
+      return res.status(403).send({ rst: "invalid token", error: "Invalid or expired token" });
+    }
+
+    const patient = await Patient.findOne({ email: payload.email });
+    if (!patient) return res.status(404).send({ rst: "not found" });
+
+    return res.status(200).send({ rst: "checked", patient });
   } catch (err) {
-    res.status(500).send({
+    console.error(err);
+    return res.status(500).send({ error: "Token check failed" });
+  }
+};
+
+/* ------------------------------- get by id -------------------------------- */
+exports.getPatientById = async (req, res) => {
+  try {
+    const pid = req.params.id;
+    if (!isObjectId(pid)) {
+      return res.status(400).send({ status: "Invalid patient id" });
+    }
+
+    const patient = await Patient.findById(pid);
+    if (!patient) return res.status(404).send({ status: "Patient not found" });
+
+    return res.status(200).send({ status: "Patient fetched", patient });
+  } catch (err) {
+    return res.status(500).send({
       status: "Error in getting patient details",
       error: err.message,
     });
   }
 };
 
-// Controller to update a patient by ID
+/* --------------------------------- update --------------------------------- */
 exports.updatePatient = async (req, res) => {
-  const pid = req.params.id;
-  const updatePatient = req.body;
-
   try {
-    await Patient.findByIdAndUpdate(pid, updatePatient);
-    res.status(200).send({ status: "Patient updated" });
+    const pid = req.params.id;
+    if (!isObjectId(pid)) {
+      return res.status(400).send({ status: "Invalid patient id" });
+    }
+
+    const updatePatient = req.body;
+    const updated = await Patient.findByIdAndUpdate(pid, updatePatient);
+    if (!updated) return res.status(404).send({ status: "Patient not found" });
+
+    return res.status(200).send({ status: "Patient updated" });
   } catch (err) {
-    res.status(500).send({
+    return res.status(500).send({
       status: "Error with updating information",
       error: err.message,
     });
   }
 };
 
-// Controller to delete a patient by ID
+/* --------------------------------- delete --------------------------------- */
 exports.deletePatient = async (req, res) => {
-  const pid = req.params.id;
-
   try {
-    await Patient.findByIdAndDelete(pid);
-    res.status(200).send({ status: "Patient deleted" });
+    const pid = req.params.id;
+    if (!isObjectId(pid)) {
+      return res.status(400).send({ status: "Invalid patient id" });
+    }
+
+    const deleted = await Patient.findByIdAndDelete(pid);
+    if (!deleted) return res.status(404).send({ status: "Patient not found" });
+
+    return res.status(200).send({ status: "Patient deleted" });
   } catch (err) {
-    res.status(202).send({
+    return res.status(500).send({
       status: "Error with deleting the Patient",
       error: err.message,
     });
   }
 };
 
-// Controller to get all patients
+/* ------------------------------ get all patients -------------------------- */
 exports.getAllPatients = async (req, res) => {
   try {
     const patients = await Patient.find();
-    res.json(patients);
+    return res.json(patients);
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    return res.status(500).json({ error: "Failed to fetch patients" });
   }
 };

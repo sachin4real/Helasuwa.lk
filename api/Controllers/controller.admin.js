@@ -1,207 +1,232 @@
-// adminController.js
+// Controllers/controller.admin.js
 const Admin = require("../models/Admin");
-const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const secretKey = 'hey';
+const { sendMail } = require("../lib/mailer");
+const { isObjectId } = require("../utils/ids");
 
-// Nodemailer transporter setup
-const transporter = nodemailer.createTransport({
-  host: "smtp.zoho.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: "helasuwa@zohomail.com",
-    pass: process.env.EmailPass,
-  },
-});
+// Use env var in prod; fallback prevents local dev from breaking
+const JWT_SECRET = process.env.JWT_SECRET || "hey";
+const FROM_EMAIL = process.env.SMTP_USER || "helasuwa@zohomail.com";
 
-// Add new admin
-exports.addAdmin = (req, res) => {
-  const { email, name, phone, roleName, allocatedWork, password } = req.body;
+/* ------------------------------- util: regex ------------------------------- */
+function escapeRegex(text = "") {
+  return String(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+function toRegex(text = "", flags = "i") {
+  const trimmed = String(text).trim();
+  if (!trimmed) return null;
+  if (trimmed.length > 64) throw new Error("Query too long");
+  return new RegExp(escapeRegex(trimmed), flags);
+}
 
-  const newAdmin = new Admin({
-    email,
-    name,
-    password,
-    phone,
-    roleName,
-    allocatedWork,
-  });
+/* -------------------------------- add admin ------------------------------- */
+exports.addAdmin = async (req, res) => {
+  try {
+    const { email, name, phone, roleName, allocatedWork, password } = req.body;
 
-  newAdmin.save().then(() => {
-    const mailOptions = {
-      from: "helasuwa@zohomail.com",
+    const newAdmin = new Admin({
+      email,
+      name,
+      password, // TODO: bcrypt hash in production
+      phone,
+      roleName,
+      allocatedWork,
+    });
+
+    await newAdmin.save();
+
+    // fire-and-forget (won't crash dev if creds absent)
+    await sendMail({
+      from: FROM_EMAIL,
       to: email,
       subject: "Staff Profile Created",
-      text: `Hello \nYour Staff Account has been created.\n\nEmail : ${email} \nPassword : ${password}\n\nThank You.`,
-    };
+      text: `Hello,
+Your Staff Account has been created.
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
+Email: ${email}
+Password: ${password}
+
+Thank you.`,
     });
-    res.json("Admin Added");
-  }).catch(err => {
-    console.log(err);
-  });
+
+    return res.json("Admin Added");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to add admin" });
+  }
 };
 
-// Delete admin
+/* ------------------------------ delete admin ------------------------------ */
 exports.deleteAdmin = async (req, res) => {
-  let aid = req.params.id;
+  try {
+    const aid = req.params.id;
+    if (!isObjectId(aid)) return res.status(400).send({ status: "Invalid admin id" });
 
-  await Admin.findByIdAndDelete(aid)
-    .then(() => {
-      res.status(200).send({ status: "Staff deleted" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(202).send({ status: "Error with deleting the admin", error: err.message });
-    });
+    const deleted = await Admin.findByIdAndDelete(aid);
+    if (!deleted) return res.status(404).send({ status: "Staff not found" });
+
+    return res.status(200).send({ status: "Staff deleted" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .send({ status: "Error with deleting the admin", error: err.message });
+  }
 };
 
-// Login
+/* ---------------------------------- login --------------------------------- */
 exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-
-  const admin = await Admin.findOne({ email: email });
-
   try {
-    if (admin) {
-      const result = password === admin.password;
+    const admin = await Admin.findOne({ email });
+    if (!admin) return res.status(401).send({ rst: "invalid admin" });
 
-      if (result) {
-        const token = jwt.sign({ email: admin.email }, secretKey, { expiresIn: '1h' });
-        res.status(200).send({ rst: "success", data: admin, tok: token });
-      } else {
-        res.status(200).send({ rst: "incorrect password" });
-      }
-    } else {
-      res.status(200).send({ rst: "invalid admin" });
-    }
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-};
+    // plaintext compare to match your current DB; switch to bcrypt later
+    if (password !== admin.password) return res.status(401).send({ rst: "incorrect password" });
 
-// Check token
-exports.checkToken = async (req, res) => {
-  const token = req.headers.authorization;
-  let email = null;
-
-  jwt.verify(token, secretKey, (error, decoded) => {
-    if (error) {
-      console.log(error);
-    } else {
-      email = decoded.email;
-    }
-  });
-
-  const admin = await Admin.findOne({ email: email });
-  res.status(200).send({ rst: "checked", admin: admin });
-};
-
-// Get all admins
-exports.getAllAdmins = (req, res) => {
-  Admin.find()
-    .then((admins) => {
-      res.json(admins);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-// Get admin by ID
-exports.getAdminById = async (req, res) => {
-  let aid = req.params.id;
-
-  const usr = await Admin.findById(aid)
-    .then((staff) => {
-      res.status(200).send({ status: "Staff fetched", staff });
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.status(500).send({
-        status: "Error in getting staff details",
-        error: err.message,
-      });
-    });
-};
-
-// Search admins
-exports.searchAdmins = async (req, res) => {
-  try {
-    const query = req.query.query;
-    const results = await Admin.find({
-      $or: [
-        { email: { $regex: query, $options: "i" } },
-        { name: { $regex: query, $options: "i" } },
-        { roleName: { $regex: query, $options: "i" } },
-        { allocatedWork: { $regex: query, $options: "i" } },
-      ],
-    });
-    res.json(results);
+    const token = jwt.sign(
+      { id: admin._id, role: admin.roleName, email: admin.email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    return res.status(200).send({ rst: "success", data: admin, tok: token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).send({ error: "Login failed" });
   }
 };
 
-// Update admin
-exports.updateAdmin = async (req, res) => {
-  let sid = req.params.id;
-  const { name, email, phone, roleName, allocatedWork } = req.body;
+/* ------------------------------- check token ------------------------------ */
+exports.checkToken = async (req, res) => {
+  try {
+    const header = req.headers.authorization || "";
+    if (!header.startsWith("Bearer ")) {
+      return res.status(401).send({ rst: "no token", error: "Missing Bearer token" });
+    }
 
-  const updateStaff = { name, email, phone, roleName, allocatedWork };
+    const token = header.slice(7);
+    let payload;
+    try {
+      payload = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("JWT verify failed:", err.message);
+      return res.status(403).send({ rst: "invalid token", error: "Invalid or expired token" });
+    }
 
-  await Admin.findByIdAndUpdate(sid, updateStaff)
-    .then(() => {
-      const mailOptions = {
-        from: "hospitalitp@zohomail.com",
-        to: email,
-        subject: "Staff Profile Updated",
-        text: `Hello ${name}, \nYour Staff Account has been Updated.\nEmail : ${email} \nNew Role : ${roleName}\nAllocated Work : ${allocatedWork}\nPhone : ${phone}\nThank You.`,
-      };
+    const admin = await Admin.findOne({ email: payload.email });
+    if (!admin) return res.status(404).send({ rst: "not found" });
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
-
-      res.status(200).send({ status: "Staff updated" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        status: "Error with updating information",
-        error: err.message,
-      });
-    });
+    return res.status(200).send({ rst: "checked", admin });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ error: "Token check failed" });
+  }
 };
 
-// Update admin with password
-exports.updateAdminWithPassword = async (req, res) => {
-  let sid = req.params.id;
-  const { name, email, phone, roleName, allocatedWork, password } = req.body;
+/* ------------------------------ list admins ------------------------------- */
+exports.getAllAdmins = async (req, res) => {
+  try {
+    const admins = await Admin.find();
+    return res.json(admins);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to fetch admins" });
+  }
+};
 
-  const updateStaff = { name, email, phone, roleName, allocatedWork, password };
+/* ------------------------------- get by id -------------------------------- */
+exports.getAdminById = async (req, res) => {
+  try {
+    const aid = req.params.id;
+    if (!isObjectId(aid)) return res.status(400).send({ status: "Invalid admin id" });
 
-  await Admin.findByIdAndUpdate(sid, updateStaff)
-    .then(() => {
-      res.status(200).send({ status: "Staff updated" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        status: "Error with updating information",
-        error: err.message,
-      });
+    const staff = await Admin.findById(aid);
+    if (!staff) return res.status(404).send({ status: "Staff not found" });
+
+    return res.status(200).send({ status: "Staff fetched", staff });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({
+      status: "Error in getting staff details",
+      error: err.message,
     });
+  }
+};
+
+/* ------------------------------ search admins ----------------------------- */
+exports.searchAdmins = async (req, res) => {
+  try {
+    const query = req.query.query || "";
+    const rx = toRegex(query);
+
+    const filter = rx
+      ? { $or: [{ email: rx }, { name: rx }, { roleName: rx }, { allocatedWork: rx }] }
+      : {};
+
+    const results = await Admin.find(filter);
+    return res.json(results);
+  } catch (error) {
+    console.error(error);
+    const msg = error && error.message === "Query too long" ? "Query too long" : "Server error";
+    return res.status(400).json({ error: msg });
+  }
+};
+
+/* ------------------------------- update admin ----------------------------- */
+exports.updateAdmin = async (req, res) => {
+  try {
+    const sid = req.params.id;
+    if (!isObjectId(sid)) return res.status(400).send({ status: "Invalid admin id" });
+
+    const { name, email, phone, roleName, allocatedWork } = req.body;
+    const updateStaff = { name, email, phone, roleName, allocatedWork };
+
+    const updated = await Admin.findByIdAndUpdate(sid, updateStaff, { new: true });
+    if (!updated) return res.status(404).send({ status: "Staff not found" });
+
+    await sendMail({
+      from: FROM_EMAIL,
+      to: email,
+      subject: "Staff Profile Updated",
+      text: `Hello ${name},
+Your Staff Account has been updated.
+
+Email: ${email}
+New Role: ${roleName}
+Allocated Work: ${allocatedWork}
+Phone: ${phone}
+
+Thank you.`,
+    });
+
+    return res.status(200).send({ status: "Staff updated" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      status: "Error with updating information",
+      error: err.message,
+    });
+  }
+};
+
+/* ----------------------- update admin (with password) --------------------- */
+exports.updateAdminWithPassword = async (req, res) => {
+  try {
+    const sid = req.params.id;
+    if (!isObjectId(sid)) return res.status(400).send({ status: "Invalid admin id" });
+
+    const { name, email, phone, roleName, allocatedWork, password } = req.body;
+    const updateStaff = { name, email, phone, roleName, allocatedWork, password }; // TODO: hash
+
+    const updated = await Admin.findByIdAndUpdate(sid, updateStaff);
+    if (!updated) return res.status(404).send({ status: "Staff not found" });
+
+    return res.status(200).send({ status: "Staff updated" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      status: "Error with updating information",
+      error: err.message,
+    });
+  }
 };

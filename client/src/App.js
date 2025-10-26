@@ -45,29 +45,29 @@ function App() {
           <Route path="/adminLogin" element={<AdminLogin />} />
 
           {/* Patient */}
-          <Route path="/patientHome" element={<PatientHome />} /> 
+          {/* <Route path="/patientHome" element={<PatientHome />} /> 
           <Route path="/records" element={<MyRecords />} />
           <Route path="/editRecord/:id" element={<EditRecord />} />
           <Route path="/editPatientProfile" element={<EditPatientProfile />} />
           <Route path="/patientProfile" element={<PatientProfile />} />
           <Route path="/myAppointments" element={<PatientAppointments />} />
           <Route path="/editApt/:aid/:cid" element={<EditAppointment />} />
-          <Route path="/makeApt/:cid" element={<MakeAppointment />} />
+          <Route path="/makeApt/:cid" element={<MakeAppointment />} /> */}
 
-          <Route path="/myPrescriptions" element={<MyPrescriptions />} />
+          {/* <Route path="/myPrescriptions" element={<MyPrescriptions />} />
           <Route path="/insurance-claim" element={<InsuranceClaim />} />
-          <Route path="/myClaims" element={<MyClaims/>} />
+          <Route path="/myClaims" element={<MyClaims/>} /> */}
 
-          <Route path="/signup" element={<Signup />} />
+          {/* <Route path="/signup" element={<Signup />} /> */}
           <Route path="/" element={<ChooseLogin />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
-          <Route path="/inventory" element={<AddInventory />} />
+          {/* <Route path="/inventory" element={<AddInventory />} /> */}
           
           {/* Doctor */}
-          <Route path="/doctorDashboard" element={<DoctorDashboard />} />
+          {/* <Route path="/doctorDashboard" element={<DoctorDashboard />} />
           <Route path="/viewChannel/:cid" element={<ViewChannel />} />
           <Route path="/editChannel/:cid" element={<EditChannel />} />
-          <Route path="/searchChannels/:date?/:doctor?" element={<SearchChannels />} />
+          <Route path="/searchChannels/:date?/:doctor?" element={<SearchChannels />} /> */}
           {/* <Route path="/addChannel" element={<AddChannel />} /> */}
           {/* <Route path="/doctorProfile" element={<DoctorProfile />} /> */}
           {/* <Route path="/viewpatient/:id" element={<Viewpatient />} /> */}
@@ -75,15 +75,15 @@ function App() {
           {/* <Route path="/allpatients" element={<AllPatients />} /> */}
 
           {/* Laboratory */}
-          <Route path="/laboratory" element={<LaboratoryDashboard />} />
+          {/* <Route path="/laboratory" element={<LaboratoryDashboard />} />
           <Route path="/addReport/:tid/:pid" element={<AddPatientReport />} />
-          <Route path="/editReport/:tid/:pid" element={<EditReport />} />
+          <Route path="/editReport/:tid/:pid" element={<EditReport />} /> */}
 
           {/* Staff */}
-          <Route path="/staff" element={<StaffDashboard />} />
+          {/* <Route path="/staff" element={<StaffDashboard />} /> */}
           <Route path="/doctor" element={<AddDoctor />} />
-          <Route path="/editStaff/:sid" element={<EditStaff />} />
-          <Route path="/staffProfile" element={<StaffProfile />} />
+          {/* <Route path="/editStaff/:sid" element={<EditStaff />} />
+          <Route path="/staffProfile" element={<StaffProfile />} /> */}
         </Routes>
       </Router>
     </div>

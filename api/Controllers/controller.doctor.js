@@ -1,150 +1,159 @@
-// controllers/doctorController.js
+// Controllers/doctorController.js
 
 const Doctor = require("../models/Doctor");
-const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const secretKey = "hey";
+const { sendMail } = require("../lib/mailer");     // safe mail wrapper (Step 1 from earlier)
+const { isObjectId } = require("../utils/ids");    // tiny helper
 
-// Function to add a new doctor
-exports.addDoctor = (req, res) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.zoho.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "helasuwa@zohomail.com",
-      pass: process.env.EmailPass,
-    },
-  });
+// Use env in prod; fallback keeps local dev working
+const JWT_SECRET = process.env.JWT_SECRET || "hey";
+const FROM_EMAIL = process.env.SMTP_USER || "helasuwa@zohomail.com";
 
-  const { email, password, name, specialization, qualifications } = req.body;
-
-  const newDoctor = new Doctor({
-    email,
-    name,
-    password,
-    specialization,
-    qualifications,
-  });
-
-  newDoctor
-    .save()
-    .then(() => {
-      const mailOptions = {
-        from: "helasuwa@zohomail.com",
-        to: `${email}`,
-        subject: "Helasuwa Doctor Profile",
-        text: `Thank You! \nDoctor for joining with us.\n
-                \nEmail: ${email} \nPassword: ${password}\n\n.`,
-      };
-
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
-
-      res.json("Doctor Added");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-// Function for doctor login
-exports.loginDoctor = async (req, res) => {
-  const { email, password } = req.body;
-
-  const doctor = await Doctor.findOne({ email: email });
-
+/* -------------------------------- add doctor ------------------------------- */
+exports.addDoctor = async (req, res) => {
   try {
-    if (doctor) {
-      const result = password === doctor.password;
+    const { email, password, name, specialization, qualifications } = req.body;
 
-      if (result) {
-        const token = jwt.sign({ email: doctor.email }, secretKey, {
-          expiresIn: "1h",
-        });
-        res.status(200).send({ rst: "success", data: doctor, tok: token });
-      } else {
-        res.status(200).send({ rst: "incorrect password" });
-      }
-    } else {
-      res.status(200).send({ rst: "invalid doctor" });
-    }
-  } catch (error) {
-    res.status(500).send({ error });
+    const newDoctor = new Doctor({
+      email,
+      name,
+      password, // TODO: hash with bcrypt in production
+      specialization,
+      qualifications,
+    });
+
+    await newDoctor.save();
+
+    // fire-and-forget, won’t crash if SMTP creds are missing
+    await sendMail({
+      from: FROM_EMAIL,
+      to: email,
+      subject: "Helasuwa Doctor Profile",
+      text: `Thank you for joining us!
+
+Email: ${email}
+Password: ${password}
+`,
+    });
+
+    return res.json("Doctor Added");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to add doctor" });
   }
 };
 
-// Function to check doctor authorization
-exports.checkDoctor = async (req, res) => {
-  const token = req.headers.authorization;
-  let email = null;
-  jwt.verify(token, secretKey, (error, decoded) => {
-    if (error) {
-      console.log(error);
-    } else {
-      email = decoded.email;
+/* --------------------------------- login ---------------------------------- */
+exports.loginDoctor = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const doctor = await Doctor.findOne({ email });
+    if (!doctor) return res.status(401).send({ rst: "invalid doctor" });
+
+    // plaintext compare for now to match your DB
+    if (password !== doctor.password) {
+      return res.status(401).send({ rst: "incorrect password" });
     }
-  });
-  const doctor = await Doctor.findOne({ email });
-  res.status(200).send({ rst: "checked", doctor });
+
+    const token = jwt.sign(
+      { id: doctor._id, role: "doctor", email: doctor.email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).send({ rst: "success", data: doctor, tok: token });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: "Login failed" });
+  }
 };
 
-// Function to fetch all doctors
-exports.getAllDoctors = (req, res) => {
-  Doctor.find()
-    .then((doctors) => {
-      res.json(doctors);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+/* ------------------------------ check doctor ------------------------------ */
+exports.checkDoctor = async (req, res) => {
+  try {
+    const header = req.headers.authorization || "";
+    if (!header.startsWith("Bearer ")) {
+      return res.status(401).send({ rst: "no token", error: "Missing Bearer token" });
+    }
+
+    const token = header.slice(7);
+    let payload;
+    try {
+      payload = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("JWT verify failed:", err.message);
+      return res.status(403).send({ rst: "invalid token", error: "Invalid or expired token" });
+    }
+
+    const doctor = await Doctor.findOne({ email: payload.email });
+    if (!doctor) return res.status(404).send({ rst: "not found" });
+
+    return res.status(200).send({ rst: "checked", doctor });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ error: "Token check failed" });
+  }
 };
 
-// Function to fetch a doctor by ID
+/* ------------------------------ get all doctors --------------------------- */
+exports.getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    return res.json(doctors);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to fetch doctors" });
+  }
+};
+
+/* ------------------------------- get doctor by id ------------------------- */
 exports.getDoctorById = async (req, res) => {
-  const cid = req.params.id;
+  try {
+    const cid = req.params.id;
+    if (!isObjectId(cid)) {
+      return res.status(400).send({ status: "Invalid doctor id" });
+    }
 
-  await Doctor.findById(cid)
-    .then((doctor) => {
-      res.status(200).send({ status: "Doctor fetched", doctor });
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.status(500).send({
-        status: "Error in getting doctor details",
-        error: err.message,
-      });
+    const doctor = await Doctor.findById(cid);
+    if (!doctor) return res.status(404).send({ status: "Doctor not found" });
+
+    return res.status(200).send({ status: "Doctor fetched", doctor });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({
+      status: "Error in getting doctor details",
+      error: err.message,
     });
+  }
 };
 
-// Function to update a doctor
+/* -------------------------------- update doctor --------------------------- */
 exports.updateDoctor = async (req, res) => {
-  const did = req.params.id;
+  try {
+    const did = req.params.id;
+    if (!isObjectId(did)) {
+      return res.status(400).send({ status: "Invalid doctor id" });
+    }
 
-  const { name, email, specialization, qualifications, password } = req.body;
+    const { name, email, specialization, qualifications, password } = req.body;
 
-  const updateDoctor = {
-    name,
-    email,
-    password,
-    specialization,
-    qualifications,
-  };
+    const updateDoctor = {
+      name,
+      email,
+      specialization,
+      qualifications,
+      password, // TODO: hash in production
+    };
 
-  await Doctor.findByIdAndUpdate(did, updateDoctor)
-    .then(() => {
-      res.status(200).send({ status: "Doctor updated" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        status: "Error with updating information",
-        error: err.message,
-      });
+    const updated = await Doctor.findByIdAndUpdate(did, updateDoctor);
+    if (!updated) return res.status(404).send({ status: "Doctor not found" });
+
+    return res.status(200).send({ status: "Doctor updated" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      status: "Error with updating information",
+      error: err.message,
     });
+  }
 };

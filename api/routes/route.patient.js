@@ -1,5 +1,7 @@
+// routes/route.patient.js
 const express = require("express");
 const router = express.Router();
+
 const {
   addPatient,
   loginPatient,
@@ -10,25 +12,17 @@ const {
   getAllPatients,
 } = require("../Controllers/controller.patient");
 
-// Route to add a new patient
-router.post("/add", addPatient);
+const auth = require("../middleware/auth");
 
-// Route to login a patient
+// Public
 router.post("/login", loginPatient);
-
-// Route to verify token
 router.get("/check", checkToken);
+router.post("/add", addPatient); // keep public if this is self-registration; otherwise protect with auth()
 
-// Route to get patient by ID
-router.get("/get/:id", getPatientById);
-
-// Route to update a patient by ID
-router.put("/update/:id", updatePatient);
-
-// Route to delete a patient by ID
-router.delete("/delete/:id", deletePatient);
-
-// Route to get all patients
-router.get("/", getAllPatients);
+// Protected (require any logged-in user; tighten to roles later if needed)
+router.get("/get/:id", auth(), getPatientById);
+router.put("/update/:id", auth(), updatePatient);
+router.delete("/delete/:id", auth(), deletePatient);
+router.get("/", auth(), getAllPatients);
 
 module.exports = router;

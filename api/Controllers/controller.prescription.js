@@ -1,74 +1,120 @@
+const { Types } = require("mongoose");
 const Prescription = require("../models/Prescription");
 const Patient = require("../models/Patient");
-const { sendEmailToPatient } = require("../services/prescriptionMailServices"); // Import the email service
+const { sendEmailToPatient } = require("../services/prescriptionMailServices");
 
-// Controller to add a new prescription
+const isObjectId = (v) => Types.ObjectId.isValid(v);
+
+// Add a new prescription
 exports.addPrescription = async (req, res) => {
+  try {
     const { text, apt: appointment, pid: patientId } = req.body;
 
+    if (!patientId || !isObjectId(patientId)) {
+      return res.status(400).json({ status: "Invalid patient id" });
+    }
+    if (appointment && !isObjectId(appointment)) {
+      return res.status(400).json({ status: "Invalid appointment id" });
+    }
+    if (!text || !String(text).trim()) {
+      return res.status(400).json({ status: "Prescription text is required" });
+    }
+
     const newPrescription = new Prescription({
-        text,
-        appointment,
-        patient: patientId,
+      text,
+      appointment,
+      patient: patientId,
     });
 
+    await newPrescription.save();
+
+    // best-effort email (won't crash if email missing/service fails)
     try {
-        await newPrescription.save();
-
-        // Fetch patient email from the database
-        const patient = await Patient.findById(patientId);
-        if (patient && patient.email) {
-            await sendEmailToPatient(patient.email); // Use the email service to send an email to the patient
-        } else {
-            console.warn("Patient email not found");
-        }
-
-        res.json("Prescription Added");
-    } catch (err) {
-        console.error("Error saving prescription: ", err);
-        res.status(500).send({ status: "Error in adding prescription", error: err.message });
+      const patient = await Patient.findById(patientId).lean();
+      if (patient?.email) {
+        await sendEmailToPatient(patient.email);
+      } else {
+        console.warn("Patient email not found");
+      }
+    } catch (mailErr) {
+      console.warn("Email notify failed:", mailErr?.message || mailErr);
     }
+
+    return res.json("Prescription Added");
+  } catch (err) {
+    console.error("Error saving prescription:", err);
+    // surface common mongoose errors cleanly
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ status: "Validation failed", error: err.message });
+    }
+    if (err.name === "CastError") {
+      return res.status(400).json({ status: `Invalid value for "${err.path}"` });
+    }
+    return res.status(500).json({ status: "Error in adding prescription", error: err.message });
+  }
 };
 
-// Controller to get prescriptions by appointment ID
+// Get prescriptions by appointment ID
 exports.getPrescriptionsByAppointmentId = async (req, res) => {
-    let aid = req.params.id;
-
-    try {
-        const prescriptions = await Prescription.find({ appointment: aid });
-        res.status(200).json({ data: prescriptions });
-    } catch (err) {
-        console.error("Error fetching prescriptions: ", err.message);
-        res.status(500).send({ status: "Error in getting prescription details", error: err.message });
+  try {
+    const aid = req.params.id;
+    if (!isObjectId(aid)) {
+      return res.status(400).json({ status: "Invalid appointment id" });
     }
+    const prescriptions = await Prescription.find({ appointment: aid });
+    return res.status(200).json({ data: prescriptions });
+  } catch (err) {
+    console.error("Error fetching prescriptions:", err.message);
+    return res
+      .status(500)
+      .json({ status: "Error in getting prescription details", error: err.message });
+  }
 };
 
-// Controller to get prescriptions by patient ID
+// Get prescriptions by patient ID
 exports.getPrescriptionsByPatientId = async (req, res) => {
-    let pid = req.params.id;
-
-    try {
-        const prescriptions = await Prescription.find({ patient: pid });
-        res.status(200).json({ data: prescriptions });
-    } catch (err) {
-        console.error("Error fetching prescriptions: ", err.message);
-        res.status(500).send({ status: "Error in getting prescription details", error: err.message });
+  try {
+    const pid = req.params.id;
+    if (!isObjectId(pid)) {
+      return res.status(400).json({ status: "Invalid patient id" });
     }
+    const prescriptions = await Prescription.find({ patient: pid });
+    return res.status(200).json({ data: prescriptions });
+  } catch (err) {
+    console.error("Error fetching prescriptions:", err.message);
+    return res
+      .status(500)
+      .json({ status: "Error in getting prescription details", error: err.message });
+  }
 };
 
-// Controller to search prescriptions by patient ID and query
+// Search prescriptions by patient ID and query
 exports.searchPrescriptionsByPatientId = async (req, res) => {
-    let pid = req.params.id;
-    const query = req.query.query;
-
-    try {
-        const results = await Prescription.find({
-            patient: pid,
-            $or: [{ text: { $regex: query, $options: "i" } }],
-        });
-        res.json(results);
-    } catch (error) {
-        console.error("Error searching prescriptions: ", error);
-        res.status(500).json({ error: "Server error" });
+  try {
+    const pid = req.params.id;
+    if (!isObjectId(pid)) {
+      return res.status(400).json({ error: "Invalid patient id" });
     }
+
+    const q = String(req.query.query || "").trim();
+    if (!q) {
+      // empty query => return all for that patient (keeps behavior predictable)
+      const all = await Prescription.find({ patient: pid });
+      return res.json(all);
+    }
+    if (q.length > 64) {
+      return res.status(400).json({ error: "Query too long" });
+    }
+    const safe = q.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    const rx = new RegExp(safe, "i");
+
+    const results = await Prescription.find({
+      patient: pid,
+      text: rx,
+    });
+    return res.json(results);
+  } catch (error) {
+    console.error("Error searching prescriptions:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
 };

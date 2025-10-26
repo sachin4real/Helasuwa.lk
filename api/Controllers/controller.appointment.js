@@ -1,74 +1,109 @@
 // api/Controllers/controller.appointment.js
+const { Types } = require("mongoose");
 const Appointment = require("../models/Appointment");
 const Channel = require("../models/Channel");
 const Patient = require("../models/Patient");
-const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
-dotenv.config();
+const { sendMail } = require("../lib/mailer"); // safe mail wrapper
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.zoho.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: "helasuwa@zohomail.com",
-    pass: process.env.EmailPass,
-  },
-});
+const isObjectId = (v) => Types.ObjectId.isValid(v);
+const FROM_EMAIL = process.env.SMTP_USER || "helasuwa@zohomail.com";
 
-// Get appointments by channel ID
+/* -------------------------- Get by channel id ----------------------------- */
 exports.getChannelAppointments = async (req, res) => {
-  let cid = req.params.id;
-
   try {
+    const cid = req.params.id;
+    if (!isObjectId(cid)) {
+      return res.status(400).json({ status: "Invalid channel id" });
+    }
+
     const appointments = await Appointment.find({ channel: cid });
-    res.status(200).json({ data: appointments });
+    return res.status(200).json({ data: appointments });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in getting appointment details",
       error: err.message,
     });
   }
 };
 
-// Get appointments by patient ID
+/* -------------------------- Get by patient id ----------------------------- */
 exports.getPatientAppointments = async (req, res) => {
-  let pid = req.params.id;
-
   try {
+    const pid = req.params.id;
+    if (!isObjectId(pid)) {
+      return res.status(400).json({ status: "Invalid patient id" });
+    }
+
     const appointments = await Appointment.find({ patient: pid });
-    res.status(200).json({ data: appointments });
+    return res.status(200).json({ data: appointments });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in getting appointment details",
       error: err.message,
     });
   }
 };
 
-// Create a new appointment
+/* ------------------------------ Create new --------------------------------
+Expected request body:
+{
+  "patient": "<ObjectId|string>",
+  "notes": "optional string",
+  // Either provide a channelId OR the full channel doc; we'll accept both:
+  "channelId": "<ObjectId|string>"  // preferred
+  // OR
+  "channel": { "_id": "...", "doctor": "...", ... }  // legacy clients
+  "name": "...",
+  "age": 30,
+  "gender": "M",
+  "contact": "07..."
+}
+--------------------------------------------------------------------------- */
 exports.createAppointment = async (req, res) => {
-  const { patient, notes, channel, name, age, gender, contact } = req.body;
-
   try {
-    const cid = channel._id;
-    const doctor = channel.doctor;
-    const startDateTime = channel.startDateTime;
-    const maxPatients = channel.maxPatients;
-    const drName = channel.drName;
-    const completed = channel.completed;
-    let patients = parseInt(channel.patients);
+    const { patient, notes, name, age, gender, contact } = req.body;
 
-    patients++;
-    const appointmentNo = patients;
+    // accept either channelId or legacy channel object
+    const channelId =
+      req.body.channelId ||
+      (req.body.channel && (req.body.channel._id || req.body.channel));
 
-    let arrivalTime = new Date(startDateTime);
-    arrivalTime.setMinutes(arrivalTime.getMinutes() + 15 * (appointmentNo - 1));
+    if (!isObjectId(patient)) {
+      return res.status(400).json({ status: "Invalid patient id" });
+    }
+    if (!channelId || !isObjectId(channelId)) {
+      return res.status(400).json({ status: "Invalid channel id" });
+    }
+
+    // Fetch channel
+    const ch = await Channel.findById(channelId).lean();
+    if (!ch) return res.status(404).json({ status: "Channel not found" });
+
+    if (ch.completed) {
+      return res.status(409).json({ status: "Channel has been completed/closed" });
+    }
+
+    // Atomically increment patients with guard against overbooking
+    // Only increment if patients < maxPatients
+    const incResult = await Channel.findOneAndUpdate(
+      { _id: channelId, patients: { $lt: ch.maxPatients } },
+      { $inc: { patients: 1 } },
+      { new: true }
+    ).lean();
+
+    if (!incResult) {
+      // Either channel not found or already full
+      return res.status(409).json({ status: "Channel capacity reached" });
+    }
+
+    const appointmentNo = incResult.patients; // after increment
+    const startDateTime = new Date(ch.startDateTime);
+    const arrivalTime = new Date(startDateTime.getTime() + 15 * 60000 * (appointmentNo - 1));
 
     const newAppointment = new Appointment({
-      channel,
+      channel: channelId,
       patient,
       appointmentNo,
       notes,
@@ -79,117 +114,130 @@ exports.createAppointment = async (req, res) => {
       contact,
     });
 
-    const updateChannel = {
-      doctor,
-      drName,
-      startDateTime,
-      maxPatients,
-      patients,
-      completed,
-    };
-
     await newAppointment.save();
-    await Channel.findByIdAndUpdate(cid, updateChannel);
 
-    const pt = await Patient.findById(patient);
+    // If now full, mark channel completed=true
+    if (incResult.patients >= ch.maxPatients && !incResult.completed) {
+      await Channel.findByIdAndUpdate(channelId, { completed: true });
+    }
 
-    const mailOptions = {
-      from: "helasuwa@zohomail.com",
-      to: pt.email,
-      subject: "Appointment Made",
-      text: `Hello \nYour Appointment has been made for Dr.${drName}. Appointment No :${appointmentNo} 
-          Date Time ${new Date(startDateTime).toString()} \nBe there at approximately ${arrivalTime.toLocaleString()} to avoid waiting.`,
-    };
+    // Email patient (best-effort; will skip if no SMTP creds)
+    const pt = await Patient.findById(patient).lean();
+    if (pt && pt.email) {
+      const drName = ch.drName || "your doctor";
+      await sendMail({
+        from: FROM_EMAIL,
+        to: pt.email,
+        subject: "Appointment Confirmation",
+        text: `Hello,
+Your appointment has been scheduled with Dr. ${drName}.
+Appointment No: ${appointmentNo}
+Date & Time: ${startDateTime.toString()}
+Please arrive around ${arrivalTime.toLocaleString()} to minimize waiting.
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
+Thank you.`,
+      });
+    }
 
-    res.json("New appointment Added");
+    return res.json({ status: "Appointment created", appointmentId: newAppointment._id });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in creating appointment",
       error: err.message,
     });
   }
 };
 
-// Delete appointment by ID
+/* ------------------------------ Delete by id ------------------------------ */
 exports.deleteAppointment = async (req, res) => {
-  let aid = req.params.id;
-  let cid = "";
-
   try {
+    const aid = req.params.id;
+    if (!isObjectId(aid)) {
+      return res.status(400).json({ status: "Invalid appointment id" });
+    }
+
     const apt = await Appointment.findById(aid);
-    cid = apt.channel;
+    if (!apt) return res.status(404).json({ status: "Appointment not found" });
 
-    const channel = await Channel.findById(cid);
-    const patients = parseInt(channel.patients) - 1;
-
-    const updChannel = { patients };
+    const cid = apt.channel;
+    if (isObjectId(cid)) {
+      // Decrement patient count atomically, but never below 0
+      await Channel.findByIdAndUpdate(cid, {
+        $inc: { patients: -1 },
+        $setOnInsert: { patients: 0 },
+      });
+    }
 
     await Appointment.findByIdAndDelete(aid);
-    await Channel.findByIdAndUpdate(cid, updChannel);
-
-    res.status(200).send({ status: "Appointment Deleted" });
+    return res.status(200).json({ status: "Appointment deleted" });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in deleting appointment",
       error: err.message,
     });
   }
 };
 
-// Fetch appointment by ID
+/* ------------------------------ Get by id --------------------------------- */
 exports.getAppointmentById = async (req, res) => {
-  let aid = req.params.id;
-
   try {
+    const aid = req.params.id;
+    if (!isObjectId(aid)) {
+      return res.status(400).json({ status: "Invalid appointment id" });
+    }
+
     const apt = await Appointment.findById(aid);
-    res.status(200).send({ status: "Appointment fetched", apt });
+    if (!apt) return res.status(404).json({ status: "Appointment not found" });
+
+    return res.status(200).json({ status: "Appointment fetched", apt });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in getting appointment details",
       error: err.message,
     });
   }
 };
 
-// Update appointment notes
+/* ------------------------------ Update notes ------------------------------ */
 exports.updateAppointment = async (req, res) => {
-  let aid = req.params.id;
-  const { notes } = req.body;
-
   try {
-    await Appointment.findByIdAndUpdate(aid, { notes });
-    res.status(200).send({ status: "Appointment updated" });
+    const aid = req.params.id;
+    if (!isObjectId(aid)) {
+      return res.status(400).json({ status: "Invalid appointment id" });
+    }
+
+    const { notes } = req.body;
+    const updated = await Appointment.findByIdAndUpdate(aid, { notes });
+    if (!updated) return res.status(404).json({ status: "Appointment not found" });
+
+    return res.status(200).json({ status: "Appointment updated" });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in updating appointment",
       error: err.message,
     });
   }
 };
 
-// Mark appointment as consulted
+/* ------------------------------ Mark consulted ---------------------------- */
 exports.markConsulted = async (req, res) => {
-  let aid = req.params.id;
-  const consulted = true;
-
   try {
-    await Appointment.findByIdAndUpdate(aid, { consulted });
-    res.status(200).send({ status: "Appointment marked as consulted" });
+    const aid = req.params.id;
+    if (!isObjectId(aid)) {
+      return res.status(400).json({ status: "Invalid appointment id" });
+    }
+
+    const updated = await Appointment.findByIdAndUpdate(aid, { consulted: true });
+    if (!updated) return res.status(404).json({ status: "Appointment not found" });
+
+    return res.status(200).json({ status: "Appointment marked as consulted" });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send({
+    console.error(err.message);
+    return res.status(500).json({
       status: "Error in marking appointment",
       error: err.message,
     });

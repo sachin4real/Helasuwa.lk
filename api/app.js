@@ -62,5 +62,14 @@ app.use("/card", cardRoutes);
 const insuranceRoutes = require('./routes/insuranceRoutes');
 app.use("/insurance", insuranceRoutes);
 
+
+// Global error handler (prevents crashes & double-sends)
+app.use((err, req, res, next) => {
+  console.error("[unhandled error]", err);
+  if (res.headersSent) return next(err);
+  res.status(err.status || 500).json({ error: err.message || "Server error" });
+});
+
+
 // Export the app
 module.exports = app;

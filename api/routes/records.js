@@ -1,136 +1,156 @@
+// routes/records.js
 const router = require("express").Router();
-let Record = require("../models/Record");
-let Prescription = require("../models/Prescription");
-let Test = require("../models/Test");
-let Report = require("../models/Report");
-let Appointment = require("../models/Appointment");
+const { Types } = require("mongoose");
+const Record = require("../models/Record");
+const Prescription = require("../models/Prescription");
+const Test = require("../models/Test");
+const Report = require("../models/Report");
+const Appointment = require("../models/Appointment");
 
-router.route("/add").post((req, res) => {
-  const title = req.body.title;
-  const reason = req.body.reason;
-  const patient = req.body.pid;
+// helpers
+const isObjectId = (v) => Types.ObjectId.isValid(v);
+function escapeRegex(text = "") {
+  return String(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+function toRegex(text = "", flags = "i") {
+  const trimmed = String(text).trim();
+  if (!trimmed) return null;
+  if (trimmed.length > 64) throw new Error("Query too long");
+  return new RegExp(escapeRegex(trimmed), flags);
+}
 
-  let prescriptions = 0;
-  let appointments = 0;
-  let tests = 0;
-  let reports = 0;
-
-  const results = Prescription.find({ patient: patient }).then((prs) => {
-    prescriptions = prs.length;
-    const results4 = Report.find({ patient: patient }).then((rpts) => {
-      reports = rpts.length;
-
-      const results1 = Test.find({ patient: patient }).then((tsts) => {
-        tests = tsts.length;
-
-        const results2 = Appointment.find({ patient: patient }).then((apts) => {
-          appointments = apts.length;
-
-          const newRecord = new Record({
-            patient,
-            title,
-            reason,
-            prescriptions,
-            appointments,
-            tests,
-            reports,
-          });
-
-          newRecord
-            .save()
-            .then(() => {
-              res.json("Prescription Added");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        });
-      });
-    });
-  });
-});
-
-router.route("/").get((req, res) => {
-  Record.find()
-    .then((records) => {
-      res.json(records);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-router.route("/get/:id").get(async (req, res) => {
-  let rid = req.params.id;
-
-  const tst = await Record.findById(rid)
-    .then((record) => {
-      res.status(200).send({ status: "Record fetched", record: record });
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.status(500).send({
-        status: "Error in getting record details",
-        error: err.message,
-      });
-    });
-});
-
-router.get("/search", async (req, res) => {
+/* ---------------------------------- ADD ----------------------------------- */
+// POST /record/add
+router.post("/add", async (req, res) => {
   try {
-    const query = req.query.query; 
-    const results = await Test.find({
-      $or: [
-        { title: { $regex: query, $options: "i" } },
-        { reason: { $regex: query, $options: "i" } },
-      ],
+    const { title, reason, pid: patient } = req.body;
+
+    if (!isObjectId(patient)) {
+      return res.status(400).json({ error: "Invalid patient id" });
+    }
+
+    // Parallel counts (faster, safer)
+    const [prescriptions, reports, tests, appointments] = await Promise.all([
+      Prescription.countDocuments({ patient }),
+      Report.countDocuments({ patient }),
+      Test.countDocuments({ patient }),
+      Appointment.countDocuments({ patient }),
+    ]);
+
+    const newRecord = new Record({
+      patient,
+      title,
+      reason,
+      prescriptions,
+      appointments,
+      tests,
+      reports,
     });
-    res.json(results);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
+
+    await newRecord.save();
+    return res.json({ status: "Record Added", recordId: newRecord._id });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to add record" });
   }
 });
 
-router.route("/delete/:id").delete(async (req, res) => {
-  let rid = req.params.id;
-
-  await Record.findByIdAndDelete(rid)
-    .then(() => {
-      res.status(200).send({ status: "Record deleted" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res
-        .status(202)
-        .send({ status: "Error with deleting the record", error: err.message });
-    });
+/* -------------------------------- LIST ALL -------------------------------- */
+// GET /record/
+router.get("/", async (_req, res) => {
+  try {
+    const records = await Record.find();
+    return res.json(records);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to fetch records" });
+  }
 });
 
-router.route("/update/:id").put(async (req, res) => {
-  let rid = req.params.id;
+/* -------------------------------- GET ONE --------------------------------- */
+// GET /record/get/:id
+router.get("/get/:id", async (req, res) => {
+  try {
+    const rid = req.params.id;
+    if (!isObjectId(rid)) {
+      return res.status(400).json({ status: "Invalid record id" });
+    }
 
-  const title = req.body.title;
-  const reason = req.body.reason;
+    const record = await Record.findById(rid);
+    if (!record) return res.status(404).json({ status: "Record not found" });
 
-  console.log(title);
-  console.log(reason);
-
-  const updateRecord = {
-    title,
-    reason,
-  };
-
-  const update = await Record.findByIdAndUpdate(rid, updateRecord)
-    .then(() => {
-      res.status(200).send({ status: "Record updated" });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        status: "Error with updating information",
-        error: err.message,
-      });
-    });
+    return res.status(200).json({ status: "Record fetched", record });
+  } catch (err) {
+    console.log(err.message);
+    return res
+      .status(500)
+      .json({ status: "Error in getting record details", error: err.message });
+  }
 });
+
+/* -------------------------------- SEARCH ---------------------------------- */
+// GET /record/search?query=...
+// NOTE: Your original searched the Test collection. Keeping that behavior,
+// but with safe regex. If you intended to search Records instead, tell me and I’ll switch it.
+router.get("/search", async (req, res) => {
+  try {
+    const rx = toRegex(req.query.query || "");
+    const filter = rx ? { $or: [{ title: rx }, { reason: rx }] } : {};
+
+    const results = await Test.find(filter);
+    return res.json(results);
+  } catch (error) {
+    console.error(error);
+    const msg = error && error.message === "Query too long" ? "Query too long" : "Server error";
+    return res.status(400).json({ error: msg });
+  }
+});
+
+/* -------------------------------- DELETE ---------------------------------- */
+// DELETE /record/delete/:id
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const rid = req.params.id;
+    if (!isObjectId(rid)) {
+      return res.status(400).json({ status: "Invalid record id" });
+    }
+
+    const deleted = await Record.findByIdAndDelete(rid);
+    if (!deleted) return res.status(404).json({ status: "Record not found" });
+
+    return res.status(200).json({ status: "Record deleted" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: "Error deleting record", error: err.message });
+  }
+});
+
+/* -------------------------------- UPDATE ---------------------------------- */
+// PUT /record/update/:id
+router.put("/update/:id", async (req, res) => {
+  try {
+    const rid = req.params.id;
+    if (!isObjectId(rid)) {
+      return res.status(400).json({ status: "Invalid record id" });
+    }
+
+    const { title, reason } = req.body;
+    const updateRecord = {};
+    if (title !== undefined) updateRecord.title = title;
+    if (reason !== undefined) updateRecord.reason = reason;
+
+    const updated = await Record.findByIdAndUpdate(rid, updateRecord);
+    if (!updated) return res.status(404).json({ status: "Record not found" });
+
+    return res.status(200).json({ status: "Record updated" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: "Error updating record", error: err.message });
+  }
+});
+
 module.exports = router;
